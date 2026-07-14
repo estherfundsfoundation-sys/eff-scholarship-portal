@@ -18,7 +18,7 @@ alter table public.legacy_claim_tokens enable row level security;
 create policy "legacy_tokens_staff" on public.legacy_claim_tokens for all to authenticated using(public.has_role('program_admin') or public.has_role('super_admin')) with check(public.has_role('program_admin') or public.has_role('super_admin'));
 
 create or replace function public.claim_legacy_application(p_token text)
-returns uuid language plpgsql security definer set search_path=public as $$
+returns uuid language plpgsql security definer set search_path=public,extensions as $$
 declare caller uuid:=auth.uid(); caller_email citext; token_row public.legacy_claim_tokens; record_row public.legacy_application_records; cycle_row public.program_cycles; form_id uuid; new_application uuid; existing_owner uuid; prior_status public.application_status;
 begin
  if caller is null then raise exception 'Please sign in to claim your application.'; end if;

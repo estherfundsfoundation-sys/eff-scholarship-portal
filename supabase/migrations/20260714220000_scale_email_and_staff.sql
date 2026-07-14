@@ -73,7 +73,7 @@ create trigger grant_designated_foundation_admin after insert or update of prima
 for each row execute procedure public.grant_designated_foundation_admin();
 
 create or replace function public.queue_legacy_claim_invitations(p_limit int,p_site_url text)
-returns int language plpgsql security definer set search_path=public as $$
+returns int language plpgsql security definer set search_path=public,extensions as $$
 declare actor uuid:=auth.uid(); item record; raw_token text; token_id uuid; queued_count int:=0;
 begin
   if actor is null or not (public.has_role('program_admin') or public.has_role('super_admin')) then raise exception 'Not authorized.'; end if;
