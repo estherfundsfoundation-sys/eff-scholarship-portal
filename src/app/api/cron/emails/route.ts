@@ -4,7 +4,7 @@ import {emailFrom, getResend} from "@/lib/email";
 
 function escapeHtml(value: string) {return value.replace(/[&<>'"]/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]!));}
 
-type EmailPayload = {name?: string; claim_url?: string; status?: string; message?: string; item?: string; due_at?: string | null; amount?: number | string | null; acceptance_deadline?: string | null; application_path?: string};
+type EmailPayload = {name?: string; claim_url?: string; status?: string; message?: string; item?: string; due_at?: string | null; amount?: number | string | null; acceptance_deadline?: string | null; application_path?: string; title?:string; deadline?:string|null; scholarship_path?:string};
 function renderMessage(templateKey: string, payload: EmailPayload) {
   const site = (process.env.NEXT_PUBLIC_SITE_URL ?? process.env.NEXT_PUBLIC_APP_URL ?? "https://he-flame.vercel.app").replace(/\/$/, "");
   const name = escapeHtml(payload.name ?? "Applicant");
@@ -14,6 +14,7 @@ function renderMessage(templateKey: string, payload: EmailPayload) {
   if (templateKey === "information_request") return {subject: "EFF needs additional information for your application", html: `<p>Hello ${name},</p><p>Our team needs the following item to continue reviewing your application:</p><blockquote>${escapeHtml(payload.item ?? "Please review the request in your portal.")}</blockquote>${payload.due_at ? `<p>Please respond by ${escapeHtml(new Date(payload.due_at).toLocaleDateString("en-US"))}.</p>` : ""}${button}`};
   if (templateKey === "award_issued") return {subject: "Your EFF award details are ready", html: `<p>Hello ${name},</p><p>Your award details are available in the secure portal${payload.amount ? ` in the amount of <strong>$${escapeHtml(Number(payload.amount).toLocaleString("en-US", {minimumFractionDigits: 2}))}</strong>` : ""}.</p>${payload.acceptance_deadline ? `<p>Please respond by ${escapeHtml(new Date(`${payload.acceptance_deadline}T12:00:00`).toLocaleDateString("en-US"))}.</p>` : ""}${button}`};
   if (templateKey === "award_accepted") return {subject: "Your EFF award acceptance is confirmed", html: `<p>Hello ${name},</p><p>We recorded your award acceptance. Thank you for completing this step.</p>${button}`};
+  if (templateKey === "scholarship_reminder") {const scholarshipUrl=`${site}${payload.scholarship_path??"/scholarships"}`;return {subject:`Scholarship deadline reminder: ${payload.title??"saved opportunity"}`,html:`<p>Hello ${name},</p><p>This is your reminder that <strong>${escapeHtml(payload.title??"a saved scholarship")}</strong>${payload.deadline?` has a listed deadline of ${escapeHtml(new Date(`${payload.deadline}T12:00:00`).toLocaleDateString("en-US"))}`:" may be closing soon"}.</p><p><a href="${escapeHtml(scholarshipUrl)}">Review the opportunity and verify details with the provider</a>.</p>`};}
   return {subject: payload.status ? `EFF update: ${payload.status}` : "An update is available in your EFF portal", html: `<p>Hello ${name},</p><p>${escapeHtml(payload.message ?? "An update is available for your application.")}</p>${button}`};
 }
 
@@ -21,6 +22,7 @@ export async function GET(request: NextRequest) {
   if (!process.env.CRON_SECRET || request.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`) return NextResponse.json({error: "Unauthorized"}, {status: 401});
   const db = createAdminClient();
   const resend = getResend();
+  await db.rpc("queue_due_scholarship_reminders", {p_limit: 100});
   const {data: messages, error} = await db.rpc("dequeue_email_messages", {p_limit: 25});
   if (error) return NextResponse.json({error: "Queue unavailable"}, {status: 500});
   let sentCount = 0;
