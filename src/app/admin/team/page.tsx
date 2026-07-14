@@ -1,0 +1,9 @@
+import Link from "next/link";
+import {requireSuperAdmin} from "@/lib/auth/staff";
+import {inviteStaff} from "./actions";
+
+export default async function TeamPage() {
+  const {supabase} = await requireSuperAdmin();
+  const {data: roles} = await supabase.from("user_roles").select("id,role,granted_at,profiles!user_roles_user_id_fkey(legal_name,primary_email)").order("granted_at", {ascending: false});
+  return <main className="section white"><div className="shell" style={{maxWidth: 1000}}><Link className="card-link" href="/admin">← Command center</Link><div className="eyebrow">Access control</div><h2>Staff and reviewers</h2><p className="muted">Invite each person to their own account. Roles are permission-scoped and every grant is audited.</p><section className="card"><h3>Invite or grant access</h3><form action={inviteStaff} className="admin-filter"><label>Email<input name="email" type="email" required placeholder="staff@example.org"/></label><label>Role<select name="role" required defaultValue="reviewer"><option value="reviewer">Reviewer</option><option value="finance">Finance</option><option value="program_admin">Program administrator</option><option value="super_admin">Super administrator</option></select></label><button className="button">Invite and grant role</button></form></section><div className="table-wrap" style={{marginTop:24}}><table><thead><tr><th>Person</th><th>Role</th><th>Granted</th></tr></thead><tbody>{roles?.map(item=>{const p=item.profiles as unknown as {legal_name:string|null;primary_email:string|null};return <tr key={item.id}><td><strong>{p?.legal_name??"Invited staff member"}</strong><br/><small>{p?.primary_email}</small></td><td>{item.role.replaceAll("_"," ")}</td><td>{new Date(item.granted_at).toLocaleString()}</td></tr>})}</tbody></table></div></div></main>;
+}
