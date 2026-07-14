@@ -10,3 +10,4 @@ work/
 supabase/.temp/
 
 .vercel
+.env*
