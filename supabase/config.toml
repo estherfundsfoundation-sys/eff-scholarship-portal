@@ -1,0 +1,30 @@
+project_id = "eff-scholarship-portal"
+
+[auth]
+enabled = true
+site_url = "https://eff-scholarship-portal.vercel.app"
+additional_redirect_urls = [
+  "http://localhost:3000/**",
+  "https://eff-scholarship-portal.vercel.app/**",
+  "https://he-*-esther-funds.vercel.app/**"
+]
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = true
+max_frequency = "1m"
+otp_length = 8
+
+[auth.mfa.totp]
+enroll_enabled = true
+verify_enabled = true
+
+[auth.email.smtp]
+enabled = true
+host = "smtp.resend.com"
+port = 465
+user = "resend"
+pass = "env(SMTP_PASS)"
+admin_email = "notifications@estherfundsinc.org"
+sender_name = "Esther Funds Foundation"
