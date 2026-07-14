@@ -62,6 +62,8 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--commit", action="store_true")
     parser.add_argument("--export", type=Path)
+    parser.add_argument("--portal-url")
+    parser.add_argument("--secret-file", type=Path)
     args = parser.parse_args()
     digest = hashlib.sha256(WORKBOOK.read_bytes()).hexdigest()
     sheet = load_workbook(WORKBOOK, read_only=True, data_only=True).active
@@ -97,6 +99,15 @@ def main() -> None:
     valid_count = sum(item["status"] != "error" for item in parsed)
     duplicate_count = sum(item["status"] == "excluded" for item in parsed)
     print(json.dumps({"rows": len(parsed), "valid_email_rows": valid_count, "unique_applicants": valid_count - duplicate_count, "duplicate_rows_excluded": duplicate_count, "invalid_rows": len(parsed) - valid_count, "file_hash_prefix": digest[:12], "mode": "commit" if args.commit else "dry-run"}))
+    if args.portal_url and args.secret_file:
+        secret = args.secret_file.read_text(encoding="utf-8").strip()
+        for number, batch in enumerate(chunks(parsed, 200)):
+            body = {"fileHash": digest, "finalBatch": (number + 1) * 200 >= len(parsed), "rows": [{"rowNumber": item["row_number"], "sourceRecordId": item["source_record_id"], "email": item["email"], "submittedAt": item["submitted_at"], "raw": item["raw"], "normalized": item["normalized"], "status": item["status"], "exclusionReason": item["exclusion_reason"], "errors": item["errors"]} for item in batch]}
+            request = urllib.request.Request(args.portal_url.rstrip("/") + "/api/admin/legacy-import", data=json.dumps(body).encode("utf-8"), headers={"Authorization": f"Bearer {secret}", "Content-Type": "application/json"}, method="POST")
+            with urllib.request.urlopen(request, timeout=90) as response:
+                if response.status != 200: raise RuntimeError("Portal import batch failed")
+        print(json.dumps({"committed": True, "rows": len(parsed), "invitations_sent": 0, "transport": "protected portal endpoint"}))
+        return
     if args.export:
         args.export.write_text(json.dumps({"file_hash": digest, "rows": parsed}, ensure_ascii=False), encoding="utf-8")
         print(json.dumps({"exported": True, "rows": len(parsed)}))
