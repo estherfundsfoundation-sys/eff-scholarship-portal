@@ -1,0 +1,3 @@
+-- Initial administrator setup is intentionally manual and documented.
+-- After Shayna registers and verifies her email, grant the super-admin role with:
+-- insert into public.user_roles(user_id, role, granted_by) values ('AUTH_USER_UUID','super_admin','AUTH_USER_UUID');
