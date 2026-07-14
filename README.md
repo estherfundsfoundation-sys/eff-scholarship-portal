@@ -1,52 +1,64 @@
-# EFF Scholarship Portal
+# Esther Funds Foundation Scholarship Portal
 
-A mobile-first portal for Esther Funds Foundation-administered programs and a separate trusted external scholarship directory. Built with Next.js, TypeScript, Supabase, Resend, and Vercel Cron.
+Production portal for EFF-administered scholarships and grants, secure legacy applicant claiming, staff review/award operations, and an automatically refreshed directory of independent scholarships.
+
+- Production: [he-flame.vercel.app](https://he-flame.vercel.app)
+- Foundation: [estherfundsfoundation.org](https://www.estherfundsfoundation.org)
+Support: `nationals@estherfundsinc.org`
+
+## Stack
+
+- Next.js 15 App Router, React 19, and TypeScript
+- Supabase Postgres, Auth, private Storage, RLS, Vault, and `pg_cron`
+- Resend transactional email
+- Vercel production hosting
+- Vitest, ESLint, and TypeScript checks
 
 ## Local setup
 
-1. Install Node.js 20+ and run `pnpm install`.
-2. Copy `.env.example` to `.env.local` and add development credentials.
-3. Create a Supabase project, run `supabase/migrations/0001_portal_core.sql`, then configure a private documents bucket.
-4. Run `pnpm dev` and open `http://localhost:3000`.
+1. Install Node.js 20 or newer and pnpm.
+2. Copy `.env.example` to `.env.local`; never commit the local file.
+3. Run `pnpm install`, then `pnpm dev`.
+4. Open `http://localhost:3000`.
 
-## Initial administrator
+Run `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build` before release.
 
-Shayna Vincent first registers normally and verifies her email. In the Supabase SQL editor, use the commented statement in `supabase/seed.sql` with her Auth user UUID. Never expose the service-role key or allow client-side role writes. Require MFA for this account in Supabase Auth settings before production launch.
+## Production architecture
 
-## Environment and integrations
+All private reads are protected by Supabase RLS and server authorization. Application documents live in the private `application-documents` bucket and staff receive five-minute signed URLs. Applicants can only read their own profiles, applications, answers, documents, requests, decisions, awards, notifications, bookmarks, reminders, and reports. Reviewer notes and decision reasons remain staff-only.
 
-- `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are browser-safe project identifiers.
-- `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`, and `CRON_SECRET` are server-only Vercel secrets.
-- Authenticate the sending domain in Resend and set `EMAIL_FROM` only after its DNS records pass.
-- Set `NEXT_PUBLIC_APP_URL` to the canonical production URL. Use cryptographically random values for cron and claim secrets.
+The designated foundation address `nationals@estherfundsinc.org` automatically receives `super_admin` after its verified Auth account exists. Additional staff use individual accounts and are invited from **Admin → Staff and reviewers**. Never share credentials. Enable MFA for every privileged account in Supabase Auth.
 
-## Deployment
+## Database and deployment
 
-1. Create a GitHub repository and push this project without any `.env` files.
-2. Import the repository into Vercel as a Next.js project.
-3. Add every production variable from `.env.example` in Vercel; use separate Preview values.
-4. Deploy, verify `/api/health`, then confirm the daily cron appears in Vercel settings.
-5. Configure the custom domain, add the Resend DNS records, and update Supabase Auth site/redirect URLs.
-6. Apply migrations to production, create the documents bucket, register Shayna, grant `super_admin`, enable MFA, and run a non-financial end-to-end test.
+The `supabase/migrations` directory is authoritative. Link the project, inspect migration parity, then apply pending migrations:
 
-## Legacy import and claim policy
+```powershell
+pnpm dlx supabase@2.109.1 migration list --linked
+pnpm dlx supabase@2.109.1 db push --linked --include-all
+pnpm dlx supabase@2.109.1 db lint --linked --level error
+```
 
-CSV imports are staged as immutable raw rows, mapped, validated, and dry-run before commit. A file hash and source IDs make commits idempotent. Claim invitations must store only a SHA-256 token hash, rotate on resend, expire promptly, verify email ownership, and attach an application only after authentication. Never include answers or documents in email.
+Deploy with the linked Vercel project:
 
-Suggested CSV fields: `original_submission_id`, `legal_name`, `email`, `phone`, `school`, `submitted_at`, `current_status`, plus answer and document URL columns. Administrators map source headers during dry run rather than relying on fixed names.
+```powershell
+pnpm dlx vercel@55.0.0 --prod
+```
 
-## Importer operations
+After deployment, verify `/`, `/programs/name-your-need`, `/scholarships`, and `/api/health`. The scholarship importer is protected by `CRON_SECRET`. Email delivery is paced by a Supabase `pg_cron` job every five minutes; Vercel Hobby’s daily cron remains sufficient for directory refreshes.
 
-Each trusted website has an independent adapter and fixture tests. The daily endpoint is protected by `CRON_SECRET`; production workers should use a run-level lock, respectful user agent, backoff, failure threshold, and source-configured frequency. Normal validated records auto-publish; suspicious or incomplete records enter exceptions. Bot challenges and transient failures do not mean removal.
+## Name Your Need 2026
 
-Written permission is represented in seeded source records, but the actual permission date and notes must be entered by an administrator before launch. Parser changes require a version bump and fixture update. Keep requests infrequent and never copy branding or long-form content.
+The official cycle closes July 31, 2026 at 11:59 p.m. Eastern. Eligibility, required answers/documents, policy acceptance, submission, status tracking, information responses, decision messaging, and award acceptance are enforced in the database. Award amounts and payment commitments are entered only by authorized EFF staff.
 
-## Security, storage, recovery, and exports
+Legacy applicant operations are documented in [docs/legacy-import.md](docs/legacy-import.md). Production operations, email, backups, and incident procedures are in [docs/operations.md](docs/operations.md). Security boundaries and role definitions are in [docs/security.md](docs/security.md).
 
-RLS is the primary data boundary; server authorization remains mandatory. Documents belong in a private bucket with short-lived signed URLs and content-type/size validation. Keep reviewer notes in the separately protected table. Log decisions, role changes, exports, imports, claims, and source changes without secrets or document content.
+## External directory
 
-Enable Supabase point-in-time recovery or daily backups before launch. Test restore procedures quarterly. In an incident, rotate affected secrets, pause imports/email, preserve audit records, restore if needed, and notify affected parties according to EFF policy and applicable law. Exports are permission-scoped, omit restricted fields by default, and create an audit event.
+Each source has its own parser/adapter. Valid records publish automatically; suspicious or malformed records enter `scholarship_exceptions`. Canonical URLs and normalized titles prevent routine duplicates. Expired fixed-deadline records archive after the configured grace period and are not deleted. Source observations and field-change history remain auditable. Applicants can save listings, schedule reminders, and report problems.
 
-## Intentionally configuration-dependent
+Source fetching uses a descriptive user agent, low frequency, timeouts, run locks, failure backoff, and automatic pause after repeated structural failures. Add or change adapters in `src/lib/importers/adapters.ts`, update fixtures/tests, increment the parser version, and test before production deployment.
 
-Award values, eligibility, deadlines, legal terms, disbursement authorization, demographic questions, retention rules, grace periods, reminder timing, source permission dates, and public domain/email identity are not invented in code. They must be approved and configured by EFF before a cycle opens.
+## Configuration boundaries
+
+EFF must explicitly approve program eligibility, legal terms, deadlines, award amounts, payment/disbursement authorization, retention schedules, source permission dates/notes, and any new demographic questions. The portal does not move money or store banking/card data.
