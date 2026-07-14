@@ -6,3 +6,7 @@ coverage
 *.log
 *.tsbuildinfo
 .vercel
+work/
+supabase/.temp/
+
+.vercel
