@@ -1,17 +1,25 @@
+import Link from "next/link";
 import { ExternalLink,Search } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-type Params={q?:string;level?:string;deadline?:string};
+
+type Params={q?:string;level?:string;deadline?:string;page?:string};
+const PAGE_SIZE=24;
+
 export default async function Scholarships({searchParams}:{searchParams:Promise<Params>}){
-  const params=await searchParams;const db=await createClient();
-  let query=db.from("external_scholarships").select("id,title,sponsor,amount_text,deadline_kind,deadline,original_url,eligibility").not("published_at","is",null).is("archived_at",null).order("deadline",{ascending:true,nullsFirst:false}).limit(100);
+  const params=await searchParams;
+  const page=Math.max(1,Number.parseInt(params.page??"1",10)||1);
+  const db=await createClient();
+  let query=db.from("external_scholarships").select("id,title,sponsor,amount_text,deadline_kind,deadline,original_url,eligibility",{count:"exact"}).not("published_at","is",null).is("archived_at",null).order("deadline",{ascending:true,nullsFirst:false}).range((page-1)*PAGE_SIZE,page*PAGE_SIZE-1);
   if(params.q)query=query.textSearch("title",params.q,{type:"websearch",config:"english"});
   if(params.deadline==="rolling")query=query.eq("deadline_kind","rolling");else query=query.or(`deadline.gte.${new Date().toISOString().slice(0,10)},deadline.is.null`);
   if(params.level&&params.level!=="all")query=query.contains("eligibility",{academic_levels:[params.level]});
-  const {data,error}=await query;const scholarships=data??[];
+  const {data,error,count}=await query;
+  const scholarships=data??[],total=count??0,totalPages=Math.max(1,Math.ceil(total/PAGE_SIZE));
+  const pageHref=(nextPage:number)=>{const queryParams=new URLSearchParams();if(params.q)queryParams.set("q",params.q);if(params.level)queryParams.set("level",params.level);if(params.deadline)queryParams.set("deadline",params.deadline);queryParams.set("page",String(nextPage));return `/scholarships?${queryParams}`;};
   return <main className="section white"><div className="shell">
     <div className="eyebrow">Independent opportunities</div><h2>External scholarship directory</h2><p className="muted">Search opportunities discovered from trusted sources and follow the original provider’s link to apply.</p>
     <form className="card scholarship-filters"><label>Keywords<input name="q" defaultValue={params.q} placeholder="Scholarship, major, sponsor…"/></label><label>Academic level<select name="level" defaultValue={params.level??"all"}><option value="all">All levels</option><option value="high school">High school</option><option value="undergraduate">Undergraduate</option><option value="graduate">Graduate</option></select></label><label>Deadline<select name="deadline" defaultValue={params.deadline??"upcoming"}><option value="upcoming">Upcoming</option><option value="rolling">Rolling or recurring</option></select></label><button className="button" type="submit"><Search size={17}/> Search</button></form>
     <div className="notice"><strong>About external scholarships</strong><br/>These opportunities are offered by independent organizations. EFF does not control their eligibility, deadlines, funding, selection, or application systems. Always confirm details on the provider’s website.</div>
-    {error?<div className="directory-empty"><h3>The directory is temporarily unavailable</h3><p className="muted">Please try again shortly.</p></div>:scholarships.length?<><p className="muted directory-count">{scholarships.length} opportunity{scholarships.length===1?"":"ies"}</p><div className="scholarship-grid">{scholarships.map(item=><article className="card" key={item.id}><div className="eyebrow">{item.deadline_kind==="fixed"&&item.deadline?`Due ${new Date(`${item.deadline}T12:00:00`).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"})}`:item.deadline_kind}</div><h3>{item.title}</h3>{item.sponsor&&<p className="muted">Offered by {item.sponsor}</p>}{item.amount_text&&<p><strong>{item.amount_text}</strong></p>}<a className="card-link" href={item.original_url} target="_blank" rel="noopener noreferrer">View provider details <ExternalLink size={15}/></a></article>)}</div></>:<div className="directory-empty"><h3>No matching scholarships yet</h3><p className="muted">The automatic source importers run daily. Try another search or check back soon.</p></div>}
+    {error?<div className="directory-empty"><h3>The directory is temporarily unavailable</h3><p className="muted">Please try again shortly.</p></div>:scholarships.length?<><p className="muted directory-count">{total} {total===1?"opportunity":"opportunities"} · Page {page} of {totalPages}</p><div className="scholarship-grid">{scholarships.map(item=><article className="card" key={item.id}><div className="eyebrow">{item.deadline_kind==="fixed"&&item.deadline?`Due ${new Date(`${item.deadline}T12:00:00`).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"})}`:item.deadline_kind}</div><h3>{item.title}</h3>{item.sponsor&&<p className="muted">Offered by {item.sponsor}</p>}{item.amount_text&&<p><strong>{item.amount_text}</strong></p>}<a className="card-link" href={item.original_url} target="_blank" rel="noopener noreferrer">View provider details <ExternalLink size={15}/></a></article>)}</div>{totalPages>1&&<nav className="pagination" aria-label="Scholarship pages">{page>1?<Link className="button outline" href={pageHref(page-1)}>Previous</Link>:<span/>}<span>Page {page} of {totalPages}</span>{page<totalPages?<Link className="button" href={pageHref(page+1)}>Next</Link>:<span/>}</nav>}</>:<div className="directory-empty"><h3>No matching scholarships yet</h3><p className="muted">The automatic source importers run daily. Try another search or check back soon.</p></div>}
   </div></main>;
 }
