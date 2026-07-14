@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
     { cookies: { getAll: () => request.cookies.getAll(), setAll(cookies:{name:string;value:string;options:CookieOptions}[]) { cookies.forEach(({name,value}) => request.cookies.set(name,value)); response=NextResponse.next({request}); cookies.forEach(({name,value,options}) => response.cookies.set(name,value,options)); } } }
   );
   const { data: { user } } = await supabase.auth.getUser();
-  const protectedPath = request.nextUrl.pathname.startsWith("/dashboard") || request.nextUrl.pathname.startsWith("/profile");
+  const protectedPath = ["/dashboard","/profile","/applications","/admin"].some(path=>request.nextUrl.pathname.startsWith(path));
   if (protectedPath && !user) { const url=request.nextUrl.clone(); url.pathname="/sign-in"; url.searchParams.set("next",request.nextUrl.pathname); return NextResponse.redirect(url); }
   if (user && ["/sign-in","/sign-up"].includes(request.nextUrl.pathname)) { const url=request.nextUrl.clone(); url.pathname="/dashboard"; url.search=""; return NextResponse.redirect(url); }
   return response;
