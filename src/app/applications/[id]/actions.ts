@@ -1,0 +1,5 @@
+"use server";
+import {revalidatePath} from "next/cache";
+import {createClient} from "@/lib/supabase/server";
+export async function acceptAward(formData:FormData){const id=String(formData.get("application_id")??"");const supabase=await createClient();const {error}=await supabase.rpc("accept_award",{p_application_id:id});if(error)throw new Error(error.message);revalidatePath(`/applications/${id}`);revalidatePath("/dashboard")}
+export async function respondToRequest(formData:FormData){const id=String(formData.get("application_id")??"");const requestId=String(formData.get("request_id")??"");const response=String(formData.get("response")??"").trim();if(!response)throw new Error("Please enter your response.");const supabase=await createClient();const {error}=await supabase.rpc("respond_to_information_request",{p_request_id:requestId,p_response:response});if(error)throw new Error(error.message);revalidatePath(`/applications/${id}`);revalidatePath("/dashboard")}
