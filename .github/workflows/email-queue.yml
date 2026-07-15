@@ -15,9 +15,13 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Process due portal emails
+        if: ${{ secrets.CRON_SECRET != '' }}
         env:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
           curl --fail-with-body --retry 3 --retry-all-errors \
             --header "Authorization: Bearer ${CRON_SECRET}" \
             https://portal.estherfundsfoundation.org/api/cron/emails
+      - name: Explain missing scheduler credential
+        if: ${{ secrets.CRON_SECRET == '' }}
+        run: echo "Email scheduler is waiting for the repository CRON_SECRET."
