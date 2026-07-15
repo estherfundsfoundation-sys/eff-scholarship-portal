@@ -43,6 +43,8 @@ export async function GET(request: NextRequest) {
       await db.from("messages").update({status: "sent", provider_id: result.data?.id, sent_at: now, payload_private: null, attempts: message.attempts + 1}).eq("id", message.message_id).eq("status", "processing");
       if (message.legacy_token_id) await db.from("legacy_claim_tokens").update({sent_at: now}).eq("id", message.legacy_token_id);
       sentCount += 1;
+    } else if (["daily_quota_exceeded","monthly_quota_exceeded"].includes(result.error.name)) {
+      await db.from("messages").update({status:"queued",next_attempt_at:new Date(Date.now()+12*60*60*1000).toISOString(),last_error_safe:"Email service quota reached; delivery is safely paused and will retry."}).eq("id",message.message_id).eq("status","processing");
     } else {
       const attempts = message.attempts + 1;
       const delayMinutes = Math.min(360, 2 ** Math.min(attempts, 8));
