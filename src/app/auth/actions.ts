@@ -15,15 +15,17 @@ export async function signUp(formData:FormData){
   const email=String(formData.get("email")??"").trim().toLowerCase();
   const password=String(formData.get("password")??"");
   const next=safeNext(formData.get("next"));
+  const explicitClaimToken=String(formData.get("claimToken")??"").trim();
   if(legalName.length<2||password.length<10)redirect(`/sign-up?error=Please+enter+your+legal+name+and+a+password+of+at+least+10+characters.&next=${encodeURIComponent(next)}`);
 
   // A private legacy claim link already proves control of the invited inbox.
   // Create these accounts as confirmed so a surge of imported students is not
   // blocked by an authentication-email quota.
   const claimMatch=next.match(/^\/claim\/([A-Za-z0-9_-]+)$/);
-  if(claimMatch){
+  const claimToken=/^[A-Za-z0-9_-]+$/.test(explicitClaimToken)?explicitClaimToken:claimMatch?.[1];
+  if(claimToken){
     const admin=createAdminClient();
-    const {data:invitedEmail,error:claimError}=await admin.rpc("legacy_claim_invitation_email",{p_token:claimMatch[1]});
+    const {data:invitedEmail,error:claimError}=await admin.rpc("legacy_claim_invitation_email",{p_token:claimToken});
     if(claimError||!invitedEmail||String(invitedEmail).toLowerCase()!==email)redirect(`/sign-up?error=${encodeURIComponent("Use the same email address that received this private invitation.")}&next=${encodeURIComponent(next)}`);
     const created=await admin.auth.admin.createUser({email,password,email_confirm:true,user_metadata:{legal_name:legalName,preferred_name:preferredName}});
     if(created.error){
@@ -40,7 +42,7 @@ export async function signUp(formData:FormData){
       const signedIn=await supabase.auth.signInWithPassword({email,password});
       if(signedIn.error)redirect(`/sign-in?message=${encodeURIComponent("Your account is ready. Sign in with the password you just created.")}&next=${encodeURIComponent(next)}`);
     }
-    redirect(next);
+    redirect(`/claim/${encodeURIComponent(claimToken)}`);
   }
 
   const requestHeaders=await headers();
