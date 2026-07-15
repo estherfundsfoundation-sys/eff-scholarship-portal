@@ -3,7 +3,7 @@ import {ArrowRight, BookOpen, HeartHandshake, Search, ShieldCheck, Sparkles, Sta
 
 const programs = [
   {title: "Name Your Need Scholarship", text: "Tell us what you need most to stay enrolled. No minimum GPA; verified unmet financial need is what matters.", icon: HeartHandshake, href: "/programs/name-your-need", tag: "Now open"},
-  {title: "For Such a Time as This", text: "Support for students stepping with purpose into an important season of growth.", icon: BookOpen, href: "/programs", tag: "EFF program"},
+  {title: "For Such a Time as This", text: "Rolling need-based support for students navigating a defining season. Multiple recipients will be selected.", icon: BookOpen, href: "/programs/for-such-a-time-as-this", tag: "Now open · rolling"},
   {title: "Emergency Grant", text: "A shorter path for urgent needs that could disrupt a student’s education.", icon: ShieldCheck, href: "/programs", tag: "Coming soon"},
 ];
 
