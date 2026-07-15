@@ -27,8 +27,15 @@ export async function signUp(formData:FormData){
     if(claimError||!invitedEmail||String(invitedEmail).toLowerCase()!==email)redirect(`/sign-up?error=${encodeURIComponent("Use the same email address that received this private invitation.")}&next=${encodeURIComponent(next)}`);
     const created=await admin.auth.admin.createUser({email,password,email_confirm:true,user_metadata:{legal_name:legalName,preferred_name:preferredName}});
     if(created.error){
-      const existingSignIn=await supabase.auth.signInWithPassword({email,password});
-      if(existingSignIn.error)redirect(`/sign-in?message=${encodeURIComponent("An account already exists for this invitation. Sign in or choose Forgot your password.")}&next=${encodeURIComponent(next)}`);
+      // A prior rate-limited signup may have left an unconfirmed user behind.
+      // The private claim token proves inbox control, so safely finish that user.
+      const existing=await admin.auth.admin.generateLink({type:"recovery",email});
+      const existingUser=existing.data?.user;
+      if(existing.error||!existingUser)redirect(`/sign-in?message=${encodeURIComponent("An account already exists for this invitation. Sign in or choose Forgot your password.")}&next=${encodeURIComponent(next)}`);
+      const repaired=await admin.auth.admin.updateUserById(existingUser.id,{password,email_confirm:true,user_metadata:{legal_name:legalName,preferred_name:preferredName}});
+      if(repaired.error)redirect(`/sign-in?message=${encodeURIComponent("Your account exists, but we could not finish its setup. Choose Forgot your password.")}&next=${encodeURIComponent(next)}`);
+      const repairedSignIn=await supabase.auth.signInWithPassword({email,password});
+      if(repairedSignIn.error)redirect(`/sign-in?message=${encodeURIComponent("Your account is ready. Sign in with the password you just created.")}&next=${encodeURIComponent(next)}`);
     }else{
       const signedIn=await supabase.auth.signInWithPassword({email,password});
       if(signedIn.error)redirect(`/sign-in?message=${encodeURIComponent("Your account is ready. Sign in with the password you just created.")}&next=${encodeURIComponent(next)}`);
