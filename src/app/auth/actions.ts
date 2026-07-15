@@ -45,11 +45,36 @@ export async function signUp(formData:FormData){
     redirect(`/claim/${encodeURIComponent(claimToken)}`);
   }
 
+  // Generate the verification link server-side and deliver it through Resend.
+  // Supabase's hosted email quota is intentionally not used, so a public launch
+  // surge cannot block otherwise-valid student registrations.
   const requestHeaders=await headers();
   const origin=requestHeaders.get("origin")??"https://portal.estherfundsfoundation.org";
-  const {error}=await supabase.auth.signUp({email,password,options:{data:{legal_name:legalName,preferred_name:preferredName},emailRedirectTo:`${origin}/auth/callback?next=${encodeURIComponent(next)}`}});
-  if(error)redirect(`/sign-up?error=${encodeURIComponent(error.message)}&next=${encodeURIComponent(next)}`);
-  redirect(`/sign-in?message=${encodeURIComponent("Check your email to verify your account, then sign in.")}&next=${encodeURIComponent(next)}`);
+  const admin=createAdminClient();
+  const generated=await admin.auth.admin.generateLink({type:"signup",email,password,options:{data:{legal_name:legalName,preferred_name:preferredName}}});
+  if(generated.error){
+    // A prior quota-limited attempt may already have created the user. Prove
+    // inbox control with a recovery link and let them finish account setup.
+    const recovery=await admin.auth.admin.generateLink({type:"recovery",email});
+    const tokenHash=recovery.data?.properties?.hashed_token;
+    if(recovery.error||!tokenHash)redirect(`/sign-in?message=${encodeURIComponent("An account already exists for this email. Sign in or choose Forgot your password.")}&next=${encodeURIComponent(next)}`);
+    const resetUrl=new URL("/auth/confirm",origin);
+    resetUrl.searchParams.set("token_hash",tokenHash);
+    resetUrl.searchParams.set("type","recovery");
+    resetUrl.searchParams.set("next","/reset-password");
+    const {error:deliveryError}=await getResend().emails.send({from:emailFrom,to:email,subject:"Finish setting up your EFF Scholarship Portal account",html:`<div style="font-family:Arial,sans-serif;line-height:1.6;color:#2d1748"><h1 style="color:#42127F">Finish setting up your portal account</h1><p>An earlier registration attempt started an account for this email. Use the secure button below to verify your inbox and create your password.</p><p><a href="${resetUrl.toString()}" style="display:inline-block;background:#42127F;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">Finish my account</a></p><p>Use only the newest email. Questions? nationals@estherfundsinc.org</p></div>`,text:`Finish setting up your EFF Scholarship Portal account: ${resetUrl.toString()}\n\nUse only the newest email.`});
+    if(deliveryError)redirect(`/sign-up?error=${encodeURIComponent("We could not send your secure setup email. Please try again shortly.")}&next=${encodeURIComponent(next)}`);
+    redirect(`/sign-in?message=${encodeURIComponent("Check your email for a secure link to finish setting up your account. Use only the newest message.")}&next=${encodeURIComponent(next)}`);
+  }
+  const tokenHash=generated.data.properties?.hashed_token;
+  if(!tokenHash)redirect(`/sign-up?error=${encodeURIComponent("We could not create your secure verification link. Please try again.")}&next=${encodeURIComponent(next)}`);
+  const verifyUrl=new URL("/auth/confirm",origin);
+  verifyUrl.searchParams.set("token_hash",tokenHash);
+  verifyUrl.searchParams.set("type","signup");
+  verifyUrl.searchParams.set("next",next);
+  const {error:deliveryError}=await getResend().emails.send({from:emailFrom,to:email,subject:"Verify your EFF Scholarship Portal account",html:`<div style="font-family:Arial,sans-serif;line-height:1.6;color:#2d1748"><h1 style="color:#42127F">Verify your portal account</h1><p>Welcome to the Esther Funds Foundation Scholarship Portal. Verify your email address to securely enter your account.</p><p><a href="${verifyUrl.toString()}" style="display:inline-block;background:#42127F;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">Verify my email</a></p><p>Use only the newest email. Questions? nationals@estherfundsinc.org</p></div>`,text:`Verify your EFF Scholarship Portal account: ${verifyUrl.toString()}\n\nUse only the newest email.`});
+  if(deliveryError)redirect(`/sign-up?error=${encodeURIComponent("We could not send your verification email. Please try again shortly.")}&next=${encodeURIComponent(next)}`);
+  redirect(`/sign-in?message=${encodeURIComponent("Check your email to verify your account, then sign in. Use only the newest message.")}&next=${encodeURIComponent(next)}`);
 }
 export async function requestPasswordReset(formData:FormData){const email=String(formData.get("email")??"").trim().toLowerCase();const requestHeaders=await headers();const origin=requestHeaders.get("origin")??process.env.NEXT_PUBLIC_APP_URL!;try{const admin=createAdminClient();const {data,error}=await admin.auth.admin.generateLink({type:"recovery",email});if(error)throw error;const tokenHash=data.properties?.hashed_token;if(!tokenHash)throw new Error("Recovery token was not generated");const resetUrl=new URL("/auth/confirm",origin);resetUrl.searchParams.set("token_hash",tokenHash);resetUrl.searchParams.set("type","recovery");resetUrl.searchParams.set("next","/reset-password");const {error:emailError}=await getResend().emails.send({from:emailFrom,to:email,subject:"Create your Esther Funds Foundation portal password",html:`<div style="font-family:Arial,sans-serif;line-height:1.6;color:#2d1748"><h1 style="color:#42127F">Create your portal password</h1><p>Use the secure button below to create your password for the Esther Funds Foundation Scholarship Portal.</p><p><a href="${resetUrl.toString()}" style="display:inline-block;background:#42127F;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">Create my password</a></p><p>This one-time link expires. If you requested more than one email, use only the newest message.</p><p>Questions? nationals@estherfundsinc.org</p></div>`,text:`Create your Esther Funds Foundation Scholarship Portal password: ${resetUrl.toString()}\n\nThis one-time link expires. If you requested more than one email, use only the newest message.`});if(emailError)throw emailError;}catch(error){console.error("Password recovery email could not be sent",error);}redirect(`/forgot-password?message=${encodeURIComponent("If that email has an account, a secure reset link is on its way. Use only the newest email; earlier links expire automatically.")}`);}
 export async function updatePassword(formData:FormData){const supabase=await createClient();const password=String(formData.get("password")??"");if(password.length<10)redirect("/reset-password?error=Password+must+be+at+least+10+characters.");const {error}=await supabase.auth.updateUser({password});if(error)redirect(`/reset-password?error=${encodeURIComponent(error.message)}`);redirect("/dashboard?message=Password+updated.");}

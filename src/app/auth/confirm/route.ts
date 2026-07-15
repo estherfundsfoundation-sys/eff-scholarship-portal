@@ -13,5 +13,6 @@ export async function GET(request:Request){
     const {error}=await supabase.auth.verifyOtp({type,token_hash:tokenHash});
     if(!error)return NextResponse.redirect(new URL(next,url.origin));
   }
-  return NextResponse.redirect(new URL("/forgot-password?error=That+reset+link+is+invalid+or+expired.+Request+a+new+link+and+use+only+the+newest+email.",url.origin));
+  const destination=type==="recovery"?"/forgot-password":"/sign-up";
+  return NextResponse.redirect(new URL(`${destination}?error=${encodeURIComponent("That secure link is invalid or expired. Request a new link and use only the newest email.")}`,url.origin));
 }
