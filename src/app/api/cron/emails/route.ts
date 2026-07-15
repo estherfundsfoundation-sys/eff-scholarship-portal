@@ -6,7 +6,7 @@ function escapeHtml(value: string) {return value.replace(/[&<>'"]/g, char => ({"
 
 type EmailPayload = {name?: string; claim_url?: string; status?: string; message?: string; item?: string; due_at?: string | null; amount?: number | string | null; acceptance_deadline?: string | null; application_path?: string; title?:string; deadline?:string|null; scholarship_path?:string};
 function renderMessage(templateKey: string, payload: EmailPayload) {
-  const site = (process.env.NEXT_PUBLIC_SITE_URL ?? process.env.NEXT_PUBLIC_APP_URL ?? "https://he-flame.vercel.app").replace(/\/$/, "");
+  const site = "https://he-flame.vercel.app";
   const name = escapeHtml(payload.name ?? "Applicant");
   const portalUrl = `${site}${payload.application_path ?? "/dashboard"}`;
   const button = `<p><a href="${escapeHtml(portalUrl)}" style="display:inline-block;background:#42127f;color:#fff;padding:12px 18px;text-decoration:none;border-radius:6px">Open your secure portal</a></p>`;
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
   for (const message of messages ?? []) {
     const payload = message.payload_private as EmailPayload | null;
     if (!payload) continue;
-    const templateKey=message.template_key??"legacy_claim";const configured=templates?.find(t=>t.event_key===templateKey);const site=(process.env.NEXT_PUBLIC_SITE_URL??process.env.NEXT_PUBLIC_APP_URL??"https://he-flame.vercel.app").replace(/\/$/,"");const rendered=configured?{subject:applyTemplate(configured.subject,payload,site),html:applyTemplate(configured.body,payload,site)}:renderMessage(templateKey,payload);
+    const templateKey=message.template_key??"legacy_claim";const configured=templates?.find(t=>t.event_key===templateKey);const site="https://he-flame.vercel.app";const rendered=configured?{subject:applyTemplate(configured.subject,payload,site),html:applyTemplate(configured.body,payload,site)}:renderMessage(templateKey,payload);
     const result = await resend.emails.send({
       from: emailFrom,
       to: message.recipient,
