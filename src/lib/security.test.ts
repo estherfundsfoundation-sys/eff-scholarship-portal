@@ -1,0 +1,3 @@
+import {describe,expect,it} from "vitest";import {escapeHtml,safeInternalPath} from "./security";
+describe("redirect safety",()=>{it("keeps internal paths",()=>expect(safeInternalPath("/applications/123?tab=status")).toBe("/applications/123?tab=status"));it.each(["https://evil.test","//evil.test","/\\evil.test","javascript:alert(1)",null])("rejects unsafe destination %s",value=>expect(safeInternalPath(value)).toBe("/dashboard"))});
+describe("HTML escaping",()=>{it("escapes user-controlled content",()=>expect(escapeHtml(`<img src=x onerror='go()'>&`)).toBe("&lt;img src=x onerror=&#39;go()&#39;&gt;&amp;"))});
