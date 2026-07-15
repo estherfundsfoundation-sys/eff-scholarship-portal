@@ -1,0 +1,23 @@
+name: Process student email queue
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: student-email-queue
+  cancel-in-progress: false
+
+jobs:
+  deliver:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Process due portal emails
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          curl --fail-with-body --retry 3 --retry-all-errors \
+            --header "Authorization: Bearer ${CRON_SECRET}" \
+            https://portal.estherfundsfoundation.org/api/cron/emails

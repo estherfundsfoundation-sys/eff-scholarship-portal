@@ -2,12 +2,18 @@ project_id = "eff-scholarship-portal"
 
 [auth]
 enabled = true
-site_url = "https://eff-scholarship-portal.vercel.app"
+site_url = "https://portal.estherfundsfoundation.org"
 additional_redirect_urls = [
   "http://localhost:3000/**",
+  "https://portal.estherfundsfoundation.org/**",
   "https://eff-scholarship-portal.vercel.app/**",
   "https://he-*-esther-funds.vercel.app/**"
 ]
+
+[auth.rate_limit]
+email_sent = 1000
+sign_in_sign_ups = 300
+token_verifications = 300
 
 [auth.email]
 enable_signup = true
