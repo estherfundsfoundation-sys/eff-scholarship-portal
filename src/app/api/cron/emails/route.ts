@@ -3,6 +3,9 @@ import {createAdminClient} from "@/lib/supabase/admin";
 import {emailFrom, getResend} from "@/lib/email";
 
 function escapeHtml(value: string) {return value.replace(/[&<>'"]/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]!));}
+const sleep = (milliseconds: number) => new Promise(resolve => setTimeout(resolve, milliseconds));
+const quotaErrors = new Set(["daily_quota_exceeded", "monthly_quota_exceeded"]);
+const rateLimitErrors = new Set(["rate_limit_exceeded", "too_many_requests"]);
 
 type EmailPayload = {name?: string; claim_url?: string; status?: string; message?: string; item?: string; due_at?: string | null; amount?: number | string | null; acceptance_deadline?: string | null; application_path?: string; title?:string; deadline?:string|null; scholarship_path?:string};
 function renderMessage(templateKey: string, payload: EmailPayload) {
@@ -28,9 +31,16 @@ export async function GET(request: NextRequest) {
   const {data: messages, error} = await db.rpc("dequeue_email_messages", {p_limit: 25});
   if (error) return NextResponse.json({error: "Queue unavailable"}, {status: 500});
   let sentCount = 0;
-  for (const message of messages ?? []) {
+  let rateLimitedCount = 0;
+  for (const [index, message] of (messages ?? []).entries()) {
+    // Resend rate limits apply across the entire team. Keep this worker below even
+    // the lower legacy limit so password resets and other services retain capacity.
+    if (index > 0) await sleep(650);
     const payload = message.payload_private as EmailPayload | null;
-    if (!payload) continue;
+    if (!payload) {
+      await db.from("messages").update({status:"failed",last_error_safe:"This queued email is missing its secure delivery data."}).eq("id",message.message_id).eq("status","processing");
+      continue;
+    }
     const templateKey=message.template_key??"legacy_claim";const configured=templates?.find(t=>t.event_key===templateKey);const site="https://portal.estherfundsfoundation.org";const rendered=configured?{subject:applyTemplate(configured.subject,payload,site),html:applyTemplate(configured.body,payload,site)}:renderMessage(templateKey,payload);
     const result = await resend.emails.send({
       from: emailFrom,
@@ -43,13 +53,19 @@ export async function GET(request: NextRequest) {
       await db.from("messages").update({status: "sent", provider_id: result.data?.id, sent_at: now, payload_private: null, attempts: message.attempts + 1}).eq("id", message.message_id).eq("status", "processing");
       if (message.legacy_token_id) await db.from("legacy_claim_tokens").update({sent_at: now}).eq("id", message.legacy_token_id);
       sentCount += 1;
-    } else if (["daily_quota_exceeded","monthly_quota_exceeded"].includes(result.error.name)) {
+    } else if (quotaErrors.has(result.error.name)) {
       await db.from("messages").update({status:"queued",next_attempt_at:new Date(Date.now()+12*60*60*1000).toISOString(),last_error_safe:"Email service quota reached; delivery is safely paused and will retry."}).eq("id",message.message_id).eq("status","processing");
+    } else if (rateLimitErrors.has(result.error.name)) {
+      // A 429 is temporary and must never consume the message's failure budget.
+      await db.from("messages").update({status:"queued",next_attempt_at:new Date(Date.now()+2*60*1000).toISOString(),last_error_safe:"Email delivery is briefly paced and will retry automatically."}).eq("id",message.message_id).eq("status","processing");
+      rateLimitedCount += 1;
     } else {
       const attempts = message.attempts + 1;
       const delayMinutes = Math.min(360, 2 ** Math.min(attempts, 8));
       await db.from("messages").update({status: attempts >= 8 ? "failed" : "queued", attempts, next_attempt_at: new Date(Date.now() + delayMinutes * 60000).toISOString(), last_error_safe: "Email provider rejected this delivery attempt."}).eq("id", message.message_id).eq("status", "processing");
     }
   }
-  return NextResponse.json({processed: messages?.length ?? 0, sent: sentCount});
+  return NextResponse.json({processed: messages?.length ?? 0, sent: sentCount, rateLimited: rateLimitedCount});
 }
+
+export const maxDuration = 60;
