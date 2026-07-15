@@ -15,7 +15,7 @@ export async function inviteStaff(formData: FormData) {
   const {data: existing} = await supabase.from("profiles").select("id").eq("primary_email", email).maybeSingle();
   profileId = existing?.id;
   if (!profileId) {
-    const site = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://he-flame.vercel.app").replace(/\/$/, "");
+    const site = "https://portal.estherfundsfoundation.org";
     const invitation = await admin.auth.admin.inviteUserByEmail(email, {redirectTo: `${site}/auth/callback?next=/admin`});
     if (invitation.error || !invitation.data.user) throw new Error("The staff invitation could not be sent.");
     profileId = invitation.data.user.id;
