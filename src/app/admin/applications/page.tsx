@@ -11,9 +11,13 @@ const answer=(answers:Answer[],key:string)=>answers.find(item=>item.question_key
 export default async function ApplicationsAdmin({searchParams}:{searchParams:Promise<Params>}){
   const params=await searchParams;const {supabase,roles}=await requireStaff();
   const canBulk=roles.some(item=>["program_admin","super_admin"].includes(item.role));
-  let query=supabase.from("applications").select("id,status,submitted_at,updated_at,profiles!applications_applicant_id_fkey(legal_name,primary_email,institution),program_cycles(name,programs(name)),application_answers(question_key,value)").order("updated_at",{ascending:false}).limit(500);
+  // Keep the initial server-render payload bounded. Loading hundreds of
+  // applications together with every answer can intermittently exceed the
+  // serverless response window and make the command-center link look broken.
+  let query=supabase.from("applications").select("id,status,submitted_at,updated_at,profiles!applications_applicant_id_fkey(legal_name,primary_email,institution),program_cycles(name,programs(name)),application_answers(question_key,value)").order("updated_at",{ascending:false}).limit(200);
   if(params.status)query=query.eq("status",params.status);
-  const {data,error}=await query;if(error)throw new Error("Applications could not be loaded.");
+  const {data,error}=await query;
+  if(error)return <main className="section white"><div className="shell"><Link href="/admin" className="card-link">← Command center</Link><div className="notice error-text" style={{marginTop:24}}><strong>The application workspace could not load.</strong><p>Please try again. Your application records were not changed.</p><Link className="button outline" href="/admin/applications">Retry workspace</Link></div></div></main>;
   const min=params.min_amount?Number(params.min_amount):null;const max=params.max_amount?Number(params.max_amount):null;
   const urgentWords=/urgent|emergency|eviction|past due|shut.?off|disconnect|deadline|food|housing|homeless|crisis|tuition balance/i;
   const filtered=(data??[]).filter(item=>{
