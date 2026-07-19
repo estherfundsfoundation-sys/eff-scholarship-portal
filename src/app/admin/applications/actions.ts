@@ -14,10 +14,10 @@ export async function bulkTransitionApplications(formData:FormData){
   if(!ids.length)redirect("/admin/applications?bulk_error="+encodeURIComponent("Select at least one application."));
   if(!allowedStatuses.includes(status))redirect("/admin/applications?bulk_error="+encodeURIComponent("Choose a valid status."));
   if(!reason)redirect("/admin/applications?bulk_error="+encodeURIComponent("Enter the internal reason for this bulk update."));
-  let changed=0;let failed=0;
-  for(const id of ids.slice(0,250)){
-    const {error}=await supabase.rpc("staff_transition_application",{p_application_id:id,p_new_status:status,p_reason:reason,p_applicant_note:applicantNote||null});
-    if(error)failed+=1;else changed+=1;
+  let changed=0;let failed=0;const selected=ids.slice(0,250);
+  for(let from=0;from<selected.length;from+=10){
+    const results=await Promise.all(selected.slice(from,from+10).map(id=>supabase.rpc("staff_transition_application",{p_application_id:id,p_new_status:status,p_reason:reason,p_applicant_note:applicantNote||null})));
+    for(const result of results){if(result.error)failed+=1;else changed+=1}
   }
   revalidatePath("/admin/applications");
   redirect(`/admin/applications?bulk_updated=${changed}&bulk_failed=${failed}`);
