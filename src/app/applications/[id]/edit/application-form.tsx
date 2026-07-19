@@ -48,8 +48,19 @@ export function ApplicationForm({applicationId,children}:{applicationId:string;c
         input.value="";
       }
 
+      // The upload state change can replace the original button before the
+      // browser resumes submission. Passing that detached button to
+      // requestSubmit crashes the page in some browsers, so preserve the
+      // intended action with a hidden field and resume without a submitter.
+      form.querySelector<HTMLInputElement>('input[data-upload-intent="true"]')?.remove();
+      const intent=document.createElement("input");
+      intent.type="hidden";
+      intent.name="intent";
+      intent.value=submitter?.value??"save";
+      intent.dataset.uploadIntent="true";
+      form.appendChild(intent);
       bypassUpload.current=true;
-      form.requestSubmit(submitter??undefined);
+      form.requestSubmit();
     }catch(cause){
       setError(cause instanceof Error?cause.message:"Your documents could not be uploaded. Please retry.");
     }finally{
