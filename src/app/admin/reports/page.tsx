@@ -14,7 +14,7 @@ export default async function Reports(){
     supabase.from("awards").select("id",{count:"exact",head:true}),
     Promise.all(statusNames.map(status=>supabase.from("applications").select("id",{count:"exact",head:true}).eq("status",status))),
     Promise.all(legacyNames.map(status=>supabase.from("legacy_application_records").select("id",{count:"exact",head:true}).eq("status",status))),
-    supabase.from("program_cycles").select("id,name,programs(name)").order("created_at",{ascending:false}),
+    supabase.from("program_cycles").select("id,name,programs(name)").order("opens_at",{ascending:false}),
   ]);
   const total=all??0;const submittedTotal=submitted??0;
   const statuses=statusNames.map((name,index)=>[name,statusResults[index].count??0] as const).filter(([,count])=>count>0);
