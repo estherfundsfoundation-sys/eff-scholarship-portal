@@ -22,7 +22,7 @@ function parseDeadline(value:string){
   const hasYear=/\b(?:19|20)\d{2}\b/.test(clean);
   let parsed=new Date(hasYear?clean:`${clean}, ${now.getUTCFullYear()}`);
   if(!hasYear&&!Number.isNaN(parsed.valueOf())&&parsed.valueOf()<now.valueOf()-45*86400000)parsed=new Date(`${clean}, ${now.getUTCFullYear()+1}`);
-  return Number.isNaN(parsed.valueOf())?null:{kind:"fixed",date:parsed.toISOString().slice(0,10)};
+  return Number.isNaN(parsed.valueOf())?null:{kind:"date",date:parsed.toISOString().slice(0,10)};
 }
 function validate(item:ParsedScholarship){if(item.title.length<4||item.title.length>240)throw new Error("Invalid title");const url=new URL(item.originalUrl);if(!/^https?:$/.test(url.protocol))throw new Error("Unsafe provider URL");if(/application fee|processing fee|pay to apply/i.test(item.title))throw new Error("Possible fee-based listing");const parsed=parseDeadline(item.deadlineText);if(!parsed)throw new Error("Unrecognized deadline");return {url:canonical(item.originalUrl),deadline:parsed};}
 async function fetchText(url:string){const contact=process.env.IMPORTER_CONTACT_EMAIL??"notifications@estherfundsinc.org";const response=await fetch(url,{headers:{"User-Agent":`EFFScholarshipDirectory/1.0 (+mailto:${contact})`,Accept:"text/html,application/rss+xml;q=0.9"},signal:AbortSignal.timeout(20000),cache:"no-store"});if(!response.ok)throw new Error(`Source returned HTTP ${response.status}`);return response.text();}

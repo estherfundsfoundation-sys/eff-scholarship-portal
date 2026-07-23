@@ -226,7 +226,7 @@ upserted as (
     seed.summary,
     seed.amount_text,
     seed.amount_numeric,
-    'fixed'::public.deadline_kind,
+    'date'::public.deadline_kind,
     seed.deadline,
     seed.original_url,
     rtrim(seed.original_url, '/'),
