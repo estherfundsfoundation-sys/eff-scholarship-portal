@@ -82,16 +82,28 @@ export async function submitHowardCase(formData:FormData){
   if(saved.error)redirect(`/resources/howard-help?error=${encodeURIComponent("Your case could not be saved. Please try again.")}#case-intake`);
   try{
     const resend=getResend();const verifyUrl=`${origin}/resources/howard-help/verify?token=${rawToken}`;
-    const sent=await resend.emails.send({from:emailFrom,to:parsed.data.email,replyTo:"nationals@estherfundsinc.org",subject:`Verify your EFF Howard Help case ${caseCode}`,text:`Hello ${parsed.data.preferredName||parsed.data.studentName},
+    const sent=await resend.emails.send({from:emailFrom,to:parsed.data.email,replyTo:"nationals@estherfundsinc.org",subject:`We received your Howard Help case ${caseCode} — verify your email`,html:`<div style="font-family:Arial,sans-serif;line-height:1.6;color:#2d1748;max-width:640px;margin:0 auto">
+<p style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7b48a6">Esther Funds Foundation · Howard Help Desk</p>
+<h1 style="color:#42127F;font-size:28px;line-height:1.2">We received your case.</h1>
+<p>Hello ${parsed.data.preferredName||parsed.data.studentName},</p>
+<p>Thank you for contacting Esther Funds Foundation. EFF does not underestimate the urgency or importance of your need.</p>
+<p>Your case number is <strong>${caseCode}</strong>. One step remains before EFF can contact Howard: verify your email and authorization within 24 hours.</p>
+<p><a href="${verifyUrl}" style="display:inline-block;background:#42127F;color:#fff;padding:13px 20px;border-radius:8px;text-decoration:none;font-weight:700">Verify my email and send my advocacy request</a></p>
+<p>After verification, EFF will automatically send one individualized reinstatement request to Howard University and copy you and EFF. You will receive a second email confirming that the advocacy request was sent.</p>
+<p style="padding:12px 14px;background:#f5f0e6;border-left:4px solid #42127F"><strong>Protect your privacy:</strong> Never email Social Security numbers, passwords, verification codes, tax returns, full financial-account details, or unredacted student IDs.</p>
+<p>Howard University—not EFF—controls enrollment decisions, but complete reinstatement is the relief EFF will request.</p>
+<p>With care,<br/><strong>Esther Funds Foundation</strong><br/>Every Future Fulfilled</p>
+</div>`,text:`Hello ${parsed.data.preferredName||parsed.data.studentName},
 
 Thank you for contacting Esther Funds Foundation. EFF does not underestimate the urgency or importance of your need.
+
+We received your Howard Help Desk case.
+Case number: ${caseCode}
 
 Please verify your email and authorization within 24 hours:
 ${verifyUrl}
 
-After verification, EFF will automatically send one individualized reinstatement request to Howard University, copy you and EFF, and place your case in the EFF Howard Help Desk. Howard University—not EFF—controls enrollment decisions, but complete reinstatement is the relief EFF will request.
-
-Case number: ${caseCode}
+After verification, EFF will automatically send one individualized reinstatement request to Howard University and copy you and EFF. You will receive a second email confirming that the advocacy request was sent. Howard University—not EFF—controls enrollment decisions, but complete reinstatement is the relief EFF will request.
 
 Never email Social Security numbers, passwords, verification codes, tax returns, full financial-account details, or unredacted student IDs.
 
