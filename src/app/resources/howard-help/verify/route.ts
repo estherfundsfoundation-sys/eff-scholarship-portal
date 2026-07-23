@@ -17,14 +17,78 @@ const recipients=(record:{student_type:string;issue_type:string;enrollment_statu
   return [...to];
 };
 
+const confirmationPage=(token:string,caseCode:string)=>`<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Verify your Howard Help case | Esther Funds Foundation</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#f5f0e6;color:#2d1748;font-family:Arial,sans-serif;line-height:1.6}
+    main{min-height:100vh;display:grid;place-items:center;padding:28px}
+    article{width:min(620px,100%);background:#fff;border:1px solid #d9cae8;border-radius:20px;box-shadow:0 18px 50px rgba(66,18,127,.12);padding:clamp(26px,6vw,48px)}
+    .eyebrow{color:#7b48a6;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+    h1{color:#42127f;font-size:clamp(30px,7vw,46px);line-height:1.08;margin:.4rem 0 1rem}
+    .case{background:#f5f0e6;border-left:4px solid #42127f;padding:12px 14px;margin:20px 0}
+    button{width:100%;border:0;border-radius:10px;background:#42127f;color:#fff;cursor:pointer;font-size:17px;font-weight:800;padding:15px 18px}
+    button:hover,button:focus{background:#5d1b9a;outline:3px solid #b799e3;outline-offset:2px}
+    small{display:block;color:#655a70;margin-top:18px}
+  </style>
+</head>
+<body>
+  <main>
+    <article>
+      <div class="eyebrow">Esther Funds Foundation · Howard Help Desk</div>
+      <h1>One final confirmation</h1>
+      <p>Your email link is valid. Press the button below to verify your authorization and send your individualized advocacy request.</p>
+      <div class="case"><strong>Case number:</strong> ${caseCode}</div>
+      <form method="post" action="/resources/howard-help/verify">
+        <input type="hidden" name="token" value="${token}" />
+        <button type="submit">Verify and send my advocacy request</button>
+      </form>
+      <small>This extra confirmation prevents university email-security scanners from submitting your case before you open the message.</small>
+    </article>
+  </main>
+</body>
+</html>`;
+
+function redirectWith(request:NextRequest,params:Record<string,string>){
+  const destination=new URL("/resources/howard-help",request.url);
+  for(const [key,value] of Object.entries(params))destination.searchParams.set(key,value);
+  destination.hash="case-intake";
+  return NextResponse.redirect(destination);
+}
+
+async function findRecord(token:string){
+  if(!/^[a-f0-9]{64}$/.test(token))return {admin:null,record:null};
+  const admin=createAdminClient();
+  const {data:record}=await admin.from("howard_help_cases").select("*").eq("verification_token_hash",hash(token)).maybeSingle();
+  return {admin,record};
+}
+
 export async function GET(request:NextRequest){
-  const token=request.nextUrl.searchParams.get("token")||"";const destination=new URL("/resources/howard-help",request.url);
-  if(!/^[a-f0-9]{64}$/.test(token)){destination.searchParams.set("error","That verification link is invalid.");destination.hash="case-intake";return NextResponse.redirect(destination);}
-  const admin=createAdminClient();const {data:record}=await admin.from("howard_help_cases").select("*").eq("verification_token_hash",hash(token)).maybeSingle();
-  if(!record){destination.searchParams.set("error","That verification link is invalid or no longer available.");destination.hash="case-intake";return NextResponse.redirect(destination);}
-  if(record.advocacy_email_sent_at){destination.searchParams.set("case","verified");destination.searchParams.set("code",record.case_code);destination.hash="case-intake";return NextResponse.redirect(destination);}
-  if(!record.verification_expires_at||new Date(record.verification_expires_at).getTime()<Date.now()){destination.searchParams.set("error","That verification link expired. Contact EFF with your case number for help.");destination.searchParams.set("code",record.case_code);destination.hash="case-intake";return NextResponse.redirect(destination);}
-  const now=new Date().toISOString();const claimed=await admin.from("howard_help_cases").update({status:"sending",verified_at:now,verification_token_hash:null,updated_at:now}).eq("id",record.id).eq("status","pending_verification").select("id").maybeSingle();
+  const token=request.nextUrl.searchParams.get("token")||"";
+  if(!/^[a-f0-9]{64}$/.test(token))return redirectWith(request,{error:"That verification link is invalid."});
+  const {record}=await findRecord(token);
+  if(!record)return redirectWith(request,{error:"That verification link is invalid or no longer available."});
+  if(record.advocacy_email_sent_at)return redirectWith(request,{case:"verified",code:record.case_code});
+  if(!record.verification_expires_at||new Date(record.verification_expires_at).getTime()<Date.now())return redirectWith(request,{error:"That verification link expired. Contact EFF with your case number for help.",code:record.case_code});
+  return new NextResponse(confirmationPage(token,record.case_code),{
+    headers:{"content-type":"text/html; charset=utf-8","cache-control":"no-store, max-age=0"}
+  });
+}
+
+export async function POST(request:NextRequest){
+  const formData=await request.formData();
+  const token=String(formData.get("token")||"");
+  if(!/^[a-f0-9]{64}$/.test(token))return redirectWith(request,{error:"That verification link is invalid."});
+  const {admin,record}=await findRecord(token);
+  if(!admin||!record)return redirectWith(request,{error:"That verification link is invalid or no longer available."});
+  if(record.advocacy_email_sent_at)return redirectWith(request,{case:"verified",code:record.case_code});
+  if(!record.verification_expires_at||new Date(record.verification_expires_at).getTime()<Date.now())return redirectWith(request,{error:"That verification link expired. Contact EFF with your case number for help.",code:record.case_code});
+  const destination=new URL("/resources/howard-help",request.url);
+  const now=new Date().toISOString();const claimed=await admin.from("howard_help_cases").update({status:"sending",verified_at:now,updated_at:now}).eq("id",record.id).eq("status","pending_verification").select("id").maybeSingle();
   if(!claimed.data){destination.searchParams.set("case","pending");destination.searchParams.set("code",record.case_code);destination.hash="case-intake";return NextResponse.redirect(destination);}
   const studentFirst=record.preferred_name||record.student_name;
   const advocacy=`Howard University Enrollment Management and Student Support Team,
