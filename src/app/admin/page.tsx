@@ -1,4 +1,4 @@
-import {Award,BarChart3,ClipboardList,Database,FileDown,HeartHandshake,Mail,ScrollText,Settings,ShieldCheck,Star,UserRound,Users} from "lucide-react";
+import {Award,BarChart3,ClipboardList,Database,FileDown,GraduationCap,HeartHandshake,Mail,ScrollText,Settings,ShieldCheck,Star,UserRound,Users} from "lucide-react";
 import {requireStaff} from "@/lib/auth/staff";
 
 export default async function Admin(){
@@ -7,6 +7,7 @@ export default async function Admin(){
   const counts=await Promise.all(statuses.map(status=>supabase.from("applications").select("id",{count:"exact",head:true}).eq("status",status)));
   const {count:exceptions}=await supabase.from("scholarship_exceptions").select("id",{count:"exact",head:true}).is("resolved_at",null);
   const cards=[
+    {title:"Howard Help Desk",text:"Track verified reinstatement cases, advocacy delivery, Howard responses, outcomes, and petition support.",href:"/admin/howard-help",icon:GraduationCap},
     {title:"Applicant Pool Dashboard",text:"Understand all Name Your Need students, claimed accounts, portal applications, statuses, programs, and awards in one place.",href:"/admin/applicant-pool",icon:BarChart3},
     {title:"Applications",text:"Search submissions, review answers and documents, request information, and record decisions.",href:"/admin/applications",icon:ClipboardList},
     {title:"Reviewer workspace",text:"Complete assigned rubrics, disclose conflicts, and submit locked reviews.",href:"/admin/reviews",icon:Star},

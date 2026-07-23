@@ -17,5 +17,5 @@
     "paths": { "@/*": ["./src/*"] }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "eff-careers-site", "miss-bgr-autumn-2026", "reach-action-hub", "rooted-in-soul-site", "shayna-vincent-site", "tmp"]
 }

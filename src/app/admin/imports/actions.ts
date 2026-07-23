@@ -11,3 +11,11 @@ export async function queueInvitations(formData: FormData) {
   if (error) throw new Error("The invitation batch could not be queued safely.");
   revalidatePath("/admin/imports");
 }
+
+export async function resendInvitation(formData:FormData){
+  const {supabase}=await requireAdmin();
+  const legacyRecordId=String(formData.get("legacy_record_id")??"");
+  const {error}=await supabase.rpc("resend_legacy_claim_invitation",{p_legacy_record_id:legacyRecordId,p_site_url:"https://portal.estherfundsfoundation.org"});
+  if(error)throw new Error(error.message);
+  revalidatePath("/admin/imports");
+}
