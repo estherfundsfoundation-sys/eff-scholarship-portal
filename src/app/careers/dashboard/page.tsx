@@ -67,6 +67,13 @@ export default async function CareersDashboard({ searchParams }: { searchParams:
 
           <aside>
             <div className="card">
+              <ShieldCheck />
+              <h3>Have a board invitation code?</h3>
+              <p className="muted">Enter the private single-use code provided by EFF National Office to open your proposed role and governance terms.</p>
+              <Link className="button" href="/careers/board-invite">Enter invitation code</Link>
+            </div>
+
+            <div className="card" style={{ marginTop: 16 }}>
               <UserRound />
               <h3>Professional profile</h3>
               <p className="muted">{profileComplete ? "Your reusable careers profile is ready." : "Complete the remaining fields before applying."}</p>

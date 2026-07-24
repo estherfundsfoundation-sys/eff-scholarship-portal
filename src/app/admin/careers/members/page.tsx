@@ -81,6 +81,7 @@ export default async function NationalMembersAdmin({ searchParams }: { searchPar
             <h2>Member profiles</h2>
             <p className="muted">Assign verified roles and membership status. Changes are recorded in the administrative history.</p>
           </div>
+          <Link className="button" href="/admin/careers/board-invites">Create board invitation code</Link>
         </div>
 
         {updated && <div className="notice">National member role and status updated.</div>}
