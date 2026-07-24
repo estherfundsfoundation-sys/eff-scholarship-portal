@@ -21,7 +21,7 @@ export default async function CareersDashboard({ searchParams }: { searchParams:
   const [{ data: base }, { data: career }, { data: member }, { data: applications }] = await Promise.all([
     supabase.from("profiles").select("legal_name,preferred_name,primary_email,phone").eq("id", user.id).single(),
     supabase.from("career_profiles").select("location,applicant_type,institution_or_employer,degree_or_field").eq("user_id", user.id).maybeSingle(),
-    supabase.from("national_member_profiles").select("display_name,role_title,membership_status,short_bio").eq("user_id", user.id).maybeSingle(),
+    supabase.from("national_member_profiles").select("display_name,role_title,membership_status,short_bio,board_role_status").eq("user_id", user.id).maybeSingle(),
     supabase.from("career_applications").select("id,role_slug,role_title,category,posting_term,status,created_at,updated_at").order("created_at", { ascending: false }),
   ]);
 
@@ -80,6 +80,20 @@ export default async function CareersDashboard({ searchParams }: { searchParams:
               {member?.role_title && <p><strong>{member.role_title}</strong><br /><small>{member.membership_status ?? "Pending"}</small></p>}
               <Link className="button outline" href="/careers/member-profile">{memberComplete ? "Review member profile" : "Create member profile"}</Link>
             </div>
+
+            {member?.board_role_status && member.board_role_status !== "not_offered" && <div className="card" style={{ marginTop: 16 }}>
+              <ShieldCheck />
+              <h3>Board role onboarding</h3>
+              <p className="muted">{member.board_role_status === "offered"
+                ? "EFF has assigned a proposed board role for your review."
+                : member.board_role_status === "accepted_pending_board_action"
+                  ? "You accepted the proposed role. Formal board action is still required."
+                  : `Board role status: ${member.board_role_status.replaceAll("_", " ")}`}</p>
+              {member?.role_title && <p><strong>{member.role_title}</strong></p>}
+              <Link className="button" href="/careers/board-onboarding">
+                {member.board_role_status === "offered" ? "Review and respond" : "View board role"}
+              </Link>
+            </div>}
 
             <div className="notice" style={{ marginTop: 16 }}>
               <CheckCircle2 />
