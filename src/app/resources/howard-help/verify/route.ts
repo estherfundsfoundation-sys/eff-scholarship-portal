@@ -1,6 +1,7 @@
 import {createHash} from "node:crypto";
 import {NextRequest,NextResponse} from "next/server";
 import {emailFrom,getResend} from "@/lib/email";
+import {createHowardPacketUrl} from "@/lib/howard-packet-token";
 import {createAdminClient} from "@/lib/supabase/admin";
 
 const hash=(token:string)=>createHash("sha256").update(token).digest("hex");
@@ -9,12 +10,28 @@ const recipients=(record:{student_type:string;issue_type:string;enrollment_statu
   const to=new Set<string>(["studentsupport@howard.edu"]);
   if(record.student_type==="Graduate or professional student")to.add("hugsadmission@howard.edu");
   else if(record.student_type==="Incoming transfer")to.add("transfer@howard.edu");
+  else if(record.student_type==="Incoming first-year"){
+    to.add("admission@howard.edu");
+    to.add("enrollmentmanagement@howard.edu");
+  }
   else if(record.student_type.startsWith("Incoming"))to.add("admission@howard.edu");
   else to.add("registrar@howard.edu");
   if(/aid|scholarship|waiver|discount/i.test(record.issue_type))to.add("finaid@howard.edu");
-  if(/balance|payment/i.test(record.issue_type))to.add("bursarhelp@howard.edu");
+  if(/scholarship|balance|payment/i.test(record.issue_type))to.add("bursarhelp@howard.edu");
   if(/housing/i.test(`${record.issue_type} ${record.enrollment_status}`))to.add("hureslife@howard.edu");
   return [...to];
+};
+
+const nextSteps=(record:{student_type:string;issue_type:string;enrollment_status:string})=>{
+  const steps=[
+    "Check BisonHub now and save a dated screenshot of your enrollment, courses, holds, tasks, aid, and balance: https://bisonhub.howard.edu/bisonhub-information-students"
+  ];
+  if(record.student_type==="Incoming first-year")steps.push("For your enrollment-status review, contact enrollmentmanagement@howard.edu and include your EFF case number.");
+  if(/aid|waiver|discount/i.test(record.issue_type))steps.push("For general financial-aid questions, contact finaid@howard.edu.");
+  if(/scholarship|balance|payment/i.test(record.issue_type))steps.push("For a pending outside scholarship, payment, or account balance, contact BursarHelp@howard.edu and use Howard’s Student Financial Services support options: https://financialservices.howard.edu/contact");
+  if(/housing/i.test(`${record.issue_type} ${record.enrollment_status}`))steps.push("If housing or move-in is at risk, contact Residence Life at hureslife@howard.edu or 202-806-9045.");
+  steps.push("Howard may require you to complete its own identity or FERPA permission steps before discussing protected records with EFF: https://howard.edu/registrar/FERPA");
+  return steps.map((step,index)=>`${index+1}. ${step}`).join("\n");
 };
 
 const confirmationPage=(token:string,caseCode:string)=>`<!doctype html>
@@ -91,6 +108,8 @@ export async function POST(request:NextRequest){
   const now=new Date().toISOString();const claimed=await admin.from("howard_help_cases").update({status:"sending",verified_at:now,updated_at:now}).eq("id",record.id).eq("status","pending_verification").select("id").maybeSingle();
   if(!claimed.data){destination.searchParams.set("case","pending");destination.searchParams.set("code",record.case_code);destination.hash="case-intake";return NextResponse.redirect(destination);}
   const studentFirst=record.preferred_name||record.student_name;
+  const studentSteps=nextSteps(record);
+  const packetUrl=createHowardPacketUrl(record.id);
   const advocacy=`Howard University Enrollment Management and Student Support Team,
 
 Esther Funds Foundation is submitting this urgent request with the student’s verified consent. The student is copied so Howard may communicate directly and complete any institution-required identity or FERPA steps.
@@ -130,22 +149,66 @@ https://portal.estherfundsfoundation.org/resources/howard-help`;
   try{
     const resend=getResend();const sent=await resend.emails.send({from:emailFrom,to:recipients(record),cc:[record.email,"nationals@estherfundsinc.org"],replyTo:"nationals@estherfundsinc.org",subject:`Urgent reinstatement request – ${record.student_name} – ${record.case_code}`,text:advocacy});
     if(sent.error)throw new Error(sent.error.message);
+    const advocacySentAt=new Date().toISOString();
     await Promise.all([
-      admin.from("howard_help_cases").update({status:"advocacy_sent",advocacy_email_sent_at:new Date().toISOString(),advocacy_provider_id:sent.data?.id||null,updated_at:new Date().toISOString()}).eq("id",record.id),
-      admin.from("audit_events").insert({actor_id:null,action:"howard_advocacy_email_sent",target_type:"howard_help_case",target_id:record.id,metadata_safe:{case_code:record.case_code,issue_type:record.issue_type}}),
-      resend.emails.send({from:emailFrom,to:record.email,replyTo:"nationals@estherfundsinc.org",subject:`EFF sent your Howard reinstatement request – ${record.case_code}`,text:`Hello ${studentFirst},
+      admin.from("howard_help_cases").update({status:"advocacy_sent",advocacy_email_sent_at:advocacySentAt,advocacy_provider_id:sent.data?.id||null,updated_at:advocacySentAt}).eq("id",record.id),
+      admin.from("audit_events").insert({actor_id:null,action:"howard_advocacy_email_sent",target_type:"howard_help_case",target_id:record.id,metadata_safe:{case_code:record.case_code,issue_type:record.issue_type}})
+    ]);
+    const confirmation=await resend.emails.send({from:emailFrom,to:record.email,replyTo:"nationals@estherfundsinc.org",subject:`EFF sent your Howard reinstatement request – ${record.case_code}`,text:`Hello ${studentFirst},
 
 Your email is verified, and EFF sent your individualized reinstatement request to Howard University. You and nationals@estherfundsinc.org were copied.
 
 EFF requested complete reinstatement, restoration or preservation of your classes and housing, protection of pending aid, and an itemized account review. Howard University controls the enrollment decision, but EFF will continue advocating for the requested outcome.
 
-Reply all when Howard responds so the case remains documented. Do not send Social Security numbers, passwords, verification codes, tax returns, full financial-account details, or unredacted student IDs.
+YOUR PRIVATE KEEP YOUR SEAT ADVOCACY PACKET
+${packetUrl}
+
+The packet includes your EFF letterhead advocacy letter, case timeline, personalized action plan, Howard contact map, evidence checklist, call script, follow-up email template, issue-specific addendum, and case-verification letter. Keep the link private and review the packet for accuracy before sharing it. The link expires in 30 days.
+
+WHAT TO DO NOW
+${studentSteps}
+
+Reply all when Howard responds so the case remains documented. If your BisonHub status changes before Howard emails you, reply with one of these phrases: REINSTATED, HOWARD RESPONDED, NO CHANGE, or NEW DEADLINE. Include a redacted screenshot only if it is safe to share.
+
+Do not send Social Security numbers, passwords, verification codes, tax returns, full financial-account details, or unredacted student IDs.
 
 Case number: ${record.case_code}
 
 Esther Funds Foundation
-Every Future Fulfilled`})
-    ]);
+Every Future Fulfilled`});
+    if(confirmation.error)console.error("Howard packet confirmation email could not be sent",{caseCode:record.case_code,error:confirmation.error.name});
+    else await admin.from("audit_events").insert({actor_id:null,action:"howard_packet_email_sent",target_type:"howard_help_case",target_id:record.id,metadata_safe:{case_code:record.case_code,delivery:"confirmation_email",provider_id:confirmation.data?.id||null}});
+    try{
+      await resend.emails.send({
+        from:emailFrom,
+        to:record.email,
+        replyTo:"nationals@estherfundsinc.org",
+        scheduledAt:new Date(Date.now()+8*60*60*1000).toISOString(),
+        subject:`Status check: review BisonHub for case ${record.case_code}`,
+        text:`Hello ${studentFirst},
+
+EFF is checking on your Howard Help Desk case. Howard may update BisonHub before sending a separate email, so please review your enrollment, courses, holds, tasks, aid, housing, and balance again.
+
+Reply with the phrase that best describes what you see:
+
+REINSTATED — your enrollment, courses, or awards are restored
+HOWARD RESPONDED — Howard sent you a case update or instructions
+NO CHANGE — the same problem remains
+NEW DEADLINE — Howard gave you a new date or required action
+
+If there is a new action or deadline, include the exact wording and date. You may attach a redacted screenshot, but never email Social Security numbers, passwords, verification codes, tax returns, full financial-account details, or an unredacted student ID.
+
+Your private EFF advocacy packet:
+${packetUrl}
+
+Case number: ${record.case_code}
+
+Esther Funds Foundation
+Every Future Fulfilled`
+      });
+    }catch(error){
+      console.error("Howard case status check could not be scheduled",error);
+    }
     destination.searchParams.set("case","verified");destination.searchParams.set("code",record.case_code);destination.hash="case-intake";return NextResponse.redirect(destination);
   }catch(error){
     console.error("Howard advocacy email could not be sent",error);

@@ -1,1 +1,1 @@
-{"crons":[{"path":"/api/cron/scholarships","schedule":"17 7 * * *"}]}
+{"crons":[{"path":"/api/cron/scholarships","schedule":"17 7 * * *"},{"path":"/api/cron/howard-packets","schedule":"47 13 * * *"}]}
