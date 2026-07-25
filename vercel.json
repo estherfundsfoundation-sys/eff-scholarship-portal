@@ -1,1 +1,1 @@
-{"crons":[{"path":"/api/cron/emails","schedule":"*/5 * * * *"},{"path":"/api/cron/scholarships","schedule":"17 7 * * *"},{"path":"/api/cron/howard-packets","schedule":"47 13 * * *"}]}
+{"crons":[{"path":"/api/cron/emails","schedule":"*/5 * * * *"},{"path":"/api/cron/scholarships","schedule":"17 7 * * *"},{"path":"/api/cron/howard-packets","schedule":"47 13 * * *"},{"path":"/api/cron/student-help-followups","schedule":"27 14 * * *"}]}
