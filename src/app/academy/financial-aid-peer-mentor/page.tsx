@@ -40,14 +40,14 @@ export default async function FinancialAidPeerMentorCourse({
       <section className="academy-course-hero">
         <div className="shell">
           <Link className="academy-back-link" href="/academy">← Leadership Training Academy</Link>
-          <div className="eyebrow">Featured certification course</div>
+          <div className="eyebrow">Featured certification · built for real student life</div>
           <h1>EFF Financial Aid <span>Peer Mentor</span></h1>
-          <p>Explain the process. Protect the student. Know when to refer.</p>
+          <p>No jargon. No gatekeeping. Just the moves that help a student get unstuck—safely.</p>
           <div className="academy-course-facts">
-            <span>8 modules</span>
-            <span>About 3 hours, self-paced</span>
-            <span>80% final score required</span>
-            <span>EFF completion certificate</span>
+            <span>8 bite-size levels</span>
+            <span>1,000 XP available</span>
+            <span>Myth-or-Fact + real scenarios</span>
+            <span>EFF certificate at 80%</span>
           </div>
         </div>
       </section>

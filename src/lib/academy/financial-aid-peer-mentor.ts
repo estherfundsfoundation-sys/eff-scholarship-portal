@@ -12,9 +12,17 @@ export type KnowledgeCheck = {
 export type CourseModule = {
   id: string;
   number: string;
+  emoji: string;
   title: string;
   time: string;
+  tagline: string;
   purpose: string;
+  quickCheck: {
+    prompt: string;
+    isFact: boolean;
+    explanation: string;
+  };
+  mentorScript: string;
   visual?: {src: string; alt: string; caption: string};
   sections: Array<{
     heading: string;
@@ -36,9 +44,17 @@ export const financialAidPeerMentorModules: CourseModule[] = [
   {
     id: "role-and-safety",
     number: "01",
+    emoji: "🛡️",
     title: "Your role, your boundaries, their dignity",
     time: "15 minutes",
+    tagline: "Protect the student. Protect the trust. Keep the account in their hands.",
     purpose: "Learn what an EFF Financial Aid Peer Mentor can do, what is off-limits, and how to protect a student’s privacy.",
+    quickCheck: {
+      prompt: "If a student gives written permission, a peer mentor can log into the student’s StudentAid.gov account.",
+      isFact: false,
+      explanation: "Permission does not change the boundary. The account is the student’s legal identity and signature; coach without entering it.",
+    },
+    mentorScript: "I can help you map the next step, but I can’t take your password or enter the account. You stay in control.",
     visual: {
       src: "/academy/fsa-basic-training-banner-screenshot.jpg",
       alt: "Official Federal Student Aid Basic Training for New Staff banner",
@@ -97,9 +113,17 @@ export const financialAidPeerMentorModules: CourseModule[] = [
   {
     id: "roadmap",
     number: "02",
+    emoji: "🗺️",
     title: "The financial-aid roadmap",
     time: "18 minutes",
+    tagline: "Processed is a milestone—not the finish line.",
     purpose: "See the entire process so you can help a student find where they are stuck instead of starting over.",
+    quickCheck: {
+      prompt: "Once the FAFSA says processed, the student’s entire financial-aid process is finished.",
+      isFact: false,
+      explanation: "Processed means Federal Student Aid handled the form. The Submission Summary, school requirements, verification, aid offers, and student account may still need action.",
+    },
+    mentorScript: "Your FAFSA is processed—great. Now let’s check your Submission Summary and school portal so nothing is quietly waiting.",
     visual: {
       src: "/academy/fsa-module-map-screenshot.jpg",
       alt: "Official Federal Student Aid Basic Training module map showing FAFSA process, eligibility, verification, grants, loans, and related topics",
@@ -163,9 +187,17 @@ export const financialAidPeerMentorModules: CourseModule[] = [
   {
     id: "accounts-and-contributors",
     number: "03",
+    emoji: "🔐",
     title: "Accounts, contributors, and preparation",
     time: "22 minutes",
+    tagline: "One person. One account. Zero password sharing.",
     purpose: "Help students start cleanly and prevent the account and invitation errors that cause many delays.",
+    quickCheck: {
+      prompt: "A FAFSA contributor is agreeing to pay the student’s college bill.",
+      isFact: false,
+      explanation: "Contributor is an information, consent, and signature role. It does not itself create a promise to pay.",
+    },
+    mentorScript: "Contributor doesn’t mean payer. It means FAFSA needs your information and your own signature from your own account.",
     sections: [
       {
         heading: "Every person uses their own account",
@@ -220,9 +252,17 @@ export const financialAidPeerMentorModules: CourseModule[] = [
   {
     id: "complete-the-fafsa",
     number: "04",
+    emoji: "🧩",
     title: "Complete the FAFSA without taking over",
     time: "28 minutes",
+    tagline: "Explain the question. Never choose the answer.",
     purpose: "Coach students through the form’s major decision points while keeping the student in control.",
+    quickCheck: {
+      prompt: "A peer mentor should recommend the answer that creates the most financial aid.",
+      isFact: false,
+      explanation: "FAFSA answers must be accurate. A mentor explains official help text and refers unclear situations rather than steering an answer.",
+    },
+    mentorScript: "We’re not picking the answer with the best result—we’re finding the answer that is accurate for your real situation.",
     visual: {
       src: "/academy/fsa-module-map-screenshot.jpg",
       alt: "Official Federal Student Aid training topics including the FAFSA Process module",
@@ -281,9 +321,17 @@ export const financialAidPeerMentorModules: CourseModule[] = [
   {
     id: "dependency-and-circumstances",
     number: "05",
+    emoji: "🤝",
     title: "Dependency and difficult family circumstances",
     time: "24 minutes",
+    tagline: "No trauma interview required. Listen, protect, and refer.",
     purpose: "Respond safely when the FAFSA’s standard family questions do not fit a student’s real life.",
+    quickCheck: {
+      prompt: "Paying your own rent and bills automatically makes you independent for FAFSA.",
+      isFact: false,
+      explanation: "FAFSA uses federal dependency criteria. Self-support alone does not establish independent status.",
+    },
+    mentorScript: "You don’t have to share painful details with me. Let’s find the school’s private process and the person authorized to review your situation.",
     sections: [
       {
         heading: "FAFSA dependency is not an everyday label",
@@ -333,9 +381,17 @@ export const financialAidPeerMentorModules: CourseModule[] = [
   {
     id: "after-submission",
     number: "06",
+    emoji: "📊",
     title: "After submission: status, SAI, and corrections",
     time: "22 minutes",
+    tagline: "Your SAI is data—not your bill, award, or destiny.",
     purpose: "Help students understand what the FAFSA result does—and does not—mean.",
+    quickCheck: {
+      prompt: "The Student Aid Index is the amount a family will be charged.",
+      isFact: false,
+      explanation: "The SAI is an eligibility index used by schools. It is not a bill, final award, or guaranteed payment amount.",
+    },
+    mentorScript: "Your SAI is not your bill. Let’s use it as one clue, then wait for the school’s actual aid offer and account charges.",
     sections: [
       {
         heading: "Read the FAFSA Submission Summary",
@@ -385,9 +441,17 @@ export const financialAidPeerMentorModules: CourseModule[] = [
   {
     id: "verification-and-offers",
     number: "07",
+    emoji: "🔎",
     title: "Verification, aid offers, and the remaining gap",
     time: "26 minutes",
+    tagline: "Compare the offer. Check the account. Close the gap.",
     purpose: "Help students respond to requests, compare aid accurately, and avoid preventable enrollment holds.",
+    quickCheck: {
+      prompt: "Work-study is automatically credited to a student’s bill before the student works.",
+      isFact: false,
+      explanation: "Work-study is generally earned through a job and paychecks; it is not the same as an upfront grant or scholarship.",
+    },
+    mentorScript: "Let’s separate free aid, earned aid, and borrowed aid—then compare all of it with what the school says is actually due.",
     visual: {
       src: "/academy/fsa-module-map-screenshot.jpg",
       alt: "Official Federal Student Aid training topics including verification, grants, loans, and packaging",
@@ -443,9 +507,17 @@ export const financialAidPeerMentorModules: CourseModule[] = [
   {
     id: "mentoring-in-action",
     number: "08",
+    emoji: "🚀",
     title: "Mentoring in action",
     time: "25 minutes",
+    tagline: "Calm voice. Clear next step. Strong follow-through.",
     purpose: "Turn knowledge into calm, respectful, deadline-aware support.",
+    quickCheck: {
+      prompt: "Having a student repeat their next three actions is a strong way to close a mentoring session.",
+      isFact: true,
+      explanation: "Teach-back confirms understanding and keeps ownership with the student.",
+    },
+    mentorScript: "Before we wrap, tell me your next three moves, who owns each one, and the deadline for each.",
     sections: [
       {
         heading: "Use the LISTEN method",
