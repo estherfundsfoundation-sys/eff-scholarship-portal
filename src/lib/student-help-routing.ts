@@ -11,6 +11,81 @@ export const helpRouting:Record<string,{department:string;documents:string[];req
   "Other":{department:"Dean of Students or Student Advocacy",documents:["factual timeline","school notices","prior case numbers","relevant deadline"],requests:["routing to the office that owns the decision","a named case contact","written next steps and response date"]}
 };
 
+export type SchoolContact={
+  department_key:string;
+  department_name:string;
+  contact_url:string|null;
+  email:string|null;
+  phone:string|null;
+  source_url:string;
+};
+
+const departmentKeys:Record<string,string[]>={
+  "Financial aid or FAFSA":["financial_aid"],
+  "Past-due balance or registration hold":["student_accounts","financial_aid"],
+  "Admissions or enrollment":["admissions","registrar"],
+  "Housing or food insecurity":["basic_needs","housing","student_advocacy"],
+  "Academic records or transfer":["registrar"],
+  "Disability or accessibility support":["accessibility"],
+  "International or veteran services":["international","veterans"],
+  "Technology access":["technology","student_advocacy"],
+  "Discrimination, safety, or student rights":["title_ix","student_advocacy"],
+  "Other":["student_advocacy"]
+};
+
+export function contactKeysForIssue(issueType:string){
+  return departmentKeys[issueType]??departmentKeys.Other;
+}
+
+export function buildAutomaticStudentRouting(record:{
+  case_code:string;
+  school_name:string;
+  issue_type:string;
+  school_deadline:string|null;
+  essentials_requested:boolean;
+  essentials_term:string|null;
+},contacts:SchoolContact[],fallbacks:{website?:string|null;admissions_url?:string|null;financial_aid_url?:string|null;accessibility_url?:string|null;veterans_url?:string|null}={}){
+  const route=helpRouting[record.issue_type]??helpRouting.Other;
+  const lines=contacts.map(contact=>{
+    const details=[
+      contact.email?`Email: ${contact.email}`:null,
+      contact.phone?`Phone: ${contact.phone}`:null,
+      contact.contact_url?`Official page: ${contact.contact_url}`:`Official source: ${contact.source_url}`
+    ].filter(Boolean).join("\n");
+    return `${contact.department_name}\n${details}`;
+  });
+  if(!lines.length){
+    const fallbackUrl=
+      record.issue_type==="Financial aid or FAFSA"||record.issue_type==="Past-due balance or registration hold"?fallbacks.financial_aid_url:
+      record.issue_type==="Admissions or enrollment"||record.issue_type==="Academic records or transfer"?fallbacks.admissions_url:
+      record.issue_type==="Disability or accessibility support"?fallbacks.accessibility_url:
+      record.issue_type==="International or veteran services"?fallbacks.veterans_url:
+      fallbacks.website;
+    lines.push(`${route.department}\nUse ${record.school_name}'s official directory${fallbackUrl?`: ${fallbackUrl}`:" and student portal"} to locate the current office contact.`);
+  }
+  const deadline=record.school_deadline?`\nReported deadline: ${record.school_deadline}\n`:"\n";
+  return `Case: ${record.case_code}
+School: ${record.school_name}
+Topic: ${record.issue_type}${deadline}
+Start with these official school channels:
+
+${lines.join("\n\n")}
+
+Ask the school for:
+- ${route.requests.join(";\n- ")};
+- the school case or ticket number;
+- every deadline and remaining action; and
+- secure instructions for any documents.
+
+Prepare these records for the school's secure process:
+- ${route.documents.join(";\n- ")}.
+
+EFF funding boundary:
+The National Student Help Desk provides navigation, advocacy preparation, and referrals. ${record.essentials_requested?`Your ${record.essentials_term??""} Student Essentials request is a separate small-request review with a maximum of $100; it is not approved or guaranteed.`:"No Student Essentials request was included in this case."} If you need a larger amount or tuition/balance assistance, review and apply for an eligible EFF scholarship at https://portal.estherfundsfoundation.org/programs. Scholarship eligibility, required documents, available funds, review, and final approval apply; submission does not guarantee an award.
+
+Use your official school account when possible. Never email EFF passwords, Social Security numbers, verification codes, tax returns, bank details, or unredacted IDs.`;
+}
+
 export function buildSchoolOutreach(record:{student_name:string;case_code:string;school_name:string;issue_type:string;situation_summary:string;steps_taken:string;school_deadline:string|null;documents_available:string[]}){
   const route=helpRouting[record.issue_type]??helpRouting.Other;
   const deadline=record.school_deadline?`\nThe student reported a school deadline of ${record.school_deadline}.`:"";
