@@ -32,10 +32,10 @@ const score=(url,route)=>{const lower=url.toLowerCase();if(/\/(news|events?|jobs
 function extractContact(page,officialHost,route){
   const title=(page.text.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1]??"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim().slice(0,240);
   const siteDomain=officialHost.replace(/^www\./,"").split(".").slice(-2).join(".");
-  const emails=[...new Set([...page.text.matchAll(/mailto:([^"'? >]+)/gi)].map(m=>decodeURIComponent(m[1]).toLowerCase()).filter(x=>/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(x)&&x.split("@")[1].endsWith(siteDomain)&&!["webmaster","info","admissions"].includes(x.split("@")[0])))].slice(0,5);
-  const phone=page.text.replace(/<[^>]+>/g," ").match(/(?:\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}/)?.[0]??null;
+  const emails=[...new Set([...page.text.matchAll(/mailto:([^"'? >]+)/gi)].map(m=>decodeURIComponent(m[1]).toLowerCase()).filter(x=>/^[a-z0-9][a-z0-9._%+-]*@[a-z0-9.-]+\.[a-z]{2,}$/i.test(x)&&x.split("@")[1].endsWith(siteDomain)&&!["webmaster","info","admissions"].includes(x.split("@")[0])))].slice(0,5);
+  const phone=page.text.replace(/<[^>]+>/g," ").match(/(?:\+?1[\s.-]?)?(?:\(\d{3}\)[\s.-]?|\d{3}[\s.-])\d{3}[\s.-]\d{4}/)?.[0]??null;
   const titlePlain=title.replace(/&[a-z#0-9]+;/gi," ").replace(/\s+/g," ").toLowerCase();
-  const editorialTitle=/\b(archives?|attachment|job|professor|prepares|participates|names|donates|continues|celebrates|announces|workshop|conference|grant|minor|degree program|retires?|helps|offered|wins|award|applications? open|concentration|bachelor|major|international education week|career programs|expected housing status|what information technology is|mechanical engineering|computer science)\b/i.test(titlePlain)
+  const editorialTitle=/\b(archives?|attachment|job|professor|prepares|participates|names|donates|continues|celebrates|announces|workshop|conference|grant|minor|degrees?|retires?|helps|offered|wins|award|applications? open|concentration|bachelor|master of|certificate|technician|international education week|career programs|expected housing status|housing and meal costs|what information technology is|mechanical engineering|computer science|health information technology|veteran student affairs|student disability services)\b/i.test(titlePlain)
     ||/\b(today|magazine|newsroom)\b/i.test(titlePlain);
   const strongTitle=!editorialTitle&&route.phrases.some(phrase=>titlePlain.includes(phrase));
   return {title,emails,phone,strongTitle};
