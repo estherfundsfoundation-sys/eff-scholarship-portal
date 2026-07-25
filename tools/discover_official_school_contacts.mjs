@@ -28,14 +28,14 @@ const locs=xml=>[...xml.matchAll(/<loc[^>]*>([\s\S]*?)<\/loc>/gi)].map(m=>m[1].r
 const hrefs=html=>[...html.matchAll(/href\s*=\s*["']([^"'#]+)["']/gi)].map(m=>m[1].trim()).filter(Boolean);
 const sameSite=(candidate,home)=>{try{const a=new URL(candidate),b=new URL(home);const ah=a.hostname.replace(/^www\./,""),bh=b.hostname.replace(/^www\./,"");return ah===bh||ah.endsWith(`.${bh}`)||bh.endsWith(`.${ah}`);}catch{return false;}};
 const canonical=(value,base)=>{try{const u=new URL(value,base);u.hash="";u.search="";return u.toString();}catch{return null;}};
-const score=(url,route)=>{const lower=url.toLowerCase();if(/\/(news|events?|jobs?|tag|category|attachment|press-release|articles?|stories)\//i.test(lower)||/\/20\d{2}\/\d{1,2}\//.test(lower)||/\.(pdf|docx?|xlsx?)$/i.test(lower))return -100;let points=0;for(const term of route.terms)if(lower.includes(term))points+=term.length+20;return points;};
+const score=(url,route)=>{const lower=url.toLowerCase();if(/\/(news|events?|jobs?|tag|category|attachment|press-release|articles?|stories|awards?|degrees?|pathways?)\//i.test(lower)||/[_-]pathways?(?:[./_-]|$)/i.test(lower)||/\/20\d{2}\/\d{1,2}\//.test(lower)||/\.(pdf|docx?|xlsx?)$/i.test(lower))return -100;let points=0;for(const term of route.terms)if(lower.includes(term))points+=term.length+20;return points;};
 function extractContact(page,officialHost,route){
   const title=(page.text.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1]??"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim().slice(0,240);
   const siteDomain=officialHost.replace(/^www\./,"").split(".").slice(-2).join(".");
   const emails=[...new Set([...page.text.matchAll(/mailto:([^"'? >]+)/gi)].map(m=>decodeURIComponent(m[1]).toLowerCase()).filter(x=>/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(x)&&x.split("@")[1].endsWith(siteDomain)&&!["webmaster","info","admissions"].includes(x.split("@")[0])))].slice(0,5);
   const phone=page.text.replace(/<[^>]+>/g," ").match(/(?:\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}/)?.[0]??null;
   const titlePlain=title.replace(/&[a-z#0-9]+;/gi," ").replace(/\s+/g," ").toLowerCase();
-  const editorialTitle=/\b(archives?|attachment|job|professor|prepares|participates|names|donates|continues|celebrates|announces|workshop|conference|grant|minor|degree program|retires?|helps|offered|wins|award|applications? open|concentration|bachelor|major|international education week|career programs|expected housing status|what information technology is)\b/i.test(titlePlain)
+  const editorialTitle=/\b(archives?|attachment|job|professor|prepares|participates|names|donates|continues|celebrates|announces|workshop|conference|grant|minor|degree program|retires?|helps|offered|wins|award|applications? open|concentration|bachelor|major|international education week|career programs|expected housing status|what information technology is|mechanical engineering|computer science)\b/i.test(titlePlain)
     ||/\b(today|magazine|newsroom)\b/i.test(titlePlain);
   const strongTitle=!editorialTitle&&route.phrases.some(phrase=>titlePlain.includes(phrase));
   return {title,emails,phone,strongTitle};
