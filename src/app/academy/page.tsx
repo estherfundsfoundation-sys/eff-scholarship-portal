@@ -1,5 +1,5 @@
 import Link from "next/link";
-import {ArrowRight, Award, BookOpen, ShieldCheck, Sparkles} from "lucide-react";
+import {ArrowRight, Award, BookOpen, HeartHandshake, ShieldCheck, Sparkles} from "lucide-react";
 
 export const metadata = {
   title: "EFF Leadership Training Academy",
@@ -50,10 +50,24 @@ export default function AcademyPage() {
               <Link className="button" href="/academy/financial-aid-peer-mentor">Enter course <ArrowRight size={18}/></Link>
             </div>
           </article>
+          <article className="academy-featured-course academy-family-course-card">
+            <div className="academy-course-number">02</div>
+            <div>
+              <span className="academy-pill">New family certification</span>
+              <h3>EFF First-Generation Family Navigator</h3>
+              <p>For parents, caregivers, relatives, and trusted supporters who want to help first-generation students understand the college map, protect their privacy, respond to emergencies, advocate professionally, and responsibly guide other families.</p>
+              <div className="academy-meta">
+                <span><BookOpen size={17}/> 8 practical modules</span>
+                <span><HeartHandshake size={17}/> Asset-based family support</span>
+                <span><Award size={17}/> Certificate at 80%</span>
+              </div>
+              <Link className="button" href="/academy/first-gen-family-navigator">Enter course <ArrowRight size={18}/></Link>
+            </div>
+          </article>
           <div className="academy-coming-soon">
             <div className="eyebrow">Academy note</div>
             <h3>More leadership training will be added here.</h3>
-            <p>The Financial Aid Peer Mentor course is placed first so students can immediately learn the safe, practical skills most often needed during financial-aid season.</p>
+            <p>The Financial Aid Peer Mentor course remains first for urgent financial-aid season support. The First-Generation Family Navigator course expands the Academy to parents, caregivers, and other trusted family supporters.</p>
           </div>
         </div>
       </section>

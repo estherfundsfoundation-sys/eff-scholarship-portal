@@ -27,8 +27,12 @@ import {
   financialAidPeerMentorCourseSources,
 } from "@/lib/academy/financial-aid-peer-mentor";
 import {submitFinancialAidPeerMentorAssessment} from "./actions";
-
-const STORAGE_KEY = "eff-financial-aid-peer-mentor-progress-v1";
+import {
+  FIRST_GEN_FAMILY_NAVIGATOR_PASSING_SCORE,
+  firstGenFamilyNavigatorCourseSources,
+  firstGenFamilyNavigatorFinalQuestions,
+} from "@/lib/academy/first-gen-family-navigator";
+import {submitFirstGenFamilyNavigatorAssessment} from "../first-gen-family-navigator/actions";
 
 const achievements = [
   {at: 0, icon: "🌱", title: "New here", copy: "Start with one smart move."},
@@ -38,19 +42,52 @@ const achievements = [
   {at: 8, icon: "🏆", title: "Mentor Mode", copy: "All modules complete. Final assessment unlocked."},
 ];
 
+const familyAchievements = [
+  {at: 0, icon: "💜", title: "Family first", copy: "Bring your strengths. Learn the map."},
+  {at: 2, icon: "🗺️", title: "Campus Decoder", copy: "You know where to take the next question."},
+  {at: 4, icon: "🔐", title: "Trust Keeper", copy: "Consent and student agency come first."},
+  {at: 6, icon: "🧯", title: "Calm in Crisis", copy: "Safety, resources, and clear next steps."},
+  {at: 8, icon: "🤝", title: "Family Navigator", copy: "Ready to guide another family responsibly."},
+];
+
 export function CoursePlayer({
   modules,
   signedIn,
   alreadyCompleted,
   completedScore,
   failedScore,
+  courseKind = "financial-aid",
 }: {
   modules: CourseModule[];
   signedIn: boolean;
   alreadyCompleted: boolean;
   completedScore: number | null;
   failedScore: number | null;
+  courseKind?: "financial-aid" | "first-gen-family";
 }) {
+  const isFamilyCourse = courseKind === "first-gen-family";
+  const storageKey = isFamilyCourse
+    ? "eff-first-gen-family-navigator-progress-v1"
+    : "eff-financial-aid-peer-mentor-progress-v1";
+  const courseAchievements = isFamilyCourse ? familyAchievements : achievements;
+  const finalQuestions = isFamilyCourse
+    ? firstGenFamilyNavigatorFinalQuestions
+    : financialAidPeerMentorFinalQuestions;
+  const passingScore = isFamilyCourse
+    ? FIRST_GEN_FAMILY_NAVIGATOR_PASSING_SCORE
+    : FINANCIAL_AID_PEER_MENTOR_PASSING_SCORE;
+  const courseSources = isFamilyCourse
+    ? firstGenFamilyNavigatorCourseSources
+    : financialAidPeerMentorCourseSources;
+  const assessmentAction = isFamilyCourse
+    ? submitFirstGenFamilyNavigatorAssessment
+    : submitFinancialAidPeerMentorAssessment;
+  const certificateHref = isFamilyCourse
+    ? "/academy/first-gen-family-navigator/complete"
+    : "/academy/financial-aid-peer-mentor/complete";
+  const certificateTitle = isFamilyCourse
+    ? "EFF First-Generation Family Navigator"
+    : "EFF Financial Aid Peer Mentor";
   const [activeIndex, setActiveIndex] = useState(0);
   const [completed, setCompleted] = useState<string[]>([]);
   const [answers, setAnswers] = useState<Record<string, number>>({});
@@ -62,25 +99,25 @@ export function CoursePlayer({
 
   useEffect(() => {
     try {
-      const saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? "{}") as {completed?: string[]; activeIndex?: number};
+      const saved = JSON.parse(window.localStorage.getItem(storageKey) ?? "{}") as {completed?: string[]; activeIndex?: number};
       setCompleted((saved.completed ?? []).filter(id => modules.some(module => module.id === id)));
       setActiveIndex(Math.min(Math.max(saved.activeIndex ?? 0, 0), modules.length));
     } catch {
-      window.localStorage.removeItem(STORAGE_KEY);
+      window.localStorage.removeItem(storageKey);
     }
     setLoaded(true);
-  }, [modules]);
+  }, [modules, storageKey]);
 
   useEffect(() => {
     if (!loaded) return;
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({completed, activeIndex}));
-  }, [activeIndex, completed, loaded]);
+    window.localStorage.setItem(storageKey, JSON.stringify({completed, activeIndex}));
+  }, [activeIndex, completed, loaded, storageKey]);
 
   const allModulesComplete = completed.length === modules.length;
   const activeModule = activeIndex < modules.length ? modules[activeIndex] : null;
   const progress = Math.round((completed.length / modules.length) * 100);
   const xp = completed.length * 125;
-  const currentAchievement = [...achievements].reverse().find(item => completed.length >= item.at) ?? achievements[0];
+  const currentAchievement = [...courseAchievements].reverse().find(item => completed.length >= item.at) ?? courseAchievements[0];
   const selectedForModule = useMemo(
     () => activeModule?.checks.filter(check => answers[check.id] !== undefined).length ?? 0,
     [activeModule, answers],
@@ -117,7 +154,7 @@ export function CoursePlayer({
 
   function resetProgress() {
     if (!window.confirm("Reset all module progress on this device? Your issued certificate will not be removed.")) return;
-    window.localStorage.removeItem(STORAGE_KEY);
+    window.localStorage.removeItem(storageKey);
     setCompleted([]);
     setAnswers({});
     setQuickAnswers({});
@@ -132,7 +169,11 @@ export function CoursePlayer({
       <section className="academy-scope-strip" aria-label="Important course boundary">
         <div className="shell">
           <ShieldAlert aria-hidden="true"/>
-          <p><strong>Real talk: this is peer-navigation training—not federal certification.</strong> You will learn how to guide, explain, organize, and refer. You will never access someone else’s account, collect private documents, determine eligibility, or replace a financial-aid professional.</p>
+          {isFamilyCourse ? (
+            <p><strong>Real talk: this is family-navigation training—not professional licensure.</strong> You will learn how to listen, organize, advocate, and make warm referrals. You will never access another person’s account, collect private records, act as the student, make institutional decisions, or replace a financial-aid, legal, counseling, or college professional.</p>
+          ) : (
+            <p><strong>Real talk: this is peer-navigation training—not federal certification.</strong> You will learn how to guide, explain, organize, and refer. You will never access someone else’s account, collect private documents, determine eligibility, or replace a financial-aid professional.</p>
+          )}
         </div>
       </section>
 
@@ -210,7 +251,11 @@ export function CoursePlayer({
 
                 <div className="academy-boundary-card">
                   <LockKeyhole aria-hidden="true"/>
-                  <div><strong>The non-negotiable privacy rule</strong><p>No passwords. No Social Security numbers. No verification codes. No tax returns. No bank details. No identity documents. The student stays in control of every account, answer, signature, and submission.</p></div>
+                  {isFamilyCourse ? (
+                    <div><strong>The non-negotiable partnership rule</strong><p>Ask for the student’s consent. Do not take over, impersonate the student, collect private records, or promise a result. Keep every account, decision, and personal story in the student’s hands.</p></div>
+                  ) : (
+                    <div><strong>The non-negotiable privacy rule</strong><p>No passwords. No Social Security numbers. No verification codes. No tax returns. No bank details. No identity documents. The student stays in control of every account, answer, signature, and submission.</p></div>
+                  )}
                 </div>
 
                 <div className="academy-lesson-cards">
@@ -264,7 +309,7 @@ export function CoursePlayer({
                 </section>
 
                 <section className="academy-sources">
-                  <h3>Receipts, not rumors</h3>
+                  <h3>{isFamilyCourse ? "Trusted sources, not guesswork" : "Receipts, not rumors"}</h3>
                   <p>Rules and dates can change. Use these official sources instead of guessing or trusting a random post.</p>
                   <div>{activeModule.sources.map(source => <a key={source.href} href={source.href} target="_blank" rel="noopener noreferrer">{source.label} <ExternalLink size={14}/></a>)}</div>
                 </section>
@@ -313,8 +358,8 @@ export function CoursePlayer({
               <section className="academy-final">
                 <div className="academy-final-icon"><Trophy aria-hidden="true"/></div>
                 <div className="eyebrow">Final boss</div>
-                <h2>Ready to mentor responsibly?</h2>
-                <p>Ten real-life decisions. No trick questions and no jargon contest. Score {FINANCIAL_AID_PEER_MENTOR_PASSING_SCORE}% or higher to earn the EFF Financial Aid Peer Mentor course-completion certificate.</p>
+                <h2>{isFamilyCourse ? "Ready to guide a family responsibly?" : "Ready to mentor responsibly?"}</h2>
+                <p>Ten real-life decisions. No trick questions and no jargon contest. Score {passingScore}% or higher to earn the {certificateTitle} course-completion certificate.</p>
 
                 {alreadyCompleted ? (
                   <div className="academy-complete-card">
@@ -322,7 +367,7 @@ export function CoursePlayer({
                     <div>
                       <h3>Course completed</h3>
                       <p>Your recorded passing score is {completedScore}%.</p>
-                      <Link className="button" href="/academy/financial-aid-peer-mentor/complete">View and download certificate</Link>
+                      <Link className="button" href={certificateHref}>View and download certificate</Link>
                     </div>
                   </div>
                 ) : !allModulesComplete ? (
@@ -334,8 +379,8 @@ export function CoursePlayer({
                   <>
                     {failedScore !== null && <div className="academy-retry-message" role="alert"><strong>Your last score was {failedScore}%.</strong> Review the questions you were uncertain about and run it back. A new attempt will not count against you.</div>}
                     {!signedIn && <div className="notice"><strong>You can learn without an account.</strong><br/>To submit the final assessment and place your name on a certificate, sign in or create a free EFF portal account.</div>}
-                    <form className="academy-final-form" action={submitFinancialAidPeerMentorAssessment}>
-                      {financialAidPeerMentorFinalQuestions.map((question, index) => (
+                    <form className="academy-final-form" action={assessmentAction}>
+                      {finalQuestions.map((question, index) => (
                         <fieldset key={question.id}>
                           <legend>{index + 1}. {question.prompt}</legend>
                           {question.options.map((option, optionIndex) => (
@@ -348,7 +393,9 @@ export function CoursePlayer({
                       ))}
                       <label className="academy-honor">
                         <input type="checkbox" name="honor" required/>
-                        <span>I completed this assessment myself and understand that this EFF certificate recognizes course completion, not federal licensure or authority to act as a financial-aid administrator.</span>
+                        <span>{isFamilyCourse
+                          ? "I completed this assessment myself and understand that this EFF certificate recognizes course completion, not authority to act as a college employee, counselor, attorney, or financial-aid administrator."
+                          : "I completed this assessment myself and understand that this EFF certificate recognizes course completion, not federal licensure or authority to act as a financial-aid administrator."}</span>
                       </label>
                       <button className="button" type="submit"><Award size={18}/> Submit final assessment</button>
                     </form>
@@ -362,13 +409,23 @@ export function CoursePlayer({
 
       <section className="section white academy-method">
         <div className="shell">
-          <div className="section-head"><div><div className="eyebrow">Course integrity</div><h2>Fun format. Serious sources.</h2></div><p>The energy is youth-friendly; the information is grounded in official U.S. Department of Education and Federal Student Aid resources.</p></div>
+          <div className="section-head"><div><div className="eyebrow">Course integrity</div><h2>Friendly format. Serious sources.</h2></div><p>{isFamilyCourse ? "The lessons use authoritative federal and EFF resources, practical family scenarios, and clear referral boundaries." : "The energy is youth-friendly; the information is grounded in official U.S. Department of Education and Federal Student Aid resources."}</p></div>
           <div className="academy-method-grid">
-            <article><strong>Official-source first</strong><p>Rules and process explanations point learners back to StudentAid.gov and the FSA Training Center.</p></article>
-            <article><strong>Student-safe scope</strong><p>Institution-only work—eligibility decisions, professional judgment, verification review, and award administration—is taught as a referral boundary.</p></article>
-            <article><strong>Reviewed July 25, 2026</strong><p>Financial-aid rules and dates change. EFF should review this course before each FAFSA cycle and whenever Federal Student Aid publishes a major update.</p></article>
+            {isFamilyCourse ? (
+              <>
+                <article><strong>Asset-based</strong><p>Families are treated as partners with existing strengths—not as problems to be fixed.</p></article>
+                <article><strong>Student-led</strong><p>Consent, privacy, student agency, and warm referrals are built into every module.</p></article>
+                <article><strong>Reviewed July 25, 2026</strong><p>College policies and federal guidance change. Learners are taught to verify the current official source.</p></article>
+              </>
+            ) : (
+              <>
+                <article><strong>Official-source first</strong><p>Rules and process explanations point learners back to StudentAid.gov and the FSA Training Center.</p></article>
+                <article><strong>Student-safe scope</strong><p>Institution-only work—eligibility decisions, professional judgment, verification review, and award administration—is taught as a referral boundary.</p></article>
+                <article><strong>Reviewed July 25, 2026</strong><p>Financial-aid rules and dates change. EFF should review this course before each FAFSA cycle and whenever Federal Student Aid publishes a major update.</p></article>
+              </>
+            )}
           </div>
-          <div className="academy-source-list">{financialAidPeerMentorCourseSources.map(source => <a key={source.href} href={source.href} target="_blank" rel="noopener noreferrer">{source.label} <ExternalLink size={14}/></a>)}</div>
+          <div className="academy-source-list">{courseSources.map(source => <a key={source.href} href={source.href} target="_blank" rel="noopener noreferrer">{source.label} <ExternalLink size={14}/></a>)}</div>
         </div>
       </section>
     </>
