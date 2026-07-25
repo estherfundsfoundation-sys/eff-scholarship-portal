@@ -41,6 +41,7 @@ set public=false,
     file_size_limit=excluded.file_size_limit,
     allowed_mime_types=excluded.allowed_mime_types;
 
+drop policy if exists "board_headshots_owner_read" on storage.objects;
 create policy "board_headshots_owner_read"
 on storage.objects for select to authenticated
 using (
