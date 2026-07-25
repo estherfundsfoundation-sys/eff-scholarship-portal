@@ -6,11 +6,13 @@ import {redirect} from "next/navigation";
 import {z} from "zod";
 import {emailFrom,getResend} from "@/lib/email";
 import {createAdminClient} from "@/lib/supabase/admin";
+import {helpRouting} from "@/lib/student-help-routing";
 
 const schema=z.object({
   studentName:z.string().trim().min(2).max(120),preferredName:z.string().trim().max(80).optional(),
   email:z.string().trim().email().max(180),phone:z.string().trim().max(40).optional(),
   schoolName:z.string().trim().min(2).max(180),schoolState:z.string().length(2),
+  collegeUnitid:z.string().regex(/^$|^\d{6}$/),
   schoolType:z.enum(["HBCU","PWI or other institution","Unsure"]),
   studentLevel:z.enum(["Incoming student","Undergraduate","Graduate or professional","Community college or certificate","Other"]),
   issueType:z.enum(["Financial aid or FAFSA","Past-due balance or registration hold","Admissions or enrollment","Housing or food insecurity","Academic records or transfer","Disability or accessibility support","International or veteran services","Technology access","Discrimination, safety, or student rights","Other"]),
@@ -36,7 +38,7 @@ export async function submitStudentHelpCase(formData:FormData){
   if(value(formData,"companyWebsite"))redirect("/resources/student-help?case=pending");
   const parsed=schema.safeParse({
     studentName:value(formData,"studentName"),preferredName:value(formData,"preferredName"),email:value(formData,"email").toLowerCase(),phone:value(formData,"phone"),
-    schoolName:value(formData,"schoolName"),schoolState:value(formData,"schoolState"),schoolType:value(formData,"schoolType"),studentLevel:value(formData,"studentLevel"),
+    schoolName:value(formData,"schoolName"),schoolState:value(formData,"schoolState"),schoolType:value(formData,"schoolType"),collegeUnitid:value(formData,"collegeUnitid"),studentLevel:value(formData,"studentLevel"),
     issueType:value(formData,"issueType"),urgency:value(formData,"urgency"),schoolDeadline:value(formData,"schoolDeadline"),
     amountAtRisk:value(formData,"amountAtRisk").replace(/[$,\s]/g,""),situationSummary:value(formData,"situationSummary"),stepsTaken:value(formData,"stepsTaken"),
     departmentSought:value(formData,"departmentSought"),documentsAvailable:formData.getAll("documentsAvailable").map(String),
@@ -49,16 +51,19 @@ export async function submitStudentHelpCase(formData:FormData){
   const ipHash=createHash("sha256").update(`${process.env.CRON_SECRET||"eff-student-help"}:${ip}`).digest("hex");
   const host=requestHeaders.get("x-forwarded-host")||requestHeaders.get("host")||"portal.estherfundsfoundation.org";
   const origin=host.includes("localhost")?`http://${host}`:"https://portal.estherfundsfoundation.org";
-  const admin=createAdminClient();const rawToken=randomBytes(32).toString("hex");const id=randomUUID();
+  const admin=createAdminClient();let officialSchool:null|{unitid:number;name:string;state:string;hbcu:boolean}=null;
+  if(parsed.data.collegeUnitid){const {data}=await admin.from("college_directory").select("unitid,name,state,hbcu").eq("unitid",Number(parsed.data.collegeUnitid)).eq("active",true).maybeSingle();officialSchool=data;}
+  const schoolName=officialSchool?.name??parsed.data.schoolName;const schoolState=officialSchool?.state??parsed.data.schoolState;const schoolType=officialSchool?(officialSchool.hbcu?"HBCU":"PWI or other institution"):parsed.data.schoolType;
+  const rawToken=randomBytes(32).toString("hex");const id=randomUUID();
   const caseCode=`EFF-${new Date().getUTCFullYear()}-${id.slice(0,8).toUpperCase()}`;const essentials=parsed.data.essentialsRequested==="on";
   const record={
     id,case_code:caseCode,student_name:parsed.data.studentName,preferred_name:parsed.data.preferredName||null,email:parsed.data.email,phone:parsed.data.phone||null,
-    school_name:parsed.data.schoolName,school_state:parsed.data.schoolState,school_type:parsed.data.schoolType,student_level:parsed.data.studentLevel,
+    college_unitid:officialSchool?.unitid??null,school_name:schoolName,school_state:schoolState,school_type:schoolType,student_level:parsed.data.studentLevel,
     issue_type:parsed.data.issueType,urgency:parsed.data.urgency,school_deadline:parsed.data.schoolDeadline||null,amount_at_risk:parsed.data.amountAtRisk?Number(parsed.data.amountAtRisk):null,
     situation_summary:parsed.data.situationSummary,steps_taken:parsed.data.stepsTaken,documents_available:parsed.data.documentsAvailable,department_sought:parsed.data.departmentSought||null,
     essentials_requested:essentials,essentials_term:essentials?parsed.data.essentialsTerm:null,essentials_category:essentials?parsed.data.essentialsCategory:null,essentials_amount:essentials?Number(parsed.data.essentialsAmount):null,
     essentials_explanation:essentials?parsed.data.essentialsExplanation:null,preferred_payment_method:essentials&&parsed.data.preferredPaymentMethod?parsed.data.preferredPaymentMethod:null,
-    essentials_status:essentials?"requested":"not_requested",authorize_eff_contact:true,privacy_consent:true,accuracy_certified:true,
+    essentials_status:essentials?"requested":"not_requested",recommended_department:helpRouting[parsed.data.issueType]?.department??helpRouting.Other.department,authorize_eff_contact:true,privacy_consent:true,accuracy_certified:true,
     verification_token_hash:hash(rawToken),verification_expires_at:new Date(Date.now()+24*60*60*1000).toISOString(),ip_hash:ipHash
   };
   const saved=await admin.from("student_help_cases").insert(record);
@@ -67,7 +72,7 @@ export async function submitStudentHelpCase(formData:FormData){
   try{
     const sent=await getResend().emails.send({from:emailFrom,to:parsed.data.email,replyTo:"nationals@estherfundsinc.org",subject:`Verify your EFF Student Help case ${caseCode}`,text:`Hello ${parsed.data.preferredName||parsed.data.studentName},
 
-We received your national Student Help Desk case for ${parsed.data.schoolName}.
+We received your national Student Help Desk case for ${schoolName}.
 Case number: ${caseCode}
 
 Verify your email within 24 hours:
