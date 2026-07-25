@@ -33,6 +33,7 @@ const schema=z.object({
 
 const value=(form:FormData,key:string)=>String(form.get(key)??"").trim();
 const hash=(token:string)=>createHash("sha256").update(token).digest("hex");
+const escapeHtml=(text:string)=>text.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
 
 export async function submitStudentHelpCase(formData:FormData){
   if(value(formData,"companyWebsite"))redirect("/resources/student-help?case=pending");
@@ -70,7 +71,20 @@ export async function submitStudentHelpCase(formData:FormData){
   if(saved.error){console.error("National help case save failed",saved.error);redirect(`/resources/student-help?error=${encodeURIComponent("Your case could not be saved. Please try again.")}#open-case`);}
   const verifyUrl=`${origin}/resources/student-help/verify?token=${rawToken}`;
   try{
-    const sent=await getResend().emails.send({from:emailFrom,to:parsed.data.email,replyTo:"nationals@estherfundsinc.org",subject:`Verify your EFF Student Help case ${caseCode}`,text:`Hello ${parsed.data.preferredName||parsed.data.studentName},
+    const studentName=parsed.data.preferredName||parsed.data.studentName;
+    const safeStudentName=escapeHtml(studentName);const safeSchoolName=escapeHtml(schoolName);
+    const sent=await getResend().emails.send({from:emailFrom,to:parsed.data.email,replyTo:"nationals@estherfundsinc.org",subject:`Case submitted — verify your EFF Student Help case ${caseCode}`,html:`<div style="font-family:Arial,sans-serif;line-height:1.6;color:#2d1748;max-width:640px;margin:0 auto">
+<h1 style="color:#42127F">Case submitted</h1>
+<p>Hello ${safeStudentName},</p>
+<p>We received your National Student Help Desk case for <strong>${safeSchoolName}</strong>.</p>
+<p style="background:#F5F0E6;border-left:5px solid #42127F;padding:14px 18px"><strong>Case number: ${caseCode}</strong></p>
+<p>Verify your email within 24 hours so your case can enter the live review line.</p>
+<p><a href="${verifyUrl}" style="display:inline-block;background:#42127F;color:#FFFFFF;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">Verify my email and enter the review line</a></p>
+<p>After verification, EFF will identify the likely school department, prepare a document checklist, and send meaningful follow-up updates.</p>
+${essentials?`<p>Your ${parsed.data.essentialsTerm} Student Essentials request of up to $100 will be reviewed separately. Funding is limited and assistance is not guaranteed.</p>`:""}
+<p><strong>Safety reminder:</strong> Do not email Social Security numbers, passwords, tax returns, bank details, or unredacted student IDs.</p>
+<p>Esther Funds Foundation<br><em>Every Future Fulfilled</em></p>
+</div>`,text:`Hello ${studentName},
 
 We received your national Student Help Desk case for ${schoolName}.
 Case number: ${caseCode}
@@ -85,6 +99,7 @@ Do not email Social Security numbers, passwords, tax returns, bank details, or u
 Esther Funds Foundation
 Every Future Fulfilled`});
     if(sent.error)throw new Error(sent.error.message);
+    await admin.from("student_help_case_events").insert({case_id:id,event_type:"verification_email_sent",summary:`Automatic verification email accepted for delivery to ${parsed.data.email}.`});
   }catch(error){
     console.error("National help verification email failed",error);
     await admin.from("student_help_cases").update({status:"delivery_failed"}).eq("id",id);
