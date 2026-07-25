@@ -8,6 +8,7 @@ export default async function Admin(){
   const {count:exceptions}=await supabase.from("scholarship_exceptions").select("id",{count:"exact",head:true}).is("resolved_at",null);
   const cards=[
     {title:"National Student Help Desk",text:"Route verified cases, approve first school outreach, automate follow-ups, and review Fall/Spring essentials requests.",href:"/admin/student-help",icon:HeartHandshake},
+    {title:"College Resource Directory",text:"Track official institution records, verified department coverage, source pages, and contact review dates.",href:"/admin/college-directory",icon:Database},
     {title:"Howard Help Desk",text:"Track verified reinstatement cases, advocacy delivery, Howard responses, outcomes, and petition support.",href:"/admin/howard-help",icon:GraduationCap},
     {title:"Applicant Pool Dashboard",text:"Understand all Name Your Need students, claimed accounts, portal applications, statuses, programs, and awards in one place.",href:"/admin/applicant-pool",icon:BarChart3},
     {title:"Applications",text:"Search submissions, review answers and documents, request information, and record decisions.",href:"/admin/applications",icon:ClipboardList},
