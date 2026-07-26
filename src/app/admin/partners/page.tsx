@@ -15,7 +15,7 @@ export default async function AdminPartners({searchParams}:{searchParams:Promise
   return <main className="section white"><div className="shell">
     <Link className="card-link" href="/admin">← Command center</Link>
     <div className="eyebrow">College Continuity Partnership</div><h2>Institution applications</h2>
-    <p className="muted">Verify the representative, official institution identity, website, logo ownership, and readiness commitments before public launch.</p>
+    <p className="muted">Registrations activate and appear publicly immediately. Review official institution identity, website, logo ownership, and readiness commitments; pause or remove any profile that raises a concern.</p>
     {query.saved&&<div className="notice success-text">Partnership status updated.</div>}
     {query.error&&<div className="notice error-text">{query.error}</div>}
     <div className="partner-admin-summary">{summary.map(([label,count,Icon])=><div className="stat" key={label}><Icon/><strong>{count}</strong><span>{label}</span></div>)}</div>
@@ -24,7 +24,7 @@ export default async function AdminPartners({searchParams}:{searchParams:Promise
       <p>{partner.public_summary}</p>
       <dl><div><dt>Representative</dt><dd>{partner.primary_contact_name}, {partner.primary_contact_title}<br/>{partner.primary_contact_email}</dd></div><div><dt>Liaison</dt><dd>{partner.liaison_department}</dd></div><div><dt>Submitted</dt><dd>{new Date(partner.created_at).toLocaleString()}</dd></div></dl>
       <div className="resource-actions">{partner.website_url&&<a className="resource-link" href={partner.website_url} target="_blank" rel="noreferrer">Official website <ExternalLink size={15}/></a>}{partner.logo_url&&<a className="resource-link" href={partner.logo_url} target="_blank" rel="noreferrer">Inspect logo <ExternalLink size={15}/></a>}</div>
-      <form action={reviewPartner} className="partner-admin-review"><input type="hidden" name="institutionId" value={partner.id}/><label>Designation<select name="designation" defaultValue={partner.designation}><option value="partner">Partner Campus</option><option value="institute">Institute for Student Continuity</option></select></label><label>Decision<select name="decision" defaultValue={partner.status==="pending"?"approved":partner.status}><option value="approved">Approve, not public yet</option><option value="active">Activate public profile</option><option value="paused">Pause public profile</option><option value="declined">Decline application</option></select></label><button className="button">Save decision</button></form>
+      <form action={reviewPartner} className="partner-admin-review"><input type="hidden" name="institutionId" value={partner.id}/><label>Designation<select name="designation" defaultValue={partner.designation}><option value="partner">Partner Campus</option><option value="institute">Institute for Student Continuity</option></select></label><label>Profile status<select name="decision" defaultValue={partner.status==="pending"?"active":partner.status}><option value="active">Public and active</option><option value="paused">Pause public profile</option><option value="declined">Remove public profile</option></select></label><button className="button">Save decision</button></form>
     </article>)}
     {!partners?.length&&<div className="partner-empty-state"><Building2/><h3>No institution applications yet.</h3><p>Applications submitted through the free partner portal will appear here.</p></div>}
     </div>

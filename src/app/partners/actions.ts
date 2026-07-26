@@ -89,7 +89,10 @@ export async function submitPartnerApplication(formData:FormData){
     primary_contact_email:primaryContactEmail,
     primary_contact_phone:text(formData,"primaryContactPhone",40)||null,
     liaison_department:liaisonDepartment,
-    status:"pending",
+    status:"active",
+    public_profile:true,
+    approved_at:new Date().toISOString(),
+    reviewed_at:new Date().toISOString(),
     application_note:text(formData,"applicationNote",1800)||null,
     created_by:user.id
   }).select("id").single();
@@ -103,8 +106,8 @@ export async function submitPartnerApplication(formData:FormData){
     redirect(`/partners/onboarding?error=${encodeURIComponent("We could not connect the institution account. Please try again.")}`);
   }
   await admin.from("eff_partner_activity").insert({
-    institution_id:institution.id,actor_id:user.id,action:"partnership_application_submitted",
-    detail_safe:{source:"public_partner_portal"}
+    institution_id:institution.id,actor_id:user.id,action:"partnership_activated",
+    detail_safe:{source:"public_partner_portal",activation:"automatic_by_eff_policy"}
   });
   redirect("/partners/dashboard?submitted=1");
 }

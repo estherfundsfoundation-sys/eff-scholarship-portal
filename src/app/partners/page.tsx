@@ -51,8 +51,8 @@ export default async function Partners(){
     <section className="partner-count-strip">
       <div className="shell">
         <strong>{partnerCount}</strong>
-        <span>public partner school{partnerCount===1?"":"s"}</span>
-        <p>Founding institutions will be featured as the national partnership launches.</p>
+        <span>active partner school{partnerCount===1?"":"s"}</span>
+        <p>Completed registrations are recognized immediately and may be reviewed or removed by EFF.</p>
         <Link href="/partners/directory">View directory <ArrowRight size={16}/></Link>
       </div>
     </section>
@@ -104,8 +104,8 @@ export default async function Partners(){
           {[
             ["01","Create the institution account","A college representative registers with an official institutional email."],
             ["02","Submit the free partnership profile","Select the institution, identify the liaison, add the logo, and accept the Continuity Pledge."],
-            ["03","EFF verifies the institution","EFF reviews the representative, official school information, and readiness commitments."],
-            ["04","Launch the student referral pathway","The approved school receives its public profile, partner materials, and Help Desk referral link."],
+            ["03","The partnership activates","The school’s logo, pledge, and public partner profile appear in the national directory immediately."],
+            ["04","Launch the student referral pathway","The school receives partner materials, its institution account, and the Help Desk referral link."],
             ["05","Build toward Institute status","Partner campuses can earn the Institute designation through verified response and student-continuity outcomes."]
           ].map(([number,title,text])=><article key={number}><b>{number}</b><div><h3>{title}</h3><p>{text}</p></div></article>)}
         </div>
