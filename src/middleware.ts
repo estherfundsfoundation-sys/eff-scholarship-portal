@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
-  const protectedPath = ["/dashboard","/profile","/applications","/admin","/careers/dashboard","/careers/profile","/careers/applications","/careers/apply","/careers/board-onboarding","/careers/board-invite"].some(path=>request.nextUrl.pathname.startsWith(path));
+  const protectedPath = ["/dashboard","/profile","/applications","/admin","/partners/dashboard","/partners/onboarding","/careers/dashboard","/careers/profile","/careers/applications","/careers/apply","/careers/board-onboarding","/careers/board-invite"].some(path=>request.nextUrl.pathname.startsWith(path));
   const authEntryPath = ["/sign-in","/sign-up"].includes(request.nextUrl.pathname);
   if (!protectedPath && !authEntryPath) return response;
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
