@@ -2,9 +2,9 @@ import fs from "node:fs";
 import path from "node:path";
 
 const [csvArg,outputArg,offsetArg="0",limitArg="15",cohortArg="hbcu"]=process.argv.slice(2);
-if(!csvArg||!outputArg)throw new Error("Usage: node tools/discover_official_school_contacts.mjs <HD.csv> <output.json> [offset] [limit] [hbcu|large-non-hbcu]");
-const offset=Math.max(0,Number(offsetArg)||0),limit=Math.min(50,Math.max(1,Number(limitArg)||15));
-const cohort=cohortArg==="large-non-hbcu"?"large-non-hbcu":"hbcu";
+if(!csvArg||!outputArg)throw new Error("Usage: node tools/discover_official_school_contacts.mjs <HD.csv> <output.json> [offset] [limit] [hbcu|large-non-hbcu|outreach-gap]");
+const offset=Math.max(0,Number(offsetArg)||0),limit=Math.min(400,Math.max(1,Number(limitArg)||15));
+const cohort=["large-non-hbcu","outreach-gap"].includes(cohortArg)?cohortArg:"hbcu";
 const routes=[
   {key:"student_accounts",name:"Bursar or Student Accounts",terms:["bursar","student-accounts","studentaccounts","student-financial-services","billing-and-payments","cashier"],phrases:["bursar","student accounts","student financial services"]},
   {key:"registrar",name:"Registrar",terms:["registrar","registration-and-records","records-registration"],phrases:["registrar","records and registration","records & registration"]},
@@ -18,10 +18,15 @@ const routes=[
 function parseCsv(text){const rows=[];let row=[],field="",quoted=false;for(let i=0;i<text.length;i++){const c=text[i];if(quoted){if(c==='"'&&text[i+1]==='"'){field+='"';i++;}else if(c==='"')quoted=false;else field+=c;}else if(c==='"')quoted=true;else if(c===","){row.push(field);field="";}else if(c==="\n"){row.push(field.replace(/\r$/,""));rows.push(row);row=[];field="";}else field+=c;}if(field||row.length){row.push(field);rows.push(row);}return rows;}
 const rows=parseCsv(fs.readFileSync(path.resolve(csvArg),"utf8")),headers=rows.shift().map(x=>x.replace(/^\uFEFF/,"")),ix=Object.fromEntries(headers.map((h,i)=>[h,i]));
 const get=(row,key)=>String(row[ix[key]]??"").trim();const normalizeUrl=value=>{let v=String(value??"").trim();if(!v||v==="-2")return null;if(!/^https?:\/\//i.test(v))v=`https://${v}`;try{const u=new URL(v);u.hash="";return u.toString();}catch{return null;}};
+const researched=cohort==="outreach-gap"
+  ? new Set(JSON.parse(fs.readFileSync(path.resolve(process.cwd(),"src","data","partner-outreach-audience.json"),"utf8")).audience.map(item=>Number(item.unitid)))
+  : new Set();
 const inCohort=row=>cohort==="hbcu"
   ? get(row,"HBCU")==="1"
-  : get(row,"HBCU")!=="1"&&get(row,"INSTSIZE")==="5";
-const schools=rows.filter(row=>get(row,"CYACTIVE")==="1"&&get(row,"POSTSEC")==="1"&&inCohort(row)).map(row=>({unitid:Number(get(row,"UNITID")),name:get(row,"INSTNM"),state:get(row,"STABBR"),website:normalizeUrl(get(row,"WEBADDR"))})).filter(x=>x.website).sort((a,b)=>a.name.localeCompare(b.name)).slice(offset,offset+limit);
+  : cohort==="large-non-hbcu"
+    ? get(row,"HBCU")!=="1"&&get(row,"INSTSIZE")==="5"
+    : get(row,"DEGGRANT")==="1"&&!researched.has(Number(get(row,"UNITID")));
+const schools=rows.filter(row=>get(row,"CYACTIVE")==="1"&&get(row,"POSTSEC")==="1"&&inCohort(row)).map(row=>({unitid:Number(get(row,"UNITID")),name:get(row,"INSTNM"),state:get(row,"STABBR"),website:normalizeUrl(get(row,"WEBADDR")),size:Number(get(row,"INSTSIZE"))||0})).filter(x=>x.website).sort((a,b)=>b.size-a.size||a.name.localeCompare(b.name)).slice(offset,offset+limit);
 const headersFetch={"User-Agent":"EstherFundsFoundation-ResourceVerifier/1.0 (+https://portal.estherfundsfoundation.org/resources/student-help)","Accept":"text/html,application/xml,text/xml;q=0.9,*/*;q=0.8"};
 async function fetchText(url,timeout=12000){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeout);try{const response=await fetch(url,{headers:headersFetch,redirect:"follow",signal:controller.signal});if(!response.ok)return null;return {url:response.url,type:response.headers.get("content-type")??"",text:await response.text()};}catch{return null;}finally{clearTimeout(timer);}}
 const locs=xml=>[...xml.matchAll(/<loc[^>]*>([\s\S]*?)<\/loc>/gi)].map(m=>m[1].replaceAll("&amp;","&").trim()).filter(Boolean);
@@ -32,7 +37,7 @@ const score=(url,route)=>{const lower=url.toLowerCase();if(/\/(news|news-events|
 function extractContact(page,officialHost,route){
   const title=(page.text.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1]??"").replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim().slice(0,240);
   const siteDomain=officialHost.replace(/^www\./,"").split(".").slice(-2).join(".");
-  const emails=[...new Set([...page.text.matchAll(/mailto:([^"'? >]+)/gi)].map(m=>decodeURIComponent(m[1]).toLowerCase()).filter(x=>/^[a-z0-9][a-z0-9._%+-]*@[a-z0-9.-]+\.[a-z]{2,}$/i.test(x)&&x.split("@")[1].endsWith(siteDomain)&&!["webmaster","info","admissions"].includes(x.split("@")[0])))].slice(0,5);
+  const emails=[...new Set([...page.text.matchAll(/mailto:([^"'? >]+)/gi)].map(m=>{try{return decodeURIComponent(m[1]).toLowerCase();}catch{return m[1].toLowerCase();}}).filter(x=>/^[a-z0-9][a-z0-9._%+-]*@[a-z0-9.-]+\.[a-z]{2,}$/i.test(x)&&x.split("@")[1].endsWith(siteDomain)&&!["webmaster","info","admissions"].includes(x.split("@")[0])))].slice(0,5);
   const phone=page.text.replace(/<[^>]+>/g," ").match(/(?:\+?1[\s.-]?)?(?:\(\d{3}\)[\s.-]?|\d{3}[\s.-])\d{3}[\s.-]\d{4}/)?.[0]??null;
   const titlePlain=title.replace(/&[a-z#0-9]+;/gi," ").replace(/\s+/g," ").toLowerCase();
   const editorialTitle=/\b(archives?|attachment|job|professor|prepares|participates|names?|named|donates|continues|celebrates|announces|workshop|conference|grant|minor|degrees?|retires?|helps|offered|wins|award|applications? open|concentration|bachelor|master of|master'?s|master s|certificate|technician|episode|employee spotlight|scholarships?|supporting our|director of basic needs|close to transit|guide to volunteering|international education week|career programs|expected housing status|housing allowance|housing and meal costs|housing costs|housing 101|housing water heater|alumni network|training materials|hipaa|diabetes prevention|decision sciences|what information technology is|mechanical engineering|computer science|health information technology|veteran student affairs|student disability services|college of podiatric medicine|kent state stark|mary lou pollack)\b/i.test(titlePlain)

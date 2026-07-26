@@ -36,7 +36,18 @@ const institutions=new Map(csvRows.map(row=>[
   }
 ]));
 
-const priority={student_advocacy:1,basic_needs:2,financial_aid:3,registrar:4,student_accounts:5};
+const priority={
+  student_advocacy:1,
+  basic_needs:2,
+  financial_aid:3,
+  registrar:4,
+  student_accounts:5,
+  financial_wellness:6,
+  housing:7,
+  international:8,
+  technology:9,
+  title_ix:10
+};
 const validEmail=/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 const excludedEmail=/(^|[._-])(no-?reply|do-?not-?reply|test|testing)([._@-]|$)/i;
 const tuple=/^\((\d+),'((?:''|[^'])*)','((?:''|[^'])*)','((?:''|[^'])*)',('(?:''|[^'])*'|null),/gm;
@@ -48,7 +59,7 @@ for(const filename of fs.readdirSync(ipedsRoot).filter(name=>name.endsWith(".sql
     const values=section.split(/on conflict/i)[0];
     for(const match of values.matchAll(tuple)){
       const unitid=Number(match[1]),departmentKey=match[2].replaceAll("''","'"),emailToken=match[5];
-      if(!institutions.has(unitid)||!(departmentKey in priority)||emailToken==="null"||!values.slice(match.index,match.index+1800).includes("'verified'"))continue;
+      if(!institutions.has(unitid)||emailToken==="null"||!values.slice(match.index,match.index+1800).includes("'verified'"))continue;
       const email=emailToken.slice(1,-1).replaceAll("''","'").trim().toLowerCase();
       if(!validEmail.test(email)||excludedEmail.test(email))continue;
       const candidate={
@@ -56,7 +67,7 @@ for(const filename of fs.readdirSync(ipedsRoot).filter(name=>name.endsWith(".sql
         email,
         department_key:departmentKey,
         source_file:filename,
-        rank:priority[departmentKey]
+        rank:priority[departmentKey]??99
       };
       const current=chosen.get(unitid);
       if(!current||candidate.rank<current.rank||(candidate.rank===current.rank&&candidate.source_file>current.source_file))chosen.set(unitid,candidate);
