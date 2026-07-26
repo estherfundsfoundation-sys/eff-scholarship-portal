@@ -25,7 +25,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
           <div className="shell nav-inner">
             <Link className="brand" href="/">
               <Image className="brand-logo" src="/brand/eff-logo.png" alt="Esther Funds Foundation — Every Future Fulfilled" width={68} height={68} priority/>
-              <span className="brand-copy"><strong>Esther Funds Foundation</strong><small>Foundation Portal</small></span>
+              <span className="brand-copy"><strong>Esther Funds Foundation</strong><small>Portal</small></span>
             </Link>
             <nav className="nav-links" aria-label="Primary">
               <Link href="/resources">I Need Help Now</Link>
@@ -43,7 +43,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
             <div>
               <div className="brand">
                 <Image className="footer-logo" src="/brand/eff-logo.png" alt="" width={86} height={86}/>
-                <span className="brand-copy"><strong>Esther Funds Foundation</strong><small>Foundation Portal</small></span>
+                <span className="brand-copy"><strong>Esther Funds Foundation</strong><small>Portal</small></span>
               </div>
               <p>We are working to prevent college dropouts around the world.</p>
               <small>© {new Date().getFullYear()} Esther Funds Foundation</small>
