@@ -48,6 +48,7 @@ export async function GET(request: NextRequest) {
     const result = await resend.emails.send({
       from: emailFrom,
       to: message.recipient,
+      replyTo: templateKey === "partner_invitation" ? "nationals@estherfundsinc.org" : undefined,
       subject: rendered.subject,
       html: `${rendered.html}<p>Questions? Contact <a href="mailto:nationals@estherfundsinc.org">nationals@estherfundsinc.org</a>.</p>`,
     });
