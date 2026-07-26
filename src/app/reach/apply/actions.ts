@@ -11,7 +11,8 @@ import {buildReachAcceptanceLetter} from "@/lib/reach/acceptance-letter";
 const applicationSchema = z.object({
   fullName: z.string().trim().min(2).max(100),
   preferredName: z.string().trim().max(60).optional(),
-  email: z.string().trim().toLowerCase().email().max(180),
+  contactEmail: z.string().trim().toLowerCase().email().max(180),
+  accountEmail: z.string().trim().toLowerCase().email().max(180),
   phone: z.string().trim().max(40).optional(),
   institution: z.string().trim().min(2).max(180),
   city: z.string().trim().max(100).optional(),
@@ -44,7 +45,8 @@ export async function submitReachAmbassadorApplication(formData: FormData) {
   const parsed = applicationSchema.safeParse({
     fullName: value(formData, "fullName"),
     preferredName: optional(formData, "preferredName"),
-    email: value(formData, "email"),
+    contactEmail: value(formData, "contactEmail"),
+    accountEmail: value(formData, "accountEmail"),
     phone: optional(formData, "phone"),
     institution: value(formData, "institution"),
     city: optional(formData, "city"),
@@ -71,18 +73,19 @@ export async function submitReachAmbassadorApplication(formData: FormData) {
   const applicant = parsed.data;
   const {data: existingApplication} = await admin
     .from("reach_ambassador_applications")
-    .select("id,welcome_sent_at")
-    .eq("email", applicant.email)
+    .select("id,login_email,welcome_sent_at")
+    .eq("email", applicant.contactEmail)
     .maybeSingle();
-  if (existingApplication?.welcome_sent_at) {
-    redirect(`/reach/apply/accepted?name=${encodeURIComponent(applicant.preferredName || applicant.fullName)}&email=${encodeURIComponent(applicant.email)}&sent=1`);
+  if (existingApplication?.welcome_sent_at && existingApplication.login_email === applicant.accountEmail) {
+    redirect(`/reach/apply/accepted?name=${encodeURIComponent(applicant.preferredName || applicant.fullName)}&email=${encodeURIComponent(applicant.accountEmail)}&sent=1`);
   }
   const {data: application, error: applicationError} = await admin
     .from("reach_ambassador_applications")
     .upsert({
       full_name: applicant.fullName,
       preferred_name: applicant.preferredName || null,
-      email: applicant.email,
+      email: applicant.contactEmail,
+      login_email: applicant.accountEmail,
       phone: applicant.phone || null,
       institution: applicant.institution,
       city: applicant.city || null,
@@ -112,7 +115,7 @@ export async function submitReachAmbassadorApplication(formData: FormData) {
   const {data: ambassador, error: rosterError} = await admin
     .from("reach_ambassadors")
     .upsert({
-      email: applicant.email,
+      email: applicant.accountEmail,
       full_name: applicant.fullName,
       institution: applicant.institution,
       application_id: application.id,
@@ -149,7 +152,7 @@ export async function submitReachAmbassadorApplication(formData: FormData) {
     });
     const sent = await getResend().emails.send({
       from: emailFrom,
-      to: applicant.email,
+      to: applicant.accountEmail,
       replyTo: "nationals@estherfundsinc.org",
       subject: "Congratulations — you are officially a REACH Campus Ambassador",
       attachments: [{
@@ -193,5 +196,5 @@ export async function submitReachAmbassadorApplication(formData: FormData) {
     }),
   ]);
 
-  redirect(`/reach/apply/accepted?name=${encodeURIComponent(applicant.preferredName || applicant.fullName)}&email=${encodeURIComponent(applicant.email)}&sent=${emailSent ? "1" : "0"}`);
+  redirect(`/reach/apply/accepted?name=${encodeURIComponent(applicant.preferredName || applicant.fullName)}&email=${encodeURIComponent(applicant.accountEmail)}&sent=${emailSent ? "1" : "0"}`);
 }

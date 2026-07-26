@@ -60,7 +60,8 @@ export default async function ReachAmbassadorApplyPage({
           <div className="form-grid">
             <label>Full legal name<input name="fullName" required minLength={2} maxLength={100}/></label>
             <label>Preferred name <span className="muted">(optional)</span><input name="preferredName" maxLength={60}/></label>
-            <label>Email address<input name="email" type="email" required maxLength={180}/></label>
+            <label>Contact email<input name="contactEmail" type="email" required maxLength={180}/></label>
+            <label>REACH account email<input name="accountEmail" type="email" required maxLength={180}/><small className="form-help">Choose any personal, school, or other email you control. This is the address you will use to claim and sign in to your ambassador account.</small></label>
             <label>Phone number <span className="muted">(optional)</span><input name="phone" type="tel" maxLength={40}/></label>
             <label className="full-field">College or university<input name="institution" required minLength={2} maxLength={180}/></label>
             <label>Campus city <span className="muted">(optional)</span><input name="city" maxLength={100}/></label>
