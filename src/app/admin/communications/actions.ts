@@ -1,4 +1,4 @@
-"use server";import {revalidatePath} from "next/cache";import {redirect} from "next/navigation";import {requireAdmin,requireSuperAdmin} from "@/lib/auth/staff";import {createAdminClient} from "@/lib/supabase/admin";
+"use server";import {revalidatePath} from "next/cache";import {redirect} from "next/navigation";import {requireAdmin,requireSuperAdmin} from "@/lib/auth/staff";import {createAdminClient} from "@/lib/supabase/admin";import partnerOutreach from "@/data/partner-outreach-audience.json";
 export async function saveTemplate(formData:FormData){const {supabase,user}=await requireAdmin();const id=String(formData.get("template_id"));const subject=String(formData.get("subject")??"").trim();const body=String(formData.get("body")??"").trim();if(!subject||!body)throw new Error("Subject and body are required.");const {error}=await supabase.from("email_templates").update({subject,body}).eq("id",id);if(error)throw new Error("Template could not be saved.");await supabase.from("audit_events").insert({actor_id:user.id,action:"email_template_updated",target_type:"email_template",target_id:id});revalidatePath("/admin/communications")}
 export async function retryFailedMessage(formData:FormData){const {supabase}=await requireAdmin();const id=String(formData.get("message_id")??"");const {error}=await supabase.rpc("retry_failed_message",{p_message_id:id});if(error)throw new Error(error.message);revalidatePath("/admin/communications")}
 
@@ -60,6 +60,13 @@ export async function queueNationalPartnerOutreach(){
     const current=chosen.get(unitid);
     if(!current||rank<current.rank||(rank===current.rank&&checked>current.checked))chosen.set(unitid,{email,rank,checked});
   }
+  for(const record of partnerOutreach.audience){
+    const email=record.email.trim().toLowerCase(),rank=priority[record.department_key]??99;
+    if(!valid.test(email)||excluded.test(email)||blocked.has(email))continue;
+    schools.set(record.unitid,record.name);
+    const current=chosen.get(record.unitid);
+    if(!current||rank<current.rank)chosen.set(record.unitid,{email,rank,checked:partnerOutreach.generated_at});
+  }
   const now=new Date().toISOString();
   const messages=[...chosen].map(([unitid,contact])=>({
     recipient:contact.email,
@@ -75,7 +82,7 @@ export async function queueNationalPartnerOutreach(){
     if(error)throw new Error("The national invitation queue could not be created.");
     queued+=data?.length??0;
   }
-  await admin.from("audit_events").insert({actor_id:user.id,action:"national_partner_outreach_queued",target_type:"partner_campaign",target_id:"every_future_fulfilled_2026",metadata_safe:{queued,eligible_institutions:messages.length,audience_policy:"one verified student-support contact per active U.S. institution"}});
+  await admin.from("audit_events").insert({actor_id:user.id,action:"national_partner_outreach_queued",target_type:"partner_campaign",target_id:"every_future_fulfilled_2026",metadata_safe:{queued,eligible_institutions:messages.length,researched_hbcus:partnerOutreach.hbcu,researched_pwis_and_other:partnerOutreach.pwi_and_other,audience_policy:"one verified student-support contact per active U.S. institution"}});
   revalidatePath("/admin/communications");
   redirect(`/admin/communications?partnerQueued=${queued}&partnerEligible=${messages.length}`);
 }
