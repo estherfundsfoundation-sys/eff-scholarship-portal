@@ -74,3 +74,62 @@ export async function reviewReachActivity(formData: FormData) {
   redirect("/admin/reach?reviewed=1");
 }
 
+export async function reviewReachAmbassadorProfile(formData: FormData) {
+  const {user} = await requireAdmin();
+  const admin = createAdminClient();
+  const ambassadorId = clean(formData.get("ambassadorId"), 80);
+  const decision = clean(formData.get("decision"), 30);
+  const reviewNote = clean(formData.get("reviewNote"), 1000);
+  if (!["published", "changes_requested", "private"].includes(decision)) {
+    redirect("/admin/reach?error=Choose+a+valid+profile+review+decision.");
+  }
+
+  const {data: profile} = await admin
+    .from("reach_ambassador_profiles")
+    .select("ambassador_id,slug,private_photo_path,public_photo_path")
+    .eq("ambassador_id", ambassadorId)
+    .single();
+  if (!profile) redirect("/admin/reach?error=Ambassador+profile+not+found.");
+
+  let publicPhotoPath = profile.public_photo_path;
+  if (decision === "published" && profile.private_photo_path) {
+    const downloaded = await admin.storage.from("reach-ambassador-uploads").download(profile.private_photo_path);
+    if (downloaded.error || !downloaded.data) {
+      redirect("/admin/reach?error=The+profile+photo+could+not+be+prepared+for+publication.");
+    }
+    const extension = profile.private_photo_path.split(".").pop()?.toLowerCase() || "jpg";
+    publicPhotoPath = `profiles/${ambassadorId}.${extension}`;
+    const uploaded = await admin.storage.from("reach-impact-media").upload(publicPhotoPath, downloaded.data, {
+      upsert: true,
+      contentType: downloaded.data.type || undefined,
+    });
+    if (uploaded.error) {
+      redirect("/admin/reach?error=The+profile+photo+could+not+be+published.");
+    }
+  }
+
+  const now = new Date().toISOString();
+  const {error} = await admin.from("reach_ambassador_profiles").update({
+    status: decision,
+    review_note: reviewNote || null,
+    public_photo_path: publicPhotoPath,
+    reviewed_at: now,
+    reviewed_by: user.id,
+    updated_at: now,
+  }).eq("ambassador_id", ambassadorId);
+  if (error) redirect("/admin/reach?error=The+profile+review+could+not+be+saved.");
+
+  await admin.from("audit_events").insert({
+    actor_id: user.id,
+    action: `reach_ambassador_profile_${decision}`,
+    target_type: "reach_ambassador_profile",
+    target_id: ambassadorId,
+    metadata_safe: {slug: profile.slug, has_public_photo: Boolean(publicPhotoPath)},
+  });
+  revalidatePath("/admin/reach");
+  revalidatePath("/reach/ambassador");
+  revalidatePath("/reach/ambassadors");
+  revalidatePath(`/reach/ambassadors/${profile.slug}`);
+  redirect("/admin/reach?profileReviewed=1");
+}
+
