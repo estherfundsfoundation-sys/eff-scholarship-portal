@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-07-26T11:31:37.987Z",
+  "generated_at": "2026-07-26T12:18:50.200Z",
   "source": "NCES IPEDS HD2023 and verified official-school contact research",
-  "total": 276,
-  "hbcu": 59,
-  "pwi_and_other": 217,
-  "states": 44,
+  "total": 615,
+  "hbcu": 84,
+  "pwi_and_other": 531,
+  "states": 51,
   "audience": [
     {
       "unitid": 100724,
@@ -16,6 +16,24 @@
       "source_file": "hbcu-contacts-manual-gap.sql"
     },
     {
+      "unitid": 102030,
+      "name": "Bishop State Community College",
+      "state": "AL",
+      "hbcu": true,
+      "email": "ymcneil@bishop.edu",
+      "department_key": "international",
+      "source_file": "hbcu-contacts-001.sql"
+    },
+    {
+      "unitid": 101240,
+      "name": "Gadsden State Community College",
+      "state": "AL",
+      "hbcu": true,
+      "email": "fdobbs@gadsdenstate.edu",
+      "department_key": "international",
+      "source_file": "hbcu-contacts-003.sql"
+    },
+    {
       "unitid": 102313,
       "name": "H Councill Trenholm State Community College",
       "state": "AL",
@@ -23,6 +41,24 @@
       "email": "tsccpantry@trenholmstate.edu",
       "department_key": "basic_needs",
       "source_file": "hbcu-contacts-003.sql"
+    },
+    {
+      "unitid": 101462,
+      "name": "J. F. Drake State Community and Technical College",
+      "state": "AL",
+      "hbcu": true,
+      "email": "tina.patton@drakestate.edu",
+      "department_key": "title_ix",
+      "source_file": "hbcu-contacts-003.sql"
+    },
+    {
+      "unitid": 101569,
+      "name": "Lawson State Community College",
+      "state": "AL",
+      "hbcu": true,
+      "email": "bholman@lawsonstate.edu",
+      "department_key": "housing",
+      "source_file": "hbcu-contacts-004.sql"
     },
     {
       "unitid": 101675,
@@ -34,12 +70,30 @@
       "source_file": "hbcu-contacts-004.sql"
     },
     {
+      "unitid": 101912,
+      "name": "Oakwood University",
+      "state": "AL",
+      "hbcu": true,
+      "email": "hollandhall@oakwood.edu",
+      "department_key": "housing",
+      "source_file": "hbcu-contacts-005.sql"
+    },
+    {
       "unitid": 102058,
       "name": "Selma University",
       "state": "AL",
       "hbcu": true,
       "email": "registrar@selmau.edu",
       "department_key": "registrar",
+      "source_file": "hbcu-contacts-005.sql"
+    },
+    {
+      "unitid": 102067,
+      "name": "Shelton State Community College",
+      "state": "AL",
+      "hbcu": true,
+      "email": "titleix@sheltonstate.edu",
+      "department_key": "title_ix",
       "source_file": "hbcu-contacts-005.sql"
     },
     {
@@ -68,6 +122,15 @@
       "email": "tharper@tuskegee.edu",
       "department_key": "student_advocacy",
       "source_file": "hbcu-contacts-006.sql"
+    },
+    {
+      "unitid": 106306,
+      "name": "Arkansas Baptist College",
+      "state": "AR",
+      "hbcu": true,
+      "email": "vicki.williams@arkansasbaptist.edu",
+      "department_key": "title_ix",
+      "source_file": "hbcu-contacts-001.sql"
     },
     {
       "unitid": 107600,
@@ -115,6 +178,15 @@
       "source_file": "hbcu-contacts-002.sql"
     },
     {
+      "unitid": 138716,
+      "name": "Albany State University",
+      "state": "GA",
+      "hbcu": true,
+      "email": "asuhousing@asurams.edu",
+      "department_key": "housing",
+      "source_file": "hbcu-contacts-001.sql"
+    },
+    {
       "unitid": 138947,
       "name": "Clark Atlanta University",
       "state": "GA",
@@ -160,6 +232,24 @@
       "source_file": "hbcu-contacts-004.sql"
     },
     {
+      "unitid": 140571,
+      "name": "Morris Brown College",
+      "state": "GA",
+      "hbcu": true,
+      "email": "greg.mullins@morrisbrown.edu",
+      "department_key": "technology",
+      "source_file": "hbcu-contacts-004.sql"
+    },
+    {
+      "unitid": 141060,
+      "name": "Spelman College",
+      "state": "GA",
+      "hbcu": true,
+      "email": "housing@spelman.edu",
+      "department_key": "housing",
+      "source_file": "hbcu-contacts-006.sql"
+    },
+    {
       "unitid": 157058,
       "name": "Kentucky State University",
       "state": "KY",
@@ -178,6 +268,33 @@
       "source_file": "hbcu-contacts-005.sql"
     },
     {
+      "unitid": 158802,
+      "name": "Dillard University",
+      "state": "LA",
+      "hbcu": true,
+      "email": "residentiallife@dillard.edu",
+      "department_key": "housing",
+      "source_file": "hbcu-contacts-002.sql"
+    },
+    {
+      "unitid": 159009,
+      "name": "Grambling State University",
+      "state": "LA",
+      "hbcu": true,
+      "email": "marshallt@gram.edu",
+      "department_key": "title_ix",
+      "source_file": "hbcu-contacts-003.sql"
+    },
+    {
+      "unitid": 160621,
+      "name": "Southern University and A & M College",
+      "state": "LA",
+      "hbcu": true,
+      "email": "counselingcenter@subr.edu",
+      "department_key": "title_ix",
+      "source_file": "hbcu-contacts-006.sql"
+    },
+    {
       "unitid": 160630,
       "name": "Southern University at New Orleans",
       "state": "LA",
@@ -193,6 +310,15 @@
       "hbcu": true,
       "email": "cveazy@susla.edu",
       "department_key": "student_advocacy",
+      "source_file": "hbcu-contacts-006.sql"
+    },
+    {
+      "unitid": 440916,
+      "name": "Southern University Law Center",
+      "state": "LA",
+      "hbcu": true,
+      "email": "titleix@sulc.edu",
+      "department_key": "title_ix",
       "source_file": "hbcu-contacts-006.sql"
     },
     {
@@ -223,6 +349,15 @@
       "source_file": "hbcu-contacts-002.sql"
     },
     {
+      "unitid": 163453,
+      "name": "Morgan State University",
+      "state": "MD",
+      "hbcu": true,
+      "email": "titleixcoordinator@morgan.edu",
+      "department_key": "title_ix",
+      "source_file": "hbcu-contacts-004.sql"
+    },
+    {
       "unitid": 163338,
       "name": "University of Maryland Eastern Shore",
       "state": "MD",
@@ -250,6 +385,33 @@
       "source_file": "hbcu-contacts-004.sql"
     },
     {
+      "unitid": 175856,
+      "name": "Jackson State University",
+      "state": "MS",
+      "hbcu": true,
+      "email": "housinginfo@jsums.edu",
+      "department_key": "housing",
+      "source_file": "hbcu-contacts-003.sql"
+    },
+    {
+      "unitid": 176044,
+      "name": "Mississippi Valley State University",
+      "state": "MS",
+      "hbcu": true,
+      "email": "raynaldo.gillus@mvsu.edu",
+      "department_key": "housing",
+      "source_file": "hbcu-contacts-manual-gap.sql"
+    },
+    {
+      "unitid": 176318,
+      "name": "Rust College",
+      "state": "MS",
+      "hbcu": true,
+      "email": "helpdesk@rustcollege.edu",
+      "department_key": "technology",
+      "source_file": "hbcu-contacts-005.sql"
+    },
+    {
       "unitid": 176406,
       "name": "Tougaloo College",
       "state": "MS",
@@ -275,6 +437,24 @@
       "email": "graduateeducation@ecsu.edu",
       "department_key": "registrar",
       "source_file": "hbcu-contacts-002.sql"
+    },
+    {
+      "unitid": 198543,
+      "name": "Fayetteville State University",
+      "state": "NC",
+      "hbcu": true,
+      "email": "residencelife@uncfsu.edu",
+      "department_key": "housing",
+      "source_file": "hbcu-contacts-002.sql"
+    },
+    {
+      "unitid": 198756,
+      "name": "Johnson C Smith University",
+      "state": "NC",
+      "hbcu": true,
+      "email": "residencelife@jcsu.edu",
+      "department_key": "housing",
+      "source_file": "hbcu-contacts-003.sql"
     },
     {
       "unitid": 198862,
@@ -394,6 +574,15 @@
       "source_file": "hbcu-contacts-002.sql"
     },
     {
+      "unitid": 217989,
+      "name": "Denmark Technical College",
+      "state": "SC",
+      "hbcu": true,
+      "email": "stoverr@denmarktech.edu",
+      "department_key": "title_ix",
+      "source_file": "hbcu-contacts-002.sql"
+    },
+    {
       "unitid": 218399,
       "name": "Morris College",
       "state": "SC",
@@ -401,6 +590,15 @@
       "email": "jdavis@morris.edu",
       "department_key": "student_advocacy",
       "source_file": "hbcu-contacts-004.sql"
+    },
+    {
+      "unitid": 218733,
+      "name": "South Carolina State University",
+      "state": "SC",
+      "hbcu": true,
+      "email": "jrollin5@scsu.edu",
+      "department_key": "housing",
+      "source_file": "hbcu-contacts-005.sql"
     },
     {
       "unitid": 218919,
@@ -457,6 +655,15 @@
       "source_file": "hbcu-contacts-003.sql"
     },
     {
+      "unitid": 227526,
+      "name": "Prairie View A & M University",
+      "state": "TX",
+      "hbcu": true,
+      "email": "titleixteam@pvamu.edu",
+      "department_key": "title_ix",
+      "source_file": "hbcu-contacts-005.sql"
+    },
+    {
       "unitid": 227854,
       "name": "St Philip's College",
       "state": "TX",
@@ -475,6 +682,15 @@
       "source_file": "hbcu-contacts-006.sql"
     },
     {
+      "unitid": 229063,
+      "name": "Texas Southern University",
+      "state": "TX",
+      "hbcu": true,
+      "email": "maddox_gh@tsu.edu",
+      "department_key": "international",
+      "source_file": "hbcu-contacts-006.sql"
+    },
+    {
       "unitid": 232265,
       "name": "Hampton University",
       "state": "VA",
@@ -482,6 +698,15 @@
       "email": "vpstudentsuccess@hamptonu.edu",
       "department_key": "student_advocacy",
       "source_file": "hbcu-contacts-003.sql"
+    },
+    {
+      "unitid": 232937,
+      "name": "Norfolk State University",
+      "state": "VA",
+      "hbcu": true,
+      "email": "studyabroad@nsu.edu",
+      "department_key": "international",
+      "source_file": "hbcu-contacts-004.sql"
     },
     {
       "unitid": 234155,
@@ -547,6 +772,24 @@
       "source_file": "national-expansion-001.sql"
     },
     {
+      "unitid": 100858,
+      "name": "Auburn University",
+      "state": "AL",
+      "hbcu": false,
+      "email": "eoc@auburn.edu",
+      "department_key": "title_ix",
+      "source_file": "large-non-hbcu-contacts-001.sql"
+    },
+    {
+      "unitid": 101161,
+      "name": "Coastal Alabama Community College",
+      "state": "AL",
+      "hbcu": false,
+      "email": "housing@coastalalabama.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 450933,
       "name": "Columbia Southern University",
       "state": "AL",
@@ -554,6 +797,33 @@
       "email": "students@columbiasouthern.edu",
       "department_key": "student_advocacy",
       "source_file": "national-expansion-001.sql"
+    },
+    {
+      "unitid": 101295,
+      "name": "George C Wallace State Community College-Hanceville",
+      "state": "AL",
+      "hbcu": false,
+      "email": "kristen.holmes@wallacestate.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 101480,
+      "name": "Jacksonville State University",
+      "state": "AL",
+      "hbcu": false,
+      "email": "jsuhousing@jsu.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 101514,
+      "name": "John C Calhoun State Community College",
+      "state": "AL",
+      "hbcu": false,
+      "email": "shirley.jones@calhoun.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-002.sql"
     },
     {
       "unitid": 100751,
@@ -572,6 +842,15 @@
       "email": "troyfinancialaid@troy.edu",
       "department_key": "financial_aid",
       "source_file": "national-expansion-001.sql"
+    },
+    {
+      "unitid": 100663,
+      "name": "University of Alabama at Birmingham",
+      "state": "AL",
+      "hbcu": false,
+      "email": "titleixoffice@uab.edu",
+      "department_key": "title_ix",
+      "source_file": "large-non-hbcu-contacts-010.sql"
     },
     {
       "unitid": 101879,
@@ -601,6 +880,15 @@
       "source_file": "national-expansion-001.sql"
     },
     {
+      "unitid": 106397,
+      "name": "University of Arkansas",
+      "state": "AR",
+      "hbcu": false,
+      "email": "housing@uark.edu",
+      "department_key": "housing",
+      "source_file": "large-non-hbcu-contacts-010.sql"
+    },
+    {
       "unitid": 445027,
       "name": "American InterContinental University System",
       "state": "AZ",
@@ -610,6 +898,33 @@
       "source_file": "national-expansion-002.sql"
     },
     {
+      "unitid": 104160,
+      "name": "Arizona Western College",
+      "state": "AZ",
+      "hbcu": false,
+      "email": "housing@azwestern.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 104346,
+      "name": "Central Arizona College",
+      "state": "AZ",
+      "hbcu": false,
+      "email": "deanofstudents@centralaz.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 104577,
+      "name": "Eastern Arizona College",
+      "state": "AZ",
+      "hbcu": false,
+      "email": "helpmehank@eac.edu",
+      "department_key": "technology",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 384333,
       "name": "Estrella Mountain Community College",
       "state": "AZ",
@@ -617,6 +932,15 @@
       "email": "finaid@estrellamountain.edu",
       "department_key": "financial_aid",
       "source_file": "national-expansion-002.sql"
+    },
+    {
+      "unitid": 105330,
+      "name": "Northern Arizona University",
+      "state": "AZ",
+      "hbcu": false,
+      "email": "campus.living@nau.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-001.sql"
     },
     {
       "unitid": 105525,
@@ -635,6 +959,33 @@
       "email": "reghelp@arizona.edu",
       "department_key": "registrar",
       "source_file": "large-manual-gap-005.sql"
+    },
+    {
+      "unitid": 484613,
+      "name": "University of Phoenix-Arizona",
+      "state": "AZ",
+      "hbcu": false,
+      "email": "tixc@phoenix.edu",
+      "department_key": "title_ix",
+      "source_file": "large-non-hbcu-contacts-013.sql"
+    },
+    {
+      "unitid": 108232,
+      "name": "Academy of Art University",
+      "state": "CA",
+      "hbcu": false,
+      "email": "registrar@academyart.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 108807,
+      "name": "Allan Hancock College",
+      "state": "CA",
+      "hbcu": false,
+      "email": "rubenc.ramirez@hancockcollege.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-001.sql"
     },
     {
       "unitid": 109208,
@@ -664,6 +1015,24 @@
       "source_file": "large-manual-gap-008.sql"
     },
     {
+      "unitid": 109819,
+      "name": "Bakersfield College",
+      "state": "CA",
+      "hbcu": false,
+      "email": "internationalstudents@bakersfieldcollege.edu",
+      "department_key": "international",
+      "source_file": "large-non-hbcu-contacts-001.sql"
+    },
+    {
+      "unitid": 110097,
+      "name": "Biola University",
+      "state": "CA",
+      "hbcu": false,
+      "email": "registrar@biola.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 110246,
       "name": "Butte College",
       "state": "CA",
@@ -671,6 +1040,15 @@
       "email": "questions@butte.edu",
       "department_key": "student_advocacy",
       "source_file": "national-expansion-003.sql"
+    },
+    {
+      "unitid": 110334,
+      "name": "Cabrillo College",
+      "state": "CA",
+      "hbcu": false,
+      "email": "asc@cabrillo.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
     },
     {
       "unitid": 110361,
@@ -689,6 +1067,33 @@
       "email": "studentaccounts@calpoly.edu",
       "department_key": "student_accounts",
       "source_file": "large-non-hbcu-contacts-002.sql"
+    },
+    {
+      "unitid": 115755,
+      "name": "California State Polytechnic University-Humboldt",
+      "state": "CA",
+      "hbcu": false,
+      "email": "records@humboldt.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 110486,
+      "name": "California State University-Bakersfield",
+      "state": "CA",
+      "hbcu": false,
+      "email": "registrar@csub.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 441937,
+      "name": "California State University-Channel Islands",
+      "state": "CA",
+      "hbcu": false,
+      "email": "basicneeds@csuci.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
     },
     {
       "unitid": 110538,
@@ -727,6 +1132,33 @@
       "source_file": "large-manual-gap-001.sql"
     },
     {
+      "unitid": 110583,
+      "name": "California State University-Long Beach",
+      "state": "CA",
+      "hbcu": false,
+      "email": "helpdesk@csulb.edu",
+      "department_key": "technology",
+      "source_file": "large-non-hbcu-contacts-002.sql"
+    },
+    {
+      "unitid": 409698,
+      "name": "California State University-Monterey Bay",
+      "state": "CA",
+      "hbcu": false,
+      "email": "titleix_dhr@csumb.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 110608,
+      "name": "California State University-Northridge",
+      "state": "CA",
+      "hbcu": false,
+      "email": "housing@csun.edu",
+      "department_key": "housing",
+      "source_file": "large-non-hbcu-contacts-002.sql"
+    },
+    {
       "unitid": 110617,
       "name": "California State University-Sacramento",
       "state": "CA",
@@ -763,6 +1195,33 @@
       "source_file": "national-expansion-004.sql"
     },
     {
+      "unitid": 111948,
+      "name": "Chapman University",
+      "state": "CA",
+      "hbcu": false,
+      "email": "reslife@chapman.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 112172,
+      "name": "Citrus College",
+      "state": "CA",
+      "hbcu": false,
+      "email": "reportmisconduct@citruscollege.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 112385,
+      "name": "Coastline Community College",
+      "state": "CA",
+      "hbcu": false,
+      "email": "basicneeds@coastline.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 111461,
       "name": "College of the Canyons",
       "state": "CA",
@@ -790,6 +1249,15 @@
       "source_file": "national-expansion-005.sql"
     },
     {
+      "unitid": 112826,
+      "name": "Contra Costa College",
+      "state": "CA",
+      "hbcu": false,
+      "email": "dsps@contracosta.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 113096,
       "name": "Cosumnes River College",
       "state": "CA",
@@ -797,6 +1265,15 @@
       "email": "crc-hawkcares@crc.losrios.edu",
       "department_key": "basic_needs",
       "source_file": "national-expansion-005.sql"
+    },
+    {
+      "unitid": 113111,
+      "name": "Crafton Hills College",
+      "state": "CA",
+      "hbcu": false,
+      "email": "esherman@craftonhills.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
     },
     {
       "unitid": 113193,
@@ -844,6 +1321,15 @@
       "source_file": "large-manual-gap-002.sql"
     },
     {
+      "unitid": 114266,
+      "name": "Evergreen Valley College",
+      "state": "CA",
+      "hbcu": false,
+      "email": "america.minjares@evc.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 444219,
       "name": "Folsom Lake College",
       "state": "CA",
@@ -880,6 +1366,15 @@
       "source_file": "national-expansion-006.sql"
     },
     {
+      "unitid": 114938,
+      "name": "Gavilan College",
+      "state": "CA",
+      "hbcu": false,
+      "email": "mtartala@gavilan.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 115001,
       "name": "Glendale Community College",
       "state": "CA",
@@ -907,6 +1402,24 @@
       "source_file": "national-expansion-007.sql"
     },
     {
+      "unitid": 115393,
+      "name": "Hartnell College",
+      "state": "CA",
+      "hbcu": false,
+      "email": "fhenders@hartnell.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 115861,
+      "name": "Imperial Valley College",
+      "state": "CA",
+      "hbcu": false,
+      "email": "andrew.sanchez@imperial.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 116439,
       "name": "Irvine Valley College",
       "state": "CA",
@@ -925,6 +1438,15 @@
       "source_file": "national-expansion-007.sql"
     },
     {
+      "unitid": 366401,
+      "name": "Las Positas College",
+      "state": "CA",
+      "hbcu": false,
+      "email": "psimpson@laspositascollege.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 117788,
       "name": "Los Angeles City College",
       "state": "CA",
@@ -932,6 +1454,15 @@
       "email": "welcomecenter@lacitycollege.edu",
       "department_key": "student_advocacy",
       "source_file": "national-expansion-007.sql"
+    },
+    {
+      "unitid": 436429,
+      "name": "Los Angeles Film School",
+      "state": "CA",
+      "hbcu": false,
+      "email": "internationalreps@lafilm.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-002.sql"
     },
     {
       "unitid": 117867,
@@ -995,6 +1526,15 @@
       "email": "mjcstudentsuccess@yosemite.edu",
       "department_key": "student_advocacy",
       "source_file": "national-expansion-008.sql"
+    },
+    {
+      "unitid": 119067,
+      "name": "Monterey Peninsula College",
+      "state": "CA",
+      "hbcu": false,
+      "email": "jbaughn@mpc.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
     },
     {
       "unitid": 119137,
@@ -1069,6 +1609,15 @@
       "source_file": "national-expansion-010.sql"
     },
     {
+      "unitid": 121044,
+      "name": "Pasadena City College",
+      "state": "CA",
+      "hbcu": false,
+      "email": "iso@pasadena.edu",
+      "department_key": "international",
+      "source_file": "large-non-hbcu-contacts-007.sql"
+    },
+    {
       "unitid": 121886,
       "name": "Rio Hondo College",
       "state": "CA",
@@ -1076,6 +1625,15 @@
       "email": "financialaid@riohondo.edu",
       "department_key": "financial_aid",
       "source_file": "national-expansion-010.sql"
+    },
+    {
+      "unitid": 121901,
+      "name": "Riverside City College",
+      "state": "CA",
+      "hbcu": false,
+      "email": "internationalcenter@rcc.edu",
+      "department_key": "international",
+      "source_file": "large-non-hbcu-contacts-008.sql"
     },
     {
       "unitid": 122180,
@@ -1141,6 +1699,15 @@
       "source_file": "national-expansion-011.sql"
     },
     {
+      "unitid": 122755,
+      "name": "San Jose State University",
+      "state": "CA",
+      "hbcu": false,
+      "email": "crtitleix@sjsu.edu",
+      "department_key": "title_ix",
+      "source_file": "large-non-hbcu-contacts-008.sql"
+    },
+    {
       "unitid": 121619,
       "name": "Santa Ana College",
       "state": "CA",
@@ -1157,6 +1724,15 @@
       "email": "basicneeds@sbcc.edu",
       "department_key": "basic_needs",
       "source_file": "national-expansion-011.sql"
+    },
+    {
+      "unitid": 122977,
+      "name": "Santa Monica College",
+      "state": "CA",
+      "hbcu": false,
+      "email": "intled@smc.edu",
+      "department_key": "international",
+      "source_file": "large-non-hbcu-contacts-008.sql"
     },
     {
       "unitid": 123013,
@@ -1204,6 +1780,24 @@
       "source_file": "national-expansion-012.sql"
     },
     {
+      "unitid": 110662,
+      "name": "University of California-Los Angeles",
+      "state": "CA",
+      "hbcu": false,
+      "email": "uclahousing@housing.ucla.edu",
+      "department_key": "housing",
+      "source_file": "large-non-hbcu-contacts-010.sql"
+    },
+    {
+      "unitid": 110671,
+      "name": "University of California-Riverside",
+      "state": "CA",
+      "hbcu": false,
+      "email": "housinginfo@ucr.edu",
+      "department_key": "housing",
+      "source_file": "large-non-hbcu-contacts-010.sql"
+    },
+    {
       "unitid": 110680,
       "name": "University of California-San Diego",
       "state": "CA",
@@ -1211,6 +1805,15 @@
       "email": "basicneeds@ucsd.edu",
       "department_key": "basic_needs",
       "source_file": "large-manual-gap-005.sql"
+    },
+    {
+      "unitid": 110705,
+      "name": "University of California-Santa Barbara",
+      "state": "CA",
+      "hbcu": false,
+      "email": "tixoffice@titleix.ucsb.edu",
+      "department_key": "title_ix",
+      "source_file": "large-non-hbcu-contacts-010.sql"
     },
     {
       "unitid": 110714,
@@ -1258,6 +1861,60 @@
       "source_file": "national-expansion-013.sql"
     },
     {
+      "unitid": 126669,
+      "name": "Colorado Christian University",
+      "state": "CO",
+      "hbcu": false,
+      "email": "ldc@ccu.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 126711,
+      "name": "Colorado Mountain College",
+      "state": "CO",
+      "hbcu": false,
+      "email": "slarson@coloradomtn.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 126775,
+      "name": "Colorado School of Mines",
+      "state": "CO",
+      "hbcu": false,
+      "email": "housing@mines.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 476975,
+      "name": "Colorado State University Global",
+      "state": "CO",
+      "hbcu": false,
+      "email": "enroll@csuglobal.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 128106,
+      "name": "Colorado State University Pueblo",
+      "state": "CO",
+      "hbcu": false,
+      "email": "registrar@csupueblo.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 126818,
+      "name": "Colorado State University-Fort Collins",
+      "state": "CO",
+      "hbcu": false,
+      "email": "titleix@colostate.edu",
+      "department_key": "title_ix",
+      "source_file": "large-manual-gap-001.sql"
+    },
+    {
       "unitid": 126827,
       "name": "Colorado Technical University-Colorado Springs",
       "state": "CO",
@@ -1265,6 +1922,15 @@
       "email": "studentfinance@coloradotech.edu",
       "department_key": "financial_aid",
       "source_file": "large-manual-gap-008.sql"
+    },
+    {
+      "unitid": 126942,
+      "name": "Community College of Denver",
+      "state": "CO",
+      "hbcu": false,
+      "email": "advising@ccd.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
     },
     {
       "unitid": 127200,
@@ -1312,6 +1978,15 @@
       "source_file": "national-expansion-013.sql"
     },
     {
+      "unitid": 126562,
+      "name": "University of Colorado Denver/Anschutz Medical Campus",
+      "state": "CO",
+      "hbcu": false,
+      "email": "housing@ucdenver.edu",
+      "department_key": "housing",
+      "source_file": "large-non-hbcu-contacts-011.sql"
+    },
+    {
       "unitid": 127060,
       "name": "University of Denver",
       "state": "CO",
@@ -1319,6 +1994,24 @@
       "email": "sos@du.edu",
       "department_key": "student_advocacy",
       "source_file": "national-expansion-013.sql"
+    },
+    {
+      "unitid": 128771,
+      "name": "Central Connecticut State University",
+      "state": "CT",
+      "hbcu": false,
+      "email": "lorraine.collazo-deleon@ccsu.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 130183,
+      "name": "Post University",
+      "state": "CT",
+      "hbcu": false,
+      "email": "internationaladmissions@post.edu",
+      "department_key": "international",
+      "source_file": "large-non-hbcu-contacts-008.sql"
     },
     {
       "unitid": 130253,
@@ -1393,6 +2086,15 @@
       "source_file": "national-expansion-014.sql"
     },
     {
+      "unitid": 132471,
+      "name": "Barry University",
+      "state": "FL",
+      "hbcu": false,
+      "email": "registrar@barry.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
       "unitid": 132709,
       "name": "Broward College",
       "state": "FL",
@@ -1402,6 +2104,15 @@
       "source_file": "large-non-hbcu-contacts-002.sql"
     },
     {
+      "unitid": 132851,
+      "name": "College of Central Florida",
+      "state": "FL",
+      "hbcu": false,
+      "email": "studentaccounts@cf.edu",
+      "department_key": "student_accounts",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 133386,
       "name": "Daytona State College",
       "state": "FL",
@@ -1409,6 +2120,15 @@
       "email": "studentaccounts@daytonastate.edu",
       "department_key": "student_accounts",
       "source_file": "national-expansion-015.sql"
+    },
+    {
+      "unitid": 132693,
+      "name": "Eastern Florida State College",
+      "state": "FL",
+      "hbcu": false,
+      "email": "registrar@easternflorida.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
     },
     {
       "unitid": 133553,
@@ -1447,6 +2167,24 @@
       "source_file": "national-expansion-015.sql"
     },
     {
+      "unitid": 133881,
+      "name": "Florida Institute of Technology",
+      "state": "FL",
+      "hbcu": false,
+      "email": "housing@fit.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 133951,
+      "name": "Florida International University",
+      "state": "FL",
+      "hbcu": false,
+      "email": "ocr@fiu.edu",
+      "department_key": "title_ix",
+      "source_file": "large-non-hbcu-contacts-004.sql"
+    },
+    {
       "unitid": 133508,
       "name": "Florida SouthWestern State College",
       "state": "FL",
@@ -1454,6 +2192,15 @@
       "email": "foodpantry@fsw.edu",
       "department_key": "basic_needs",
       "source_file": "national-expansion-015.sql"
+    },
+    {
+      "unitid": 133702,
+      "name": "Florida State College at Jacksonville",
+      "state": "FL",
+      "hbcu": false,
+      "email": "fscjinternational@fscj.edu",
+      "department_key": "international",
+      "source_file": "large-non-hbcu-contacts-004.sql"
     },
     {
       "unitid": 134097,
@@ -1465,6 +2212,15 @@
       "source_file": "large-non-hbcu-contacts-004.sql"
     },
     {
+      "unitid": 134608,
+      "name": "Indian River State College",
+      "state": "FL",
+      "hbcu": false,
+      "email": "studentsupportservices@irsc.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
       "unitid": 135081,
       "name": "Keiser University-Ft Lauderdale",
       "state": "FL",
@@ -1472,6 +2228,24 @@
       "email": "registrarsclr@keiseruniversity.edu",
       "department_key": "registrar",
       "source_file": "large-non-hbcu-contacts-005.sql"
+    },
+    {
+      "unitid": 135188,
+      "name": "Lake-Sumter State College",
+      "state": "FL",
+      "hbcu": false,
+      "email": "esc@lssc.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 135717,
+      "name": "Miami Dade College",
+      "state": "FL",
+      "hbcu": false,
+      "email": "jruff@mdc.edu",
+      "department_key": "title_ix",
+      "source_file": "large-non-hbcu-contacts-006.sql"
     },
     {
       "unitid": 136215,
@@ -1582,6 +2356,15 @@
       "source_file": "national-expansion-016.sql"
     },
     {
+      "unitid": 137351,
+      "name": "University of South Florida",
+      "state": "FL",
+      "hbcu": false,
+      "email": "ucm@usf.edu",
+      "department_key": "housing",
+      "source_file": "large-non-hbcu-contacts-013.sql"
+    },
+    {
       "unitid": 138354,
       "name": "University of West Florida",
       "state": "FL",
@@ -1589,6 +2372,24 @@
       "email": "deanofstudents@uwf.edu",
       "department_key": "student_advocacy",
       "source_file": "national-expansion-016.sql"
+    },
+    {
+      "unitid": 138187,
+      "name": "Valencia College",
+      "state": "FL",
+      "hbcu": false,
+      "email": "amiller259@valenciacollege.edu",
+      "department_key": "title_ix",
+      "source_file": "large-non-hbcu-contacts-014.sql"
+    },
+    {
+      "unitid": 482149,
+      "name": "Augusta University",
+      "state": "GA",
+      "hbcu": false,
+      "email": "vp_esa@augusta.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-001.sql"
     },
     {
       "unitid": 483045,
@@ -1600,6 +2401,24 @@
       "source_file": "national-expansion-016.sql"
     },
     {
+      "unitid": 140331,
+      "name": "Chattahoochee Technical College",
+      "state": "GA",
+      "hbcu": false,
+      "email": "counseling@chattahoocheetech.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 139311,
+      "name": "Clayton  State University",
+      "state": "GA",
+      "hbcu": false,
+      "email": "myarichardson-echols@clayton.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 139658,
       "name": "Emory University",
       "state": "GA",
@@ -1609,6 +2428,15 @@
       "source_file": "national-expansion-016.sql"
     },
     {
+      "unitid": 139861,
+      "name": "Georgia College & State University",
+      "state": "GA",
+      "hbcu": false,
+      "email": "registrar@gcsu.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 447689,
       "name": "Georgia Gwinnett College",
       "state": "GA",
@@ -1616,6 +2444,24 @@
       "email": "deanofstudents@ggc.edu",
       "department_key": "student_advocacy",
       "source_file": "national-expansion-016.sql"
+    },
+    {
+      "unitid": 485111,
+      "name": "Georgia Military College",
+      "state": "GA",
+      "hbcu": false,
+      "email": "aselin@gmc.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 139384,
+      "name": "Georgia Northwestern Technical College",
+      "state": "GA",
+      "hbcu": false,
+      "email": "registrar@gntc.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
     },
     {
       "unitid": 139931,
@@ -1636,6 +2482,33 @@
       "source_file": "national-expansion-016.sql"
     },
     {
+      "unitid": 140012,
+      "name": "Gwinnett Technical College",
+      "state": "GA",
+      "hbcu": false,
+      "email": "foundationoffice@gwinnetttech.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 140447,
+      "name": "Mercer University",
+      "state": "GA",
+      "hbcu": false,
+      "email": "strecker_jl@mercer.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 482158,
+      "name": "Middle Georgia State University",
+      "state": "GA",
+      "hbcu": false,
+      "email": "brock.giddens@mga.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 139959,
       "name": "University of Georgia",
       "state": "GA",
@@ -1643,6 +2516,15 @@
       "email": "sgafreshexpress@uga.edu",
       "department_key": "basic_needs",
       "source_file": "large-manual-gap-005.sql"
+    },
+    {
+      "unitid": 482680,
+      "name": "University of North Georgia",
+      "state": "GA",
+      "hbcu": false,
+      "email": "ada@ung.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-001.sql"
     },
     {
       "unitid": 141334,
@@ -1663,6 +2545,24 @@
       "source_file": "national-expansion-016.sql"
     },
     {
+      "unitid": 141796,
+      "name": "Kapiolani Community College",
+      "state": "HI",
+      "hbcu": false,
+      "email": "btchun@hawaii.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 141811,
+      "name": "Leeward Community College",
+      "state": "HI",
+      "hbcu": false,
+      "email": "leetix@hawaii.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 141574,
       "name": "University of Hawaii at Manoa",
       "state": "HI",
@@ -1681,6 +2581,33 @@
       "source_file": "large-non-hbcu-contacts-003.sql"
     },
     {
+      "unitid": 153311,
+      "name": "Eastern Iowa Community College District",
+      "state": "IA",
+      "hbcu": false,
+      "email": "eiccinfo@eicc.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 153603,
+      "name": "Iowa State University",
+      "state": "IA",
+      "hbcu": false,
+      "email": "contact@iastate.edu",
+      "department_key": "housing",
+      "source_file": "large-non-hbcu-contacts-005.sql"
+    },
+    {
+      "unitid": 153630,
+      "name": "Iowa Western Community College",
+      "state": "IA",
+      "hbcu": false,
+      "email": "housing@iwcc.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 153737,
       "name": "Kirkwood Community College",
       "state": "IA",
@@ -1688,6 +2615,42 @@
       "email": "studentfoodpantry@kirkwood.edu",
       "department_key": "basic_needs",
       "source_file": "national-expansion-017.sql"
+    },
+    {
+      "unitid": 142115,
+      "name": "Boise State University",
+      "state": "ID",
+      "hbcu": false,
+      "email": "housing@boisestate.edu",
+      "department_key": "housing",
+      "source_file": "large-non-hbcu-contacts-001.sql"
+    },
+    {
+      "unitid": 142522,
+      "name": "Brigham Young University-Idaho",
+      "state": "ID",
+      "hbcu": false,
+      "email": "housing@byui.edu",
+      "department_key": "housing",
+      "source_file": "large-non-hbcu-contacts-001.sql"
+    },
+    {
+      "unitid": 142559,
+      "name": "College of Southern Idaho",
+      "state": "ID",
+      "hbcu": false,
+      "email": "jlord@csi.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 455114,
+      "name": "College of Western Idaho",
+      "state": "ID",
+      "hbcu": false,
+      "email": "chadtrisler@cwi.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-001.sql"
     },
     {
       "unitid": 142276,
@@ -1708,6 +2671,33 @@
       "source_file": "national-expansion-017.sql"
     },
     {
+      "unitid": 143118,
+      "name": "Aurora University",
+      "state": "IL",
+      "hbcu": false,
+      "email": "registrar@aurora.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 143358,
+      "name": "Bradley University",
+      "state": "IL",
+      "hbcu": false,
+      "email": "studentsupport@bradley.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 454227,
+      "name": "Chamberlain University-Illinois",
+      "state": "IL",
+      "hbcu": false,
+      "email": "titleixcoordinator@chamberlain.edu",
+      "department_key": "title_ix",
+      "source_file": "large-manual-gap-001.sql"
+    },
+    {
       "unitid": 144865,
       "name": "College of DuPage",
       "state": "IL",
@@ -1724,6 +2714,51 @@
       "email": "finaid@clcillinois.edu",
       "department_key": "basic_needs",
       "source_file": "national-expansion-017.sql"
+    },
+    {
+      "unitid": 144351,
+      "name": "Concordia University-Chicago",
+      "state": "IL",
+      "hbcu": false,
+      "email": "iss@cuchicago.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 144892,
+      "name": "Eastern Illinois University",
+      "state": "IL",
+      "hbcu": false,
+      "email": "housing@eiu.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 145725,
+      "name": "Illinois Institute of Technology",
+      "state": "IL",
+      "hbcu": false,
+      "email": "regq@kentlaw.iit.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 146296,
+      "name": "Joliet Junior College",
+      "state": "IL",
+      "hbcu": false,
+      "email": "residency@jjc.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 146685,
+      "name": "Lincoln Land Community College",
+      "state": "IL",
+      "hbcu": false,
+      "email": "trio@llcc.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
     },
     {
       "unitid": 146719,
@@ -1744,6 +2779,24 @@
       "source_file": "national-expansion-017.sql"
     },
     {
+      "unitid": 147536,
+      "name": "National Louis University",
+      "state": "IL",
+      "hbcu": false,
+      "email": "registrar@nl.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 147776,
+      "name": "Northeastern Illinois University",
+      "state": "IL",
+      "hbcu": false,
+      "email": "student-affairs@neiu.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 147703,
       "name": "Northern Illinois University",
       "state": "IL",
@@ -1760,6 +2813,15 @@
       "email": "nu-registrar@northwestern.edu",
       "department_key": "registrar",
       "source_file": "large-manual-gap-003.sql"
+    },
+    {
+      "unitid": 147800,
+      "name": "Oakton College",
+      "state": "IL",
+      "hbcu": false,
+      "email": "studentaffairs@oakton.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
     },
     {
       "unitid": 149222,
@@ -1805,6 +2867,33 @@
       "email": "transcripts@illinois.edu",
       "department_key": "registrar",
       "source_file": "large-non-hbcu-contacts-011.sql"
+    },
+    {
+      "unitid": 149842,
+      "name": "William Rainey Harper College",
+      "state": "IL",
+      "hbcu": false,
+      "email": "da25828@harpercollege.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 150136,
+      "name": "Ball State University",
+      "state": "IN",
+      "hbcu": false,
+      "email": "hrlassign@bsu.edu",
+      "department_key": "housing",
+      "source_file": "large-manual-gap-001.sql"
+    },
+    {
+      "unitid": 151111,
+      "name": "Indiana University-Indianapolis",
+      "state": "IN",
+      "hbcu": false,
+      "email": "reslife@iu.edu",
+      "department_key": "housing",
+      "source_file": "large-non-hbcu-contacts-005.sql"
     },
     {
       "unitid": 488679,
@@ -1861,6 +2950,15 @@
       "source_file": "national-expansion-018.sql"
     },
     {
+      "unitid": 154800,
+      "name": "Butler Community College",
+      "state": "KS",
+      "hbcu": false,
+      "email": "housing@butlercc.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 155061,
       "name": "Fort Hays State University",
       "state": "KS",
@@ -1906,6 +3004,15 @@
       "source_file": "national-expansion-018.sql"
     },
     {
+      "unitid": 156392,
+      "name": "Bluegrass Community and Technical College",
+      "state": "KY",
+      "hbcu": false,
+      "email": "brian.schanding@kctcs.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
       "unitid": 156365,
       "name": "Campbellsville University",
       "state": "KY",
@@ -1924,6 +3031,15 @@
       "source_file": "national-expansion-018.sql"
     },
     {
+      "unitid": 156648,
+      "name": "Elizabethtown Community and Technical College",
+      "state": "KY",
+      "hbcu": false,
+      "email": "dale.buckles@kctcs.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 156921,
       "name": "Jefferson Community and Technical College",
       "state": "KY",
@@ -1931,6 +3047,24 @@
       "email": "jf-studentengagement@kctcs.edu",
       "department_key": "student_advocacy",
       "source_file": "national-expansion-019.sql"
+    },
+    {
+      "unitid": 157386,
+      "name": "Morehead State University",
+      "state": "KY",
+      "hbcu": false,
+      "email": "jmyarabeck@moreheadstate.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 157401,
+      "name": "Murray State University",
+      "state": "KY",
+      "hbcu": false,
+      "email": "msu.admissions@murraystate.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
     },
     {
       "unitid": 157447,
@@ -1948,6 +3082,15 @@
       "hbcu": false,
       "email": "ukpr@uky.edu",
       "department_key": "registrar",
+      "source_file": "large-non-hbcu-contacts-011.sql"
+    },
+    {
+      "unitid": 157289,
+      "name": "University of Louisville",
+      "state": "KY",
+      "hbcu": false,
+      "email": "housing@louisville.edu",
+      "department_key": "housing",
       "source_file": "large-non-hbcu-contacts-011.sql"
     },
     {
@@ -1969,6 +3112,15 @@
       "source_file": "national-expansion-019.sql"
     },
     {
+      "unitid": 437103,
+      "name": "Baton Rouge Community College",
+      "state": "LA",
+      "hbcu": false,
+      "email": "generalquestions@mybrcc.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
       "unitid": 159391,
       "name": "Louisiana State University and Agricultural & Mechanical College",
       "state": "LA",
@@ -1978,6 +3130,24 @@
       "source_file": "large-non-hbcu-contacts-006.sql"
     },
     {
+      "unitid": 159382,
+      "name": "Louisiana State University-Alexandria",
+      "state": "LA",
+      "hbcu": false,
+      "email": "registrar@lsua.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 159416,
+      "name": "Louisiana State University-Shreveport",
+      "state": "LA",
+      "hbcu": false,
+      "email": "success@lsus.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 159647,
       "name": "Louisiana Tech University",
       "state": "LA",
@@ -1985,6 +3155,24 @@
       "email": "techaid@latech.edu",
       "department_key": "financial_aid",
       "source_file": "national-expansion-019.sql"
+    },
+    {
+      "unitid": 159717,
+      "name": "McNeese State University",
+      "state": "LA",
+      "hbcu": false,
+      "email": "communications@mcneese.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 160038,
+      "name": "Northwestern State University of Louisiana",
+      "state": "LA",
+      "hbcu": false,
+      "email": "triosss@nsula.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
     },
     {
       "unitid": 160612,
@@ -2014,6 +3202,24 @@
       "source_file": "national-expansion-019.sql"
     },
     {
+      "unitid": 164739,
+      "name": "Bentley University",
+      "state": "MA",
+      "hbcu": false,
+      "email": "institutionalequity@bentley.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 164748,
+      "name": "Berklee College of Music",
+      "state": "MA",
+      "hbcu": false,
+      "email": "2238@berklee.edu",
+      "department_key": "technology",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 164924,
       "name": "Boston College",
       "state": "MA",
@@ -2032,6 +3238,33 @@
       "source_file": "large-manual-gap-001.sql"
     },
     {
+      "unitid": 165024,
+      "name": "Bridgewater State University",
+      "state": "MA",
+      "hbcu": false,
+      "email": "gradadmissions@bridgew.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 165033,
+      "name": "Bristol Community College",
+      "state": "MA",
+      "hbcu": false,
+      "email": "basicneeds@bristolcc.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 165820,
+      "name": "Fitchburg State University",
+      "state": "MA",
+      "hbcu": false,
+      "email": "studentaffairs@fitchburgstate.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 166683,
       "name": "Massachusetts Institute of Technology",
       "state": "MA",
@@ -2039,6 +3272,15 @@
       "email": "s3-support@mit.edu",
       "department_key": "student_advocacy",
       "source_file": "national-expansion-019.sql"
+    },
+    {
+      "unitid": 166656,
+      "name": "MCPHS University",
+      "state": "MA",
+      "hbcu": false,
+      "email": "dos.boston@mcphs.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
     },
     {
       "unitid": 166638,
@@ -2066,6 +3308,33 @@
       "email": "studentcentral@ccbcmd.edu",
       "department_key": "student_advocacy",
       "source_file": "national-expansion-020.sql"
+    },
+    {
+      "unitid": 162690,
+      "name": "Hagerstown Community College",
+      "state": "MD",
+      "hbcu": false,
+      "email": "informationcenter@hagerstowncc.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 162779,
+      "name": "Howard Community College",
+      "state": "MD",
+      "hbcu": false,
+      "email": "registrationoffice@howardcc.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 162928,
+      "name": "Johns Hopkins University",
+      "state": "MD",
+      "hbcu": false,
+      "email": "titleixcoordinator@jhu.edu",
+      "department_key": "title_ix",
+      "source_file": "large-manual-gap-002.sql"
     },
     {
       "unitid": 163426,
@@ -2140,6 +3409,24 @@
       "source_file": "national-expansion-020.sql"
     },
     {
+      "unitid": 170657,
+      "name": "Lansing Community College",
+      "state": "MI",
+      "hbcu": false,
+      "email": "registrar@star.lcc.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 170790,
+      "name": "Macomb Community College",
+      "state": "MI",
+      "hbcu": false,
+      "email": "answer@macomb.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
       "unitid": 171100,
       "name": "Michigan State University",
       "state": "MI",
@@ -2147,6 +3434,33 @@
       "email": "onestop@msu.edu",
       "department_key": "registrar",
       "source_file": "large-manual-gap-003.sql"
+    },
+    {
+      "unitid": 171128,
+      "name": "Michigan Technological University",
+      "state": "MI",
+      "hbcu": false,
+      "email": "finaid@mtu.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 171456,
+      "name": "Northern Michigan University",
+      "state": "MI",
+      "hbcu": false,
+      "email": "records@nmu.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 171535,
+      "name": "Oakland Community College",
+      "state": "MI",
+      "hbcu": false,
+      "email": "pbjones@oaklandcc.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-001.sql"
     },
     {
       "unitid": 170976,
@@ -2158,6 +3472,15 @@
       "source_file": "large-manual-gap-005.sql"
     },
     {
+      "unitid": 172635,
+      "name": "Wayne County Community College District",
+      "state": "MI",
+      "hbcu": false,
+      "email": "triostudentsupport@mail.wcccd.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
       "unitid": 172644,
       "name": "Wayne State University",
       "state": "MI",
@@ -2165,6 +3488,33 @@
       "email": "registrar@wayne.edu",
       "department_key": "registrar",
       "source_file": "large-manual-gap-007.sql"
+    },
+    {
+      "unitid": 174136,
+      "name": "Minneapolis Community and Technical College",
+      "state": "MN",
+      "hbcu": false,
+      "email": "patrick.troup@minneapolis.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 173559,
+      "name": "Minnesota State Community and Technical College",
+      "state": "MN",
+      "hbcu": false,
+      "email": "housing@minnesota.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 173920,
+      "name": "Minnesota State University-Mankato",
+      "state": "MN",
+      "hbcu": false,
+      "email": "reslife@mnsu.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-001.sql"
     },
     {
       "unitid": 174066,
@@ -2176,6 +3526,33 @@
       "source_file": "large-manual-gap-006.sql"
     },
     {
+      "unitid": 177065,
+      "name": "Columbia College",
+      "state": "MO",
+      "hbcu": false,
+      "email": "international@ccis.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 178059,
+      "name": "Maryville University of Saint Louis",
+      "state": "MO",
+      "hbcu": false,
+      "email": "financialaid@maryville.edu",
+      "department_key": "student_accounts",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 178244,
+      "name": "Missouri Baptist University",
+      "state": "MO",
+      "hbcu": false,
+      "email": "recordsoffice@mobap.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 179566,
       "name": "Missouri State University-Springfield",
       "state": "MO",
@@ -2183,6 +3560,123 @@
       "email": "registrar@missouristate.edu",
       "department_key": "registrar",
       "source_file": "large-manual-gap-003.sql"
+    },
+    {
+      "unitid": 178411,
+      "name": "Missouri University of Science and Technology",
+      "state": "MO",
+      "hbcu": false,
+      "email": "registrar@mst.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 178624,
+      "name": "Northwest Missouri State University",
+      "state": "MO",
+      "hbcu": false,
+      "email": "registrar@nwmissouri.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 179308,
+      "name": "Saint Louis Community College",
+      "state": "MO",
+      "hbcu": false,
+      "email": "registrar@stlcc.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 179159,
+      "name": "Saint Louis University",
+      "state": "MO",
+      "hbcu": false,
+      "email": "accessibility_disability@slu.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 176965,
+      "name": "University of Central Missouri",
+      "state": "MO",
+      "hbcu": false,
+      "email": "registrar@ucmo.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 178396,
+      "name": "University of Missouri-Columbia",
+      "state": "MO",
+      "hbcu": false,
+      "email": "housing@missouri.edu",
+      "department_key": "housing",
+      "source_file": "large-manual-gap-006.sql"
+    },
+    {
+      "unitid": 178402,
+      "name": "University of Missouri-Kansas City",
+      "state": "MO",
+      "hbcu": false,
+      "email": "helpline@umkc.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 175786,
+      "name": "Hinds Community College",
+      "state": "MS",
+      "hbcu": false,
+      "email": "ssc@hindscc.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 176071,
+      "name": "Mississippi Gulf Coast Community College",
+      "state": "MS",
+      "hbcu": false,
+      "email": "heaven.roberts@mgccc.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 176080,
+      "name": "Mississippi State University",
+      "state": "MS",
+      "hbcu": false,
+      "email": "cm7@msstate.edu",
+      "department_key": "housing",
+      "source_file": "large-non-hbcu-contacts-006.sql"
+    },
+    {
+      "unitid": 176178,
+      "name": "Northwest Mississippi Community College",
+      "state": "MS",
+      "hbcu": false,
+      "email": "ilias@northwestms.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 176017,
+      "name": "University of Mississippi",
+      "state": "MS",
+      "hbcu": false,
+      "email": "housing@olemiss.edu",
+      "department_key": "housing",
+      "source_file": "large-non-hbcu-contacts-012.sql"
+    },
+    {
+      "unitid": 180489,
+      "name": "The University of Montana",
+      "state": "MT",
+      "hbcu": false,
+      "email": "business@mso.umt.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-001.sql"
     },
     {
       "unitid": 197869,
@@ -2194,6 +3688,96 @@
       "source_file": "large-non-hbcu-contacts-001.sql"
     },
     {
+      "unitid": 197887,
+      "name": "Asheville-Buncombe Technical Community College",
+      "state": "NC",
+      "hbcu": false,
+      "email": "globaleducation@abtech.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 198136,
+      "name": "Campbell University",
+      "state": "NC",
+      "hbcu": false,
+      "email": "sfs@campbell.edu",
+      "department_key": "student_accounts",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 198260,
+      "name": "Central Piedmont Community College",
+      "state": "NC",
+      "hbcu": false,
+      "email": "userid@email.cpcc.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 198419,
+      "name": "Duke University",
+      "state": "NC",
+      "hbcu": false,
+      "email": "medreg@dm.duke.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 198464,
+      "name": "East Carolina University",
+      "state": "NC",
+      "hbcu": false,
+      "email": "alstonl@ecu.edu",
+      "department_key": "title_ix",
+      "source_file": "large-manual-gap-002.sql"
+    },
+    {
+      "unitid": 198534,
+      "name": "Fayetteville Technical Community College",
+      "state": "NC",
+      "hbcu": false,
+      "email": "foodpantry@faytechcc.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 198552,
+      "name": "Forsyth Technical Community College",
+      "state": "NC",
+      "hbcu": false,
+      "email": "internationaladmissions@forsythtech.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 198622,
+      "name": "Guilford Technical Community College",
+      "state": "NC",
+      "hbcu": false,
+      "email": "studentsuccesscenter@gtcc.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 199193,
+      "name": "North Carolina State University at Raleigh",
+      "state": "NC",
+      "hbcu": false,
+      "email": "title-ix-coordinator@ncsu.edu",
+      "department_key": "title_ix",
+      "source_file": "large-manual-gap-003.sql"
+    },
+    {
+      "unitid": 199218,
+      "name": "University of North Carolina Wilmington",
+      "state": "NC",
+      "hbcu": false,
+      "email": "schraders@uncw.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
       "unitid": 199856,
       "name": "Wake Technical Community College",
       "state": "NC",
@@ -2201,6 +3785,78 @@
       "email": "care@waketech.edu",
       "department_key": "basic_needs",
       "source_file": "large-manual-gap-007.sql"
+    },
+    {
+      "unitid": 200004,
+      "name": "Western Carolina University",
+      "state": "NC",
+      "hbcu": false,
+      "email": "housingquestions@wcu.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 200332,
+      "name": "North Dakota State University-Main Campus",
+      "state": "ND",
+      "hbcu": false,
+      "email": "ndsu.studentaffairs@ndsu.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 200280,
+      "name": "University of North Dakota",
+      "state": "ND",
+      "hbcu": false,
+      "email": "saa@und.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 180814,
+      "name": "Bellevue University",
+      "state": "NE",
+      "hbcu": false,
+      "email": "dso@bellevue.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 181002,
+      "name": "Creighton University",
+      "state": "NE",
+      "hbcu": false,
+      "email": "living@creighton.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 181303,
+      "name": "Metropolitan Community College Area",
+      "state": "NE",
+      "hbcu": false,
+      "email": "jmizaguirrepena@mccneb.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 181491,
+      "name": "Northeast Community College",
+      "state": "NE",
+      "hbcu": false,
+      "email": "housing@northeast.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 181394,
+      "name": "University of Nebraska at Omaha",
+      "state": "NE",
+      "hbcu": false,
+      "email": "unoregistrar@unomaha.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
     },
     {
       "unitid": 181464,
@@ -2221,6 +3877,141 @@
       "source_file": "large-manual-gap-004.sql"
     },
     {
+      "unitid": 183859,
+      "name": "Brookdale Community College",
+      "state": "NJ",
+      "hbcu": false,
+      "email": "affairsymadas@brookdalecc.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 183938,
+      "name": "Camden County College",
+      "state": "NJ",
+      "hbcu": false,
+      "email": "issoffice@camdencc.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 184180,
+      "name": "County College of Morris",
+      "state": "NJ",
+      "hbcu": false,
+      "email": "dsd@ccm.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 184603,
+      "name": "Fairleigh Dickinson University-Metropolitan Campus",
+      "state": "NJ",
+      "hbcu": false,
+      "email": "fduhousing@fdu.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 185262,
+      "name": "Kean University",
+      "state": "NJ",
+      "hbcu": false,
+      "email": "studentaffairs@kean.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 185509,
+      "name": "Mercer County Community College",
+      "state": "NJ",
+      "hbcu": false,
+      "email": "registrar@mccc.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 185536,
+      "name": "Middlesex College",
+      "state": "NJ",
+      "hbcu": false,
+      "email": "resource_hub@middlesexcollege.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 185590,
+      "name": "Montclair State University",
+      "state": "NJ",
+      "hbcu": false,
+      "email": "itservicedesk@montclair.edu",
+      "department_key": "technology",
+      "source_file": "large-non-hbcu-contacts-006.sql"
+    },
+    {
+      "unitid": 185828,
+      "name": "New Jersey Institute of Technology",
+      "state": "NJ",
+      "hbcu": false,
+      "email": "cory.cottingim@njit.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 185873,
+      "name": "Ocean County College",
+      "state": "NJ",
+      "hbcu": false,
+      "email": "counselingservices@ocean.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 186380,
+      "name": "Rutgers University-New Brunswick",
+      "state": "NJ",
+      "hbcu": false,
+      "email": "accessibility@rutgers.edu",
+      "department_key": "housing",
+      "source_file": "large-non-hbcu-contacts-008.sql"
+    },
+    {
+      "unitid": 187620,
+      "name": "New Mexico State University-Dona Ana",
+      "state": "NM",
+      "hbcu": false,
+      "email": "avanza@dacc.nmsu.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 188030,
+      "name": "New Mexico State University-Main Campus",
+      "state": "NM",
+      "hbcu": false,
+      "email": "equity@nmsu.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 187985,
+      "name": "University of New Mexico-Main Campus",
+      "state": "NM",
+      "hbcu": false,
+      "email": "housing@unm.edu",
+      "department_key": "housing",
+      "source_file": "large-manual-gap-006.sql"
+    },
+    {
+      "unitid": 441900,
+      "name": "Nevada State University",
+      "state": "NV",
+      "hbcu": false,
+      "email": "edith.fernandez@nevadastate.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 182281,
       "name": "University of Nevada-Las Vegas",
       "state": "NV",
@@ -2228,6 +4019,24 @@
       "email": "studentaffairs@unlv.edu",
       "department_key": "student_advocacy",
       "source_file": "large-non-hbcu-contacts-012.sql"
+    },
+    {
+      "unitid": 188429,
+      "name": "Adelphi University",
+      "state": "NY",
+      "hbcu": false,
+      "email": "sbakari@adelphi.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 190558,
+      "name": "College of Staten Island CUNY",
+      "state": "NY",
+      "hbcu": false,
+      "email": "bursar@csi.cuny.edu",
+      "department_key": "student_accounts",
+      "source_file": "partner-outreach-gap-001.sql"
     },
     {
       "unitid": 190150,
@@ -2248,6 +4057,168 @@
       "source_file": "large-non-hbcu-contacts-003.sql"
     },
     {
+      "unitid": 190530,
+      "name": "CUNY Bronx Community College",
+      "state": "NY",
+      "hbcu": false,
+      "email": "registrar@bcc.cuny.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 190600,
+      "name": "CUNY John Jay College of Criminal Justice",
+      "state": "NY",
+      "hbcu": false,
+      "email": "jjcfoodpantry@jjay.cuny.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 190619,
+      "name": "CUNY Kingsborough Community College",
+      "state": "NY",
+      "hbcu": false,
+      "email": "registrar.kcc@kbcc.cuny.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 190655,
+      "name": "CUNY New York City College of Technology",
+      "state": "NY",
+      "hbcu": false,
+      "email": "registrar@citytech.cuny.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 190664,
+      "name": "CUNY Queens College",
+      "state": "NY",
+      "hbcu": false,
+      "email": "dos@qc.cuny.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 190673,
+      "name": "CUNY Queensborough Community College",
+      "state": "NY",
+      "hbcu": false,
+      "email": "registrar@qcc.cuny.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 190840,
+      "name": "Dutchess Community College",
+      "state": "NY",
+      "hbcu": false,
+      "email": "registrar@sunydutchess.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 196264,
+      "name": "Empire State University",
+      "state": "NY",
+      "hbcu": false,
+      "email": "titleix@sunyempire.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 191083,
+      "name": "Erie Community College",
+      "state": "NY",
+      "hbcu": false,
+      "email": "titleixcoordinator@ecc.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 196680,
+      "name": "Excelsior University",
+      "state": "NY",
+      "hbcu": false,
+      "email": "orr@excelsior.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 191199,
+      "name": "Finger Lakes Community College",
+      "state": "NY",
+      "hbcu": false,
+      "email": "housing@flcc.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 191719,
+      "name": "Hudson Valley Community College",
+      "state": "NY",
+      "hbcu": false,
+      "email": "success@hvcc.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 192819,
+      "name": "Marist College",
+      "state": "NY",
+      "hbcu": false,
+      "email": "registrar@marist.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 193016,
+      "name": "Mercy University",
+      "state": "NY",
+      "hbcu": false,
+      "email": "residentiallife@mercy.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 193283,
+      "name": "Mohawk Valley Community College",
+      "state": "NY",
+      "hbcu": false,
+      "email": "housing@mvcc.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 193326,
+      "name": "Monroe Community College",
+      "state": "NY",
+      "hbcu": false,
+      "email": "internationaladmissions@monroecc.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 193478,
+      "name": "Nassau Community College",
+      "state": "NY",
+      "hbcu": false,
+      "email": "registrar@ncc.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 194091,
+      "name": "New York Institute of Technology",
+      "state": "NY",
+      "hbcu": false,
+      "email": "titleix@nyit.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 193900,
       "name": "New York University",
       "state": "NY",
@@ -2255,6 +4226,33 @@
       "email": "studentlink@nyu.edu",
       "department_key": "financial_aid",
       "source_file": "large-manual-gap-007.sql"
+    },
+    {
+      "unitid": 194222,
+      "name": "Onondaga Community College",
+      "state": "NY",
+      "hbcu": false,
+      "email": "reslife@sunyocc.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 194310,
+      "name": "Pace University",
+      "state": "NY",
+      "hbcu": false,
+      "email": "mbestman@pace.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 195003,
+      "name": "Rochester Institute of Technology",
+      "state": "NY",
+      "hbcu": false,
+      "email": "brian.trager@rit.edu",
+      "department_key": "technology",
+      "source_file": "partner-outreach-gap-001.sql"
     },
     {
       "unitid": 196097,
@@ -2275,6 +4273,15 @@
       "source_file": "large-non-hbcu-contacts-009.sql"
     },
     {
+      "unitid": 196592,
+      "name": "Touro University",
+      "state": "NY",
+      "hbcu": false,
+      "email": "sun.choi3@touro.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
       "unitid": 196088,
       "name": "University at Buffalo",
       "state": "NY",
@@ -2282,6 +4289,69 @@
       "email": "ubregistrar@buffalo.edu",
       "department_key": "registrar",
       "source_file": "large-manual-gap-004.sql"
+    },
+    {
+      "unitid": 201441,
+      "name": "Bowling Green State University-Main Campus",
+      "state": "OH",
+      "hbcu": false,
+      "email": "odos@bgsu.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 201645,
+      "name": "Case Western Reserve University",
+      "state": "OH",
+      "hbcu": false,
+      "email": "titleix@case.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 201928,
+      "name": "Cincinnati State Technical and Community College",
+      "state": "OH",
+      "hbcu": false,
+      "email": "angela.haensel@cincinnatistate.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 202134,
+      "name": "Cleveland State University",
+      "state": "OH",
+      "hbcu": false,
+      "email": "reslife@csuohio.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 202222,
+      "name": "Columbus State Community College",
+      "state": "OH",
+      "hbcu": false,
+      "email": "rbyers7@cscc.edu",
+      "department_key": "title_ix",
+      "source_file": "large-non-hbcu-contacts-003.sql"
+    },
+    {
+      "unitid": 202356,
+      "name": "Cuyahoga Community College District",
+      "state": "OH",
+      "hbcu": false,
+      "email": "lana.benton2@tri-c.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 202806,
+      "name": "Franklin University",
+      "state": "OH",
+      "hbcu": false,
+      "email": "advocate@franklin.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
     },
     {
       "unitid": 203517,
@@ -2293,6 +4363,24 @@
       "source_file": "large-non-hbcu-contacts-006.sql"
     },
     {
+      "unitid": 204024,
+      "name": "Miami University-Oxford",
+      "state": "OH",
+      "hbcu": false,
+      "email": "international@miamioh.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 204796,
+      "name": "Ohio State University-Main Campus",
+      "state": "OH",
+      "hbcu": false,
+      "email": "housing@osu.edu",
+      "department_key": "housing",
+      "source_file": "large-non-hbcu-contacts-007.sql"
+    },
+    {
       "unitid": 204857,
       "name": "Ohio University-Main Campus",
       "state": "OH",
@@ -2300,6 +4388,24 @@
       "email": "registrar@ohio.edu",
       "department_key": "registrar",
       "source_file": "large-non-hbcu-contacts-007.sql"
+    },
+    {
+      "unitid": 205470,
+      "name": "Sinclair Community College",
+      "state": "OH",
+      "hbcu": false,
+      "email": "carol.glaser-atkins@sinclair.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 200800,
+      "name": "University of Akron Main Campus",
+      "state": "OH",
+      "hbcu": false,
+      "email": "cashier@uakron.edu",
+      "department_key": "student_accounts",
+      "source_file": "partner-outreach-gap-001.sql"
     },
     {
       "unitid": 201885,
@@ -2311,6 +4417,33 @@
       "source_file": "large-non-hbcu-contacts-010.sql"
     },
     {
+      "unitid": 206695,
+      "name": "Youngstown State University",
+      "state": "OH",
+      "hbcu": false,
+      "email": "servicedesk@ysu.edu",
+      "department_key": "technology",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 207263,
+      "name": "Northeastern State University",
+      "state": "OK",
+      "hbcu": false,
+      "email": "nsuoba@nsuok.edu",
+      "department_key": "student_accounts",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 207449,
+      "name": "Oklahoma City Community College",
+      "state": "OK",
+      "hbcu": false,
+      "email": "bursar@occc.edu",
+      "department_key": "student_accounts",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
       "unitid": 207388,
       "name": "Oklahoma State University-Main Campus",
       "state": "OK",
@@ -2318,6 +4451,24 @@
       "email": "registrar@okstate.edu",
       "department_key": "registrar",
       "source_file": "large-manual-gap-003.sql"
+    },
+    {
+      "unitid": 207582,
+      "name": "Oral Roberts University",
+      "state": "OK",
+      "hbcu": false,
+      "email": "concierge@oru.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 207935,
+      "name": "Tulsa Community College",
+      "state": "OK",
+      "hbcu": false,
+      "email": "triosss@tulsacc.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-001.sql"
     },
     {
       "unitid": 207500,
@@ -2329,6 +4480,33 @@
       "source_file": "large-manual-gap-006.sql"
     },
     {
+      "unitid": 208406,
+      "name": "Clackamas Community College",
+      "state": "OR",
+      "hbcu": false,
+      "email": "ocfoodpantry@clackamas.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 209038,
+      "name": "Lane Community College",
+      "state": "OR",
+      "hbcu": false,
+      "email": "bursar@lanecc.edu",
+      "department_key": "student_accounts",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 209746,
+      "name": "Portland Community College",
+      "state": "OR",
+      "hbcu": false,
+      "email": "international@pcc.edu",
+      "department_key": "international",
+      "source_file": "large-non-hbcu-contacts-007.sql"
+    },
+    {
       "unitid": 209807,
       "name": "Portland State University",
       "state": "OR",
@@ -2336,6 +4514,141 @@
       "email": "triosss@pdx.edu",
       "department_key": "basic_needs",
       "source_file": "large-non-hbcu-contacts-007.sql"
+    },
+    {
+      "unitid": 209551,
+      "name": "University of Oregon",
+      "state": "OR",
+      "hbcu": false,
+      "email": "uoaec@uoregon.edu",
+      "department_key": "housing",
+      "source_file": "large-non-hbcu-contacts-012.sql"
+    },
+    {
+      "unitid": 211307,
+      "name": "Bucks County Community College",
+      "state": "PA",
+      "hbcu": false,
+      "email": "samuel.coleman@bucks.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 211440,
+      "name": "Carnegie Mellon University",
+      "state": "PA",
+      "hbcu": false,
+      "email": "institutionalequity@cmu.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 498562,
+      "name": "Commonwealth University of Pennsylvania",
+      "state": "PA",
+      "hbcu": false,
+      "email": "registrar@commonwealthu.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 210605,
+      "name": "Community College of Allegheny County",
+      "state": "PA",
+      "hbcu": false,
+      "email": "transcripts@ccac.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 215239,
+      "name": "Community College of Philadelphia",
+      "state": "PA",
+      "hbcu": false,
+      "email": "4itsupport@ccp.edu",
+      "department_key": "technology",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 211927,
+      "name": "Delaware County Community College",
+      "state": "PA",
+      "hbcu": false,
+      "email": "mdeemilio@dccc.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 212054,
+      "name": "Drexel University",
+      "state": "PA",
+      "hbcu": false,
+      "email": "isss@drexel.edu",
+      "department_key": "international",
+      "source_file": "large-non-hbcu-contacts-003.sql"
+    },
+    {
+      "unitid": 212115,
+      "name": "East Stroudsburg University of Pennsylvania",
+      "state": "PA",
+      "hbcu": false,
+      "email": "housinganddining@esu.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 213020,
+      "name": "Indiana University of Pennsylvania-Main Campus",
+      "state": "PA",
+      "hbcu": false,
+      "email": "registrars-office@iup.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 213349,
+      "name": "Kutztown University of Pennsylvania",
+      "state": "PA",
+      "hbcu": false,
+      "email": "cesadept@kutztown.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 213525,
+      "name": "Lehigh Carbon Community College",
+      "state": "PA",
+      "hbcu": false,
+      "email": "communityresources@lccc.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 213543,
+      "name": "Lehigh University",
+      "state": "PA",
+      "hbcu": false,
+      "email": "inhouse@lehigh.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 214041,
+      "name": "Millersville University of Pennsylvania",
+      "state": "PA",
+      "hbcu": false,
+      "email": "officeofstudentaffairs@millersville.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 214379,
+      "name": "Northampton County Area Community College",
+      "state": "PA",
+      "hbcu": false,
+      "email": "erosenthal@northampton.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
     },
     {
       "unitid": 214777,
@@ -2347,6 +4660,33 @@
       "source_file": "large-non-hbcu-contacts-007.sql"
     },
     {
+      "unitid": 498571,
+      "name": "Pennsylvania Western University",
+      "state": "PA",
+      "hbcu": false,
+      "email": "registrar@pennwest.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 216597,
+      "name": "Villanova University",
+      "state": "PA",
+      "hbcu": false,
+      "email": "residencelife@villanova.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 217484,
+      "name": "University of Rhode Island",
+      "state": "RI",
+      "hbcu": false,
+      "email": "housing@uri.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
       "unitid": 217882,
       "name": "Clemson University",
       "state": "SC",
@@ -2354,6 +4694,51 @@
       "email": "registrar@clemson.edu",
       "department_key": "registrar",
       "source_file": "large-non-hbcu-contacts-002.sql"
+    },
+    {
+      "unitid": 218724,
+      "name": "Coastal Carolina University",
+      "state": "SC",
+      "hbcu": false,
+      "email": "registrar@coastal.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 218113,
+      "name": "Greenville Technical College",
+      "state": "SC",
+      "hbcu": false,
+      "email": "titleix@gvltec.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 218140,
+      "name": "Horry-Georgetown Technical College",
+      "state": "SC",
+      "hbcu": false,
+      "email": "registrar@hgtc.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 218353,
+      "name": "Midlands Technical College",
+      "state": "SC",
+      "hbcu": false,
+      "email": "oreee@midlandstech.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 218894,
+      "name": "Trident Technical College",
+      "state": "SC",
+      "hbcu": false,
+      "email": "records@tridenttech.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
     },
     {
       "unitid": 218663,
@@ -2365,6 +4750,105 @@
       "source_file": "large-non-hbcu-contacts-013.sql"
     },
     {
+      "unitid": 219356,
+      "name": "South Dakota State University",
+      "state": "SD",
+      "hbcu": false,
+      "email": "sdsu.reslife@sdstate.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 219602,
+      "name": "Austin Peay State University",
+      "state": "TN",
+      "hbcu": false,
+      "email": "williamslr@apsu.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 219709,
+      "name": "Belmont University",
+      "state": "TN",
+      "hbcu": false,
+      "email": "carly.elliott@belmont.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 220631,
+      "name": "Lincoln Memorial University",
+      "state": "TN",
+      "hbcu": false,
+      "email": "registrar@lmunet.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 219976,
+      "name": "Lipscomb University",
+      "state": "TN",
+      "hbcu": false,
+      "email": "housing@lipscomb.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 221184,
+      "name": "Nashville State Community College",
+      "state": "TN",
+      "hbcu": false,
+      "email": "studentsuccesscenter@nscc.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 221908,
+      "name": "Northeast State Community College",
+      "state": "TN",
+      "hbcu": false,
+      "email": "trio@northeaststate.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 222178,
+      "name": "Abilene Christian University",
+      "state": "TX",
+      "hbcu": false,
+      "email": "reslife@acu.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 222567,
+      "name": "Alvin Community College",
+      "state": "TX",
+      "hbcu": false,
+      "email": "international@alvincollege.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 222576,
+      "name": "Amarillo College",
+      "state": "TX",
+      "hbcu": false,
+      "email": "askac@actx.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 222831,
+      "name": "Angelo State University",
+      "state": "TX",
+      "hbcu": false,
+      "email": "title.ix@angelo.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
       "unitid": 223232,
       "name": "Baylor University",
       "state": "TX",
@@ -2372,6 +4856,15 @@
       "email": "registrar@baylor.edu",
       "department_key": "registrar",
       "source_file": "large-manual-gap-001.sql"
+    },
+    {
+      "unitid": 223427,
+      "name": "Blinn College District",
+      "state": "TX",
+      "hbcu": false,
+      "email": "housing@blinn.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-001.sql"
     },
     {
       "unitid": 247834,
@@ -2383,6 +4876,222 @@
       "source_file": "large-manual-gap-001.sql"
     },
     {
+      "unitid": 224615,
+      "name": "Dallas College",
+      "state": "TX",
+      "hbcu": false,
+      "email": "titleix@dallascollege.edu",
+      "department_key": "title_ix",
+      "source_file": "large-non-hbcu-contacts-003.sql"
+    },
+    {
+      "unitid": 224350,
+      "name": "Del Mar College",
+      "state": "TX",
+      "hbcu": false,
+      "email": "tmcdonal1@delmar.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 225423,
+      "name": "Houston Community College",
+      "state": "TX",
+      "hbcu": false,
+      "email": "oiss.international@hccs.edu",
+      "department_key": "international",
+      "source_file": "large-non-hbcu-contacts-005.sql"
+    },
+    {
+      "unitid": 226019,
+      "name": "Kilgore College",
+      "state": "TX",
+      "hbcu": false,
+      "email": "internationalstudents@kilgore.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 441760,
+      "name": "Lamar Institute of Technology",
+      "state": "TX",
+      "hbcu": false,
+      "email": "helpdesk@lit.edu",
+      "department_key": "technology",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 226091,
+      "name": "Lamar University",
+      "state": "TX",
+      "hbcu": false,
+      "email": "dept_healthcenter@lamar.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 226134,
+      "name": "Laredo College",
+      "state": "TX",
+      "hbcu": false,
+      "email": "triosss@laredo.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 226204,
+      "name": "Lee College",
+      "state": "TX",
+      "hbcu": false,
+      "email": "titleixsupport@lee.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 227182,
+      "name": "Lone Star College System",
+      "state": "TX",
+      "hbcu": false,
+      "email": "lsc-f1admissions@lonestar.edu",
+      "department_key": "international",
+      "source_file": "large-non-hbcu-contacts-006.sql"
+    },
+    {
+      "unitid": 226578,
+      "name": "McLennan Community College",
+      "state": "TX",
+      "hbcu": false,
+      "email": "mkittner@mclennan.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 226806,
+      "name": "Midland College",
+      "state": "TX",
+      "hbcu": false,
+      "email": "mcpolice@midland.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 226833,
+      "name": "Midwestern State University",
+      "state": "TX",
+      "hbcu": false,
+      "email": "registrar@msutexas.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 227146,
+      "name": "Navarro College",
+      "state": "TX",
+      "hbcu": false,
+      "email": "registrar@navarrocollege.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 224110,
+      "name": "North Central Texas College",
+      "state": "TX",
+      "hbcu": false,
+      "email": "studentlife@nctc.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 488730,
+      "name": "Northeast Lakeview College",
+      "state": "TX",
+      "hbcu": false,
+      "email": "lboyer-owens@alamo.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 227304,
+      "name": "Odessa College",
+      "state": "TX",
+      "hbcu": false,
+      "email": "housing@odessa.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 227881,
+      "name": "Sam Houston State University",
+      "state": "TX",
+      "hbcu": false,
+      "email": "titleix@shsu.edu",
+      "department_key": "title_ix",
+      "source_file": "large-non-hbcu-contacts-008.sql"
+    },
+    {
+      "unitid": 227924,
+      "name": "San Antonio College",
+      "state": "TX",
+      "hbcu": false,
+      "email": "sac-cares@alamo.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 228246,
+      "name": "Southern Methodist University",
+      "state": "TX",
+      "hbcu": false,
+      "email": "manedesk@smu.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 228431,
+      "name": "Stephen F Austin State University",
+      "state": "TX",
+      "hbcu": false,
+      "email": "sahegrad@sfasu.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 228547,
+      "name": "Tarrant County College District",
+      "state": "TX",
+      "hbcu": false,
+      "email": "hrtitleix@tccd.edu",
+      "department_key": "title_ix",
+      "source_file": "large-non-hbcu-contacts-009.sql"
+    },
+    {
+      "unitid": 224147,
+      "name": "Texas A & M University-Corpus Christi",
+      "state": "TX",
+      "hbcu": false,
+      "email": "marcom@tamucc.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 228875,
+      "name": "Texas Christian University",
+      "state": "TX",
+      "hbcu": false,
+      "email": "registrar_office@tcu.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 487320,
+      "name": "Texas State Technical College",
+      "state": "TX",
+      "hbcu": false,
+      "email": "housing@marshall.tstc.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
       "unitid": 228459,
       "name": "Texas State University",
       "state": "TX",
@@ -2390,6 +5099,33 @@
       "email": "registrar@txstate.edu",
       "department_key": "registrar",
       "source_file": "large-manual-gap-004.sql"
+    },
+    {
+      "unitid": 229115,
+      "name": "Texas Tech University",
+      "state": "TX",
+      "hbcu": false,
+      "email": "housing@ttu.edu",
+      "department_key": "housing",
+      "source_file": "large-non-hbcu-contacts-009.sql"
+    },
+    {
+      "unitid": 229179,
+      "name": "Texas Woman's University",
+      "state": "TX",
+      "hbcu": false,
+      "email": "titleix@twu.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 228769,
+      "name": "The University of Texas at Arlington",
+      "state": "TX",
+      "hbcu": false,
+      "email": "titleix@uta.edu",
+      "department_key": "title_ix",
+      "source_file": "large-non-hbcu-contacts-009.sql"
     },
     {
       "unitid": 228787,
@@ -2410,6 +5146,69 @@
       "source_file": "large-manual-gap-004.sql"
     },
     {
+      "unitid": 229027,
+      "name": "The University of Texas at San Antonio",
+      "state": "TX",
+      "hbcu": false,
+      "email": "eos.office@utsa.edu",
+      "department_key": "title_ix",
+      "source_file": "large-non-hbcu-contacts-010.sql"
+    },
+    {
+      "unitid": 229355,
+      "name": "Tyler Junior College",
+      "state": "TX",
+      "hbcu": false,
+      "email": "deana.sheppard@tjc.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 227216,
+      "name": "University of North Texas",
+      "state": "TX",
+      "hbcu": false,
+      "email": "latoya.haynes@unt.edu",
+      "department_key": "title_ix",
+      "source_file": "large-non-hbcu-contacts-012.sql"
+    },
+    {
+      "unitid": 230038,
+      "name": "Brigham Young University",
+      "state": "UT",
+      "hbcu": false,
+      "email": "titleix@byu.edu",
+      "department_key": "title_ix",
+      "source_file": "large-non-hbcu-contacts-001.sql"
+    },
+    {
+      "unitid": 230418,
+      "name": "Ensign College",
+      "state": "UT",
+      "hbcu": false,
+      "email": "registration@ensign.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 230746,
+      "name": "Salt Lake Community College",
+      "state": "UT",
+      "hbcu": false,
+      "email": "help.desk@slcc.edu",
+      "department_key": "title_ix",
+      "source_file": "large-non-hbcu-contacts-008.sql"
+    },
+    {
+      "unitid": 230603,
+      "name": "Southern Utah University",
+      "state": "UT",
+      "hbcu": false,
+      "email": "housing@suu.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
       "unitid": 230764,
       "name": "University of Utah",
       "state": "UT",
@@ -2426,6 +5225,60 @@
       "email": "studentaffairs@usu.edu",
       "department_key": "student_advocacy",
       "source_file": "large-non-hbcu-contacts-013.sql"
+    },
+    {
+      "unitid": 230171,
+      "name": "Utah Tech University",
+      "state": "UT",
+      "hbcu": false,
+      "email": "deanofstudents@utahtech.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 230782,
+      "name": "Weber State University",
+      "state": "UT",
+      "hbcu": false,
+      "email": "housing@weber.edu",
+      "department_key": "housing",
+      "source_file": "large-non-hbcu-contacts-014.sql"
+    },
+    {
+      "unitid": 433387,
+      "name": "Western Governors University",
+      "state": "UT",
+      "hbcu": false,
+      "email": "titleix@wgu.edu",
+      "department_key": "title_ix",
+      "source_file": "large-non-hbcu-contacts-014.sql"
+    },
+    {
+      "unitid": 232450,
+      "name": "Brightpoint Community College",
+      "state": "VA",
+      "hbcu": false,
+      "email": "intlstudentservices@brightpoint.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 232195,
+      "name": "Germanna Community College",
+      "state": "VA",
+      "hbcu": false,
+      "email": "internationaladmissions@germanna.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 232414,
+      "name": "J Sargeant Reynolds Community College",
+      "state": "VA",
+      "hbcu": false,
+      "email": "dfilipchuk@reynolds.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-002.sql"
     },
     {
       "unitid": 232423,
@@ -2446,6 +5299,15 @@
       "source_file": "large-non-hbcu-contacts-006.sql"
     },
     {
+      "unitid": 232946,
+      "name": "Northern Virginia Community College",
+      "state": "VA",
+      "hbcu": false,
+      "email": "rmurillo@nvcc.edu",
+      "department_key": "international",
+      "source_file": "large-non-hbcu-contacts-007.sql"
+    },
+    {
       "unitid": 232982,
       "name": "Old Dominion University",
       "state": "VA",
@@ -2464,6 +5326,78 @@
       "source_file": "large-manual-gap-006.sql"
     },
     {
+      "unitid": 233921,
+      "name": "Virginia Polytechnic Institute and State University",
+      "state": "VA",
+      "hbcu": false,
+      "email": "koaks@vt.edu",
+      "department_key": "title_ix",
+      "source_file": "large-non-hbcu-contacts-014.sql"
+    },
+    {
+      "unitid": 230861,
+      "name": "Community College of Vermont",
+      "state": "VT",
+      "hbcu": false,
+      "email": "laurie.cook@ccv.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 231174,
+      "name": "University of Vermont",
+      "state": "VT",
+      "hbcu": false,
+      "email": "registrar@uvm.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 234827,
+      "name": "Central Washington University",
+      "state": "WA",
+      "hbcu": false,
+      "email": "basicneeds@cwu.edu",
+      "department_key": "basic_needs",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 234933,
+      "name": "Clark College",
+      "state": "WA",
+      "hbcu": false,
+      "email": "international@clark.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 234979,
+      "name": "Columbia Basin College",
+      "state": "WA",
+      "hbcu": false,
+      "email": "housing@columbiabasin.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 235103,
+      "name": "Edmonds College",
+      "state": "WA",
+      "hbcu": false,
+      "email": "accessibleit@edmonds.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 235343,
+      "name": "Green River College",
+      "state": "WA",
+      "hbcu": false,
+      "email": "otr@greenriver.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
       "unitid": 236939,
       "name": "Washington State University",
       "state": "WA",
@@ -2471,6 +5405,87 @@
       "email": "cougar.pantry@wsu.edu",
       "department_key": "basic_needs",
       "source_file": "large-manual-gap-007.sql"
+    },
+    {
+      "unitid": 237011,
+      "name": "Western Washington University",
+      "state": "WA",
+      "hbcu": false,
+      "email": "crtc@wwu.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 240116,
+      "name": "Chippewa Valley Technical College",
+      "state": "WI",
+      "hbcu": false,
+      "email": "therightchoice@cvtc.edu",
+      "department_key": "technology",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 238722,
+      "name": "Fox Valley Technical College",
+      "state": "WI",
+      "hbcu": false,
+      "email": "isso@fvtc.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 238759,
+      "name": "Gateway Technical College",
+      "state": "WI",
+      "hbcu": false,
+      "email": "compliance@gtc.edu",
+      "department_key": "title_ix",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 238263,
+      "name": "Madison Area Technical College",
+      "state": "WI",
+      "hbcu": false,
+      "email": "schoolofstem@madisoncollege.edu",
+      "department_key": "technology",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 239105,
+      "name": "Marquette University",
+      "state": "WI",
+      "hbcu": false,
+      "email": "student-affairs@marquette.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 239460,
+      "name": "Northcentral Technical College",
+      "state": "WI",
+      "hbcu": false,
+      "email": "blanchet@ntc.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-002.sql"
+    },
+    {
+      "unitid": 239488,
+      "name": "Northeast Wisconsin Technical College",
+      "state": "WI",
+      "hbcu": false,
+      "email": "international@nwtc.edu",
+      "department_key": "international",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 240277,
+      "name": "University of Wisconsin-Green Bay",
+      "state": "WI",
+      "hbcu": false,
+      "email": "dos@uwgb.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-001.sql"
     },
     {
       "unitid": 240444,
@@ -2482,6 +5497,24 @@
       "source_file": "large-non-hbcu-contacts-013.sql"
     },
     {
+      "unitid": 240365,
+      "name": "University of Wisconsin-Oshkosh",
+      "state": "WI",
+      "hbcu": false,
+      "email": "registrar@uwosh.edu",
+      "department_key": "registrar",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 240189,
+      "name": "University of Wisconsin-Whitewater",
+      "state": "WI",
+      "hbcu": false,
+      "email": "schmidtl@uww.edu",
+      "department_key": "student_advocacy",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
       "unitid": 449339,
       "name": "American Public University System",
       "state": "WV",
@@ -2489,6 +5522,24 @@
       "email": "stuaccounts@apus.edu",
       "department_key": "student_accounts",
       "source_file": "large-manual-gap-008.sql"
+    },
+    {
+      "unitid": 237525,
+      "name": "Marshall University",
+      "state": "WV",
+      "hbcu": false,
+      "email": "housing@marshall.edu",
+      "department_key": "housing",
+      "source_file": "partner-outreach-gap-001.sql"
+    },
+    {
+      "unitid": 238032,
+      "name": "West Virginia University",
+      "state": "WV",
+      "hbcu": false,
+      "email": "wvuadmissions@mail.wvu.edu",
+      "department_key": "international",
+      "source_file": "large-non-hbcu-contacts-014.sql"
     }
   ]
 }
