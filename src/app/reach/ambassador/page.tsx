@@ -32,9 +32,9 @@ export default async function ReachAmbassadorPage({
   const campus = ambassador.institution || profile?.institution || "";
 
   return <main className="section white"><div className="shell">
-    <div className="section-head"><div><div className="eyebrow">Private REACH Ambassador workspace</div><h2>Welcome, {name}</h2><p>Access outreach tools, document your campus impact, and submit photos for National Office review.</p></div><Link className="button outline" href="https://reach.estherfundsfoundation.org">Open REACH Action Hub</Link></div>
-    {params.submitted && <div className="notice"><CheckCircle2 size={18}/><strong>Your activity was submitted.</strong> EFF will review it before anything is published.</div>}
-    {params.profileSubmitted && <div className="notice"><UserRoundCheck size={18}/><strong>Your public profile was submitted.</strong> It will appear in the directory after National Office review.</div>}
+    <div className="section-head"><div><div className="eyebrow">Private REACH Ambassador workspace</div><h2>Welcome, {name}</h2><p>Access outreach tools, document your campus impact, and publish consent-confirmed stories to your profile.</p></div><Link className="button outline" href="https://reach.estherfundsfoundation.org">Open REACH Action Hub</Link></div>
+    {params.submitted && <div className="notice"><CheckCircle2 size={18}/><strong>Your activity is live.</strong> It now appears on your public profile.</div>}
+    {params.profileSubmitted && <div className="notice"><UserRoundCheck size={18}/><strong>Your public profile is live.</strong> You may update it whenever you need to.</div>}
     {params.error && <div className="notice error-text" role="alert">{params.error}</div>}
 
     <div className="stats admin-stats" style={{marginTop:24}}>
@@ -45,7 +45,7 @@ export default async function ReachAmbassadorPage({
 
     <section className="reach-profile-editor" style={{marginTop:36}}>
       <div className="reach-profile-intro"><div className="eyebrow">Your public ambassador profile</div><h3>Introduce yourself to the REACH community</h3><p>Choose what the public may see. Your email address, login information, and private submissions are never shown.</p>
-        <div className="notice"><Globe2 size={19}/><div><strong>{publicProfile?.status === "published" ? "Your profile is live." : publicProfile?.status === "pending_review" ? "Your profile is awaiting review." : publicProfile?.status === "changes_requested" ? "National Office requested changes." : "Your profile is private."}</strong>{publicProfile?.review_note && <p>{publicProfile.review_note}</p>}</div></div>
+        <div className="notice"><Globe2 size={19}/><div><strong>{publicProfile?.status === "published" ? "Your profile is live." : "Complete the form to publish your profile."}</strong></div></div>
         {publicProfile?.status === "published" && <Link className="button outline" href={`/reach/ambassadors/${publicProfile.slug}`}>View my public profile</Link>}
         <Link className="card-link" href="/reach/ambassadors">Browse the Ambassador Directory →</Link>
       </div>
@@ -62,9 +62,9 @@ export default async function ReachAmbassadorPage({
           <label>Instagram username <span className="muted">(optional)</span><input name="instagram" maxLength={200} defaultValue={publicProfile?.instagram_url ?? ""} placeholder="@username"/></label>
           <label>LinkedIn URL <span className="muted">(optional)</span><input name="linkedin" type="url" maxLength={300} defaultValue={publicProfile?.linkedin_url ?? ""} placeholder="https://www.linkedin.com/in/..."/></label>
         </div>
-        <label className="career-upload"><Camera/><strong>Profile photo (optional)</strong><span>JPG, PNG, or WEBP, up to 6 MB. EFF reviews the photo before it becomes public.</span><input name="profilePhoto" type="file" accept="image/jpeg,image/png,image/webp"/></label>
-        <label className="check"><input name="profileConsent" type="checkbox" required/><span>I am choosing to submit this profile for public display and confirm that the information and photo belong to me. I understand EFF will review it before publication.</span></label>
-        <button className="button" type="submit"><Globe2 size={17}/> Submit profile for publication</button>
+        <label className="career-upload"><Camera/><strong>Profile photo (optional)</strong><span>JPG, PNG, or WEBP, up to 6 MB. The photo becomes public when you publish.</span><input name="profilePhoto" type="file" accept="image/jpeg,image/png,image/webp"/></label>
+        <label className="check"><input name="profileConsent" type="checkbox" required/><span>I choose to publish this profile publicly and confirm that the information and photo belong to me.</span></label>
+        <button className="button" type="submit"><Globe2 size={17}/> Publish my profile</button>
       </form>
     </section>
 
@@ -83,15 +83,15 @@ export default async function ReachAmbassadorPage({
           <label className="full-field">What did you do, what did students need, and what happened?<textarea name="description" required minLength={20} maxLength={2400} rows={7}/></label>
         </div>
       </section>
-      <section className="form-section"><span className="section-number">02</span><h3>Share photos for review</h3>
-        <label className="career-upload"><Camera/><strong>Upload up to six photos</strong><span>JPG, PNG, or WEBP, up to 6 MB each. Photos stay private until National Office reviews and approves them.</span><input name="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple/></label>
-        <div className="career-privacy"><ShieldCheck/><p>Do not upload private student records, grades, financial information, IDs, or images of anyone who did not agree to be photographed and shared with EFF. National Office decides whether approved photos are published.</p></div>
-        <label className="check"><input name="consent" type="checkbox" required/><span>I confirm that I have permission to submit these photos, no private student information is shown, and EFF may review them for possible publication.</span></label>
+      <section className="form-section"><span className="section-number">02</span><h3>Share your impact</h3>
+        <label className="career-upload"><Camera/><strong>Upload up to six photos</strong><span>JPG, PNG, or WEBP, up to 6 MB each. Submitted photos will appear on your public profile.</span><input name="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple/></label>
+        <div className="career-privacy"><ShieldCheck/><p>Do not upload private student records, grades, financial information, IDs, or images of anyone who did not agree to be photographed and published.</p></div>
+        <label className="check"><input name="consent" type="checkbox" required/><span>I confirm that everyone shown agreed to public sharing, no private student information is visible, and EFF may display these photos on my public profile.</span></label>
       </section>
       <button className="button" type="submit"><MapPin size={17}/> Submit campus activity</button>
     </form>
 
-    <section style={{marginTop:40}}><div className="eyebrow">Your activity history</div><h3>Submissions and review status</h3>
+    <section style={{marginTop:40}}><div className="eyebrow">Your activity history</div><h3>Published campus impact</h3>
       {submissions?.length ? submissions.map(item=><article className="card" key={item.id} style={{marginTop:14}}><div className="section-head"><div><div className="eyebrow">{item.activity_type.replaceAll("_"," ")}</div><h3>{item.title}</h3><p className="muted">{item.campus} Â· {new Date(`${item.activity_date}T12:00:00`).toLocaleDateString()}</p></div><span className="status">{statusLabels[item.status] ?? item.status}</span></div>{item.review_note && <div className="notice">{item.review_note}</div>}</article>) : <div className="card"><p>No campus activities have been submitted yet.</p></div>}
     </section>
   </div></main>;

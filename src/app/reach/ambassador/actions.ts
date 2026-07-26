@@ -55,27 +55,40 @@ export async function submitReachProfile(formData: FormData) {
   if (displayName.length < 2 || institution.length < 2 || bio.length < 50) {
     redirect("/reach/ambassador?error=Complete+your+public+name,+school,+and+a+bio+of+at+least+50+characters.");
   }
-  if (!consentConfirmed) redirect("/reach/ambassador?error=Confirm+that+you+want+EFF+to+review+this+profile+for+public+display.");
+  if (!consentConfirmed) redirect("/reach/ambassador?error=Confirm+that+you+want+to+publish+this+profile+in+the+public+directory.");
   if (instagramInput && !instagramUrl) redirect("/reach/ambassador?error=Enter+a+valid+Instagram+username+or+Instagram+URL.");
   if (linkedinInput && !linkedinUrl) redirect("/reach/ambassador?error=Enter+a+valid+LinkedIn+URL.");
 
   const {data: current} = await admin.from("reach_ambassador_profiles")
-    .select("slug,private_photo_path").eq("ambassador_id", ambassador.id).maybeSingle();
+    .select("slug,private_photo_path,public_photo_path").eq("ambassador_id", ambassador.id).maybeSingle();
   const photo = formData.get("profilePhoto");
   let privatePhotoPath = current?.private_photo_path ?? null;
+  let publicPhotoPath = current?.public_photo_path ?? null;
   let newPhotoPath: string | null = null;
+  let newPublicPhotoPath: string | null = null;
   if (photo instanceof File && photo.size > 0) {
     if (!acceptedTypes.has(photo.type) || photo.size > 6 * 1024 * 1024) {
       redirect("/reach/ambassador?error=Your+profile+photo+must+be+a+JPG,+PNG,+or+WEBP+file+no+larger+than+6+MB.");
     }
     const extension = photo.type === "image/png" ? "png" : photo.type === "image/webp" ? "webp" : "jpg";
     newPhotoPath = `${user.id}/profile/${Date.now()}.${extension}`;
-    const uploaded = await admin.storage.from("reach-ambassador-uploads").upload(newPhotoPath, photo, {
+    const photoBytes = new Uint8Array(await photo.arrayBuffer());
+    const uploaded = await admin.storage.from("reach-ambassador-uploads").upload(newPhotoPath, photoBytes, {
       contentType: photo.type,
       upsert: false,
     });
     if (uploaded.error) redirect("/reach/ambassador?error=Your+profile+photo+could+not+be+uploaded.");
+    newPublicPhotoPath = `profiles/${ambassador.id}.${extension}`;
+    const published = await admin.storage.from("reach-impact-media").upload(newPublicPhotoPath, photoBytes, {
+      contentType: photo.type,
+      upsert: true,
+    });
+    if (published.error) {
+      await admin.storage.from("reach-ambassador-uploads").remove([newPhotoPath]);
+      redirect("/reach/ambassador?error=Your+profile+photo+could+not+be+published.");
+    }
     privatePhotoPath = newPhotoPath;
+    publicPhotoPath = newPublicPhotoPath;
   }
 
   const now = new Date().toISOString();
@@ -93,30 +106,39 @@ export async function submitReachProfile(formData: FormData) {
     instagram_url: instagramUrl,
     linkedin_url: linkedinUrl,
     private_photo_path: privatePhotoPath,
+    public_photo_path: publicPhotoPath,
     consent_confirmed: true,
-    status: "pending_review",
+    status: "published",
     review_note: null,
     submitted_at: now,
-    reviewed_at: null,
+    reviewed_at: now,
     reviewed_by: null,
     updated_at: now,
   }, {onConflict: "ambassador_id"});
   if (error) {
     if (newPhotoPath) await admin.storage.from("reach-ambassador-uploads").remove([newPhotoPath]);
+    if (newPublicPhotoPath && newPublicPhotoPath !== current?.public_photo_path) {
+      await admin.storage.from("reach-impact-media").remove([newPublicPhotoPath]);
+    }
     redirect("/reach/ambassador?error=Your+public+profile+could+not+be+saved.");
   }
   if (newPhotoPath && current?.private_photo_path && current.private_photo_path !== newPhotoPath) {
     await admin.storage.from("reach-ambassador-uploads").remove([current.private_photo_path]);
   }
+  if (newPublicPhotoPath && current?.public_photo_path && current.public_photo_path !== newPublicPhotoPath) {
+    await admin.storage.from("reach-impact-media").remove([current.public_photo_path]);
+  }
   await admin.from("audit_events").insert({
     actor_id: user.id,
-    action: "reach_ambassador_profile_submitted",
+    action: "reach_ambassador_profile_published",
     target_type: "reach_ambassador_profile",
     target_id: ambassador.id,
     metadata_safe: {has_photo: Boolean(privatePhotoPath), focus_area_count: focusAreas.length},
   });
   revalidatePath("/reach/ambassador");
   revalidatePath("/admin/reach");
+  revalidatePath("/reach/ambassadors");
+  revalidatePath(`/reach/ambassadors/${current?.slug ?? `${slugPart(displayName)}-${ambassador.id.slice(0, 6)}`}`);
   redirect("/reach/ambassador?profileSubmitted=1");
 }
 
@@ -151,20 +173,35 @@ export async function submitReachActivity(formData: FormData) {
 
   const submissionId = crypto.randomUUID();
   const uploadedPaths: string[] = [];
+  const publicPaths: string[] = [];
   for (const [index, file] of files.entries()) {
     const extension = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
     const path = `${user.id}/${submissionId}/${index + 1}-${Date.now()}.${extension}`;
-    const uploaded = await admin.storage.from("reach-ambassador-uploads").upload(path, file, {
+    const photoBytes = new Uint8Array(await file.arrayBuffer());
+    const uploaded = await admin.storage.from("reach-ambassador-uploads").upload(path, photoBytes, {
       contentType: file.type,
       upsert: false,
     });
     if (uploaded.error) {
       if (uploadedPaths.length) await admin.storage.from("reach-ambassador-uploads").remove(uploadedPaths);
+      if (publicPaths.length) await admin.storage.from("reach-impact-media").remove(publicPaths);
       redirect("/reach/ambassador?error=Your+photos+could+not+be+uploaded.+Please+try+again.");
     }
     uploadedPaths.push(path);
+    const publicPath = `${submissionId}/${index + 1}.${extension}`;
+    const published = await admin.storage.from("reach-impact-media").upload(publicPath, photoBytes, {
+      contentType: file.type,
+      upsert: true,
+    });
+    if (published.error) {
+      await admin.storage.from("reach-ambassador-uploads").remove(uploadedPaths);
+      if (publicPaths.length) await admin.storage.from("reach-impact-media").remove(publicPaths);
+      redirect("/reach/ambassador?error=Your+photos+could+not+be+published.+Please+try+again.");
+    }
+    publicPaths.push(publicPath);
   }
 
+  const now = new Date().toISOString();
   const {error} = await admin.from("reach_activity_submissions").insert({
     id: submissionId,
     ambassador_id: ambassador.id,
@@ -176,21 +213,27 @@ export async function submitReachActivity(formData: FormData) {
     description,
     students_reached: studentsReached,
     photo_paths: uploadedPaths,
+    public_photo_paths: publicPaths,
     consent_confirmed: true,
+    status: "published",
+    reviewed_at: now,
   });
   if (error) {
     if (uploadedPaths.length) await admin.storage.from("reach-ambassador-uploads").remove(uploadedPaths);
+    if (publicPaths.length) await admin.storage.from("reach-impact-media").remove(publicPaths);
     redirect("/reach/ambassador?error=Your+activity+could+not+be+saved.+Please+try+again.");
   }
   await admin.from("audit_events").insert({
     actor_id: user.id,
-    action: "reach_activity_submitted",
+    action: "reach_activity_published",
     target_type: "reach_activity_submission",
     target_id: submissionId,
-    metadata_safe: {activity_type: activityType, photo_count: uploadedPaths.length},
+    metadata_safe: {activity_type: activityType, photo_count: publicPaths.length},
   });
   revalidatePath("/reach/ambassador");
   revalidatePath("/admin/reach");
+  revalidatePath("/reach/impact");
+  revalidatePath("/reach/ambassadors");
   redirect("/reach/ambassador?submitted=1");
 }
 

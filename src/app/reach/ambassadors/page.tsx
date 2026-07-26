@@ -18,7 +18,7 @@ export default async function ReachAmbassadorDirectoryPage() {
       </div>
     </div></section>
     <section className="section white"><div className="shell">
-      <div className="reach-directory-trust"><ShieldCheck/><div><strong>Published with permission.</strong><span>Every profile is submitted by the ambassador and reviewed by Esther Funds Foundation before appearing here.</span></div></div>
+      <div className="reach-directory-trust"><ShieldCheck/><div><strong>Published by the ambassador.</strong><span>Every profile appears only after the ambassador explicitly chooses what to share publicly.</span></div></div>
       {ambassadors.length ? <div className="reach-directory-grid">
         {ambassadors.map((ambassador) => <Link className="reach-ambassador-card" href={`/reach/ambassadors/${ambassador.slug}`} key={ambassador.slug}>
           <div className="reach-avatar">{ambassador.photo_url ? <img src={ambassador.photo_url} alt=""/> : <span>{ambassador.display_name.split(/\s+/).slice(0,2).map((part) => part[0]).join("")}</span>}</div>
@@ -29,7 +29,7 @@ export default async function ReachAmbassadorDirectoryPage() {
           {ambassador.focus_areas.length > 0 && <div className="reach-tags">{ambassador.focus_areas.slice(0,3).map((area) => <span key={area}>{area}</span>)}</div>}
           <b>View ambassador profile <ArrowRight size={16}/></b>
         </Link>)}
-      </div> : <div className="reach-directory-empty"><Globe2/><h2>Profiles are being prepared.</h2><p>Ambassadors may now build their profiles in the secure workspace. Approved profiles will appear here as they are published.</p><Link className="button" href="/reach/ambassador">Open Ambassador Workspace</Link></div>}
+      </div> : <div className="reach-directory-empty"><Globe2/><h2>Profiles are being prepared.</h2><p>Ambassadors may now build and publish their profiles directly from the secure workspace.</p><Link className="button" href="/reach/ambassador">Open Ambassador Workspace</Link></div>}
     </div></section>
   </main>;
 }
