@@ -3,7 +3,7 @@ import {requireAdmin} from "@/lib/auth/staff";
 import {createAdminClient} from "@/lib/supabase/admin";
 import {addReachResource, setReachResourceActive} from "./actions";
 
-type AmbassadorRow = {id:string;email:string;full_name:string|null;institution:string|null};
+type AmbassadorRow = {id:string;email:string;login_email:string|null;full_name:string|null;institution:string|null};
 
 export default async function ReachAdminPage({
   searchParams,
@@ -14,7 +14,7 @@ export default async function ReachAdminPage({
   await requireAdmin();
   const admin = createAdminClient();
   const [{data: ambassadors}, {data: resources}, {data: submissions}, {data: publicProfiles}] = await Promise.all([
-    admin.from("reach_ambassadors").select("id,email,full_name,institution,active,invited_at,claimed_at").order("full_name",{nullsFirst:false}),
+    admin.from("reach_ambassadors").select("id,email,login_email,full_name,institution,active,invited_at,claimed_at").order("full_name",{nullsFirst:false}),
     admin.from("reach_resources").select("id,title,description,category,resource_url,active,created_at").order("created_at",{ascending:false}),
     admin.from("reach_activity_submissions").select("id,title,activity_type,campus,activity_date,description,students_reached,photo_paths,status,review_note,created_at,reach_ambassadors(full_name,email,institution)").order("created_at",{ascending:false}),
     admin.from("reach_ambassador_profiles").select("ambassador_id,slug,display_name,headline,institution,major,class_year,bio,why_reach,focus_areas,instagram_url,linkedin_url,private_photo_path,public_photo_path,status,review_note,submitted_at").order("submitted_at",{ascending:false}),
@@ -49,9 +49,9 @@ export default async function ReachAdminPage({
       </form>
       <section className="card">
         <div className="eyebrow">Invitation progress</div><h3>{claimed} of {ambassadors?.length ?? 0} accounts claimed</h3>
-        <p className="muted">Claim access is tied to the verified email address on the approved ambassador list.</p>
+        <p className="muted">A private link sent to the invitation inbox can be connected to any verified portal email the ambassador controls.</p>
         <div className="table-wrap" style={{maxHeight:350,overflow:"auto"}}><table><thead><tr><th>Ambassador</th><th>Status</th></tr></thead><tbody>
-          {ambassadors?.map((item) => <tr key={item.id}><td>{item.full_name||item.email}<br/><small>{item.institution||item.email}</small></td><td>{item.claimed_at?"Claimed":item.invited_at?"Invited":"Ready to invite"}</td></tr>)}
+          {ambassadors?.map((item) => <tr key={item.id}><td>{item.full_name||item.email}<br/><small>{item.institution||item.email}{item.login_email && item.login_email !== item.email ? ` · Portal: ${item.login_email}` : ""}</small></td><td>{item.claimed_at?"Claimed":item.invited_at?"Invited":"Ready to invite"}</td></tr>)}
         </tbody></table></div>
       </section>
     </div>

@@ -17,7 +17,7 @@ export default async function ReachAmbassadorTrainingPage({
   const query = await searchParams;
   const {ambassador} = await requireReachAmbassador("/reach/ambassador/training");
   if (!ambassador) return <main className="section white"><div className="shell" style={{maxWidth:760}}>
-    <div className="card"><div className="eyebrow">REACH Ambassador training</div><h2>Claim your ambassador account first.</h2><p>Use the exact email address from your acceptance message. Your application record will connect automatically after you sign in.</p><Link className="button" href="/reach/claim">Claim my account</Link></div>
+    <div className="card"><div className="eyebrow">REACH Ambassador training</div><h2>Claim your ambassador account first.</h2><p>Use your private claim link to connect the invitation to any verified email address you control.</p><Link className="button" href="/reach/claim">Claim my account</Link></div>
   </div></main>;
 
   return <main className="academy-course-page">

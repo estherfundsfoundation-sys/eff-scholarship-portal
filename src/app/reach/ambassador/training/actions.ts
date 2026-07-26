@@ -54,7 +54,7 @@ export async function submitReachAmbassadorAssessment(formData: FormData) {
   try {
     await getResend().emails.send({
       from: emailFrom,
-      to: ambassador.email,
+      to: ambassador.login_email || ambassador.email,
       replyTo: "nationals@estherfundsinc.org",
       subject: "You are a certified EFF REACH Campus Ambassador",
       html: `<div style="font-family:Arial,sans-serif;line-height:1.65;color:#2b1740;max-width:680px;margin:auto">

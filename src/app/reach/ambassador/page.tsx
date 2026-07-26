@@ -19,7 +19,7 @@ export default async function ReachAmbassadorPage({
   const params = await searchParams;
   const {admin, user, ambassador} = await requireReachAmbassador();
   if (!ambassador) return <main className="section white"><div className="shell" style={{maxWidth:780}}>
-    <div className="card"><div className="eyebrow">REACH Ambassador access</div><h2>This account is not connected to an active invitation.</h2><p>Use the exact email address where EFF sent your REACH Ambassador invitation.</p><Link className="button" href="/reach/claim">Check my invitation</Link></div>
+    <div className="card"><div className="eyebrow">REACH Ambassador access</div><h2>This account is not connected to an active invitation.</h2><p>Request a private claim link, then connect your invitation to any verified email address you control.</p><Link className="button" href="/reach/claim">Connect my invitation</Link></div>
   </div></main>;
 
   const [{data: resources}, {data: submissions}, {data: profile}, {data: publicProfile}] = await Promise.all([

@@ -10,12 +10,20 @@ export async function requireReachAmbassador(next = "/reach/ambassador") {
 
   const admin = createAdminClient();
   const email = user.email.trim().toLowerCase();
-  const {data: ambassador} = await admin
+  const selection = "id,email,login_email,full_name,institution,user_id,active,invited_at,claimed_at,application_id,accepted_at,training_started_at,training_completed_at,training_score,certified_at,certificate_code";
+  const {data: connected} = await admin
     .from("reach_ambassadors")
-    .select("id,email,full_name,institution,user_id,active,invited_at,claimed_at,application_id,accepted_at,training_started_at,training_completed_at,training_score,certified_at,certificate_code")
+    .select(selection)
+    .eq("user_id", user.id)
+    .eq("active", true)
+    .maybeSingle();
+  const {data: emailMatch} = connected ? {data: null} : await admin
+    .from("reach_ambassadors")
+    .select(selection)
     .eq("email", email)
     .eq("active", true)
     .maybeSingle();
+  const ambassador = connected ?? emailMatch;
 
   if (!ambassador) {
     return {supabase, admin, user, ambassador: null};
@@ -27,10 +35,10 @@ export async function requireReachAmbassador(next = "/reach/ambassador") {
     const now = new Date().toISOString();
     const {data: claimed, error} = await admin
       .from("reach_ambassadors")
-      .update({user_id: user.id, claimed_at: now, updated_at: now})
+      .update({user_id: user.id, login_email: email, claimed_at: now, updated_at: now})
       .eq("id", ambassador.id)
       .is("user_id", null)
-      .select("id,email,full_name,institution,user_id,active,invited_at,claimed_at,application_id,accepted_at,training_started_at,training_completed_at,training_score,certified_at,certificate_code")
+      .select(selection)
       .single();
     if (error || !claimed) {
       return {supabase, admin, user, ambassador: null};
