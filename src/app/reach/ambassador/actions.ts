@@ -36,6 +36,9 @@ function normalizeLinkedIn(value: string) {
 export async function submitReachProfile(formData: FormData) {
   const {admin, user, ambassador} = await requireReachAmbassador();
   if (!ambassador) redirect("/reach/claim");
+  if (ambassador.application_id && !ambassador.certified_at) {
+    redirect("/reach/ambassador?error=Complete+the+REACH+Ambassador+certification+before+publishing+an+official+profile.");
+  }
 
   const displayName = clean(formData.get("displayName"), 80);
   const headline = clean(formData.get("headline"), 140);
@@ -145,6 +148,9 @@ export async function submitReachProfile(formData: FormData) {
 export async function submitReachActivity(formData: FormData) {
   const {admin, user, ambassador} = await requireReachAmbassador();
   if (!ambassador) redirect("/reach/claim");
+  if (ambassador.application_id && !ambassador.certified_at) {
+    redirect("/reach/ambassador?error=Complete+the+REACH+Ambassador+certification+before+representing+REACH+in+an+activity.");
+  }
 
   const activityType = clean(formData.get("activityType"), 30);
   const title = clean(formData.get("title"), 140);
