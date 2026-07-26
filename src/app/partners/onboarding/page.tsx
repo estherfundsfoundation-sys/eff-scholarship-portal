@@ -28,11 +28,11 @@ export default async function PartnerOnboarding({searchParams}:{searchParams:Pro
         <p>Our institution believes a temporary barrier should not quietly become the end of a student’s education.</p>
         <div className="partner-mini-steps">
           <span><b>1</b> Submit application</span>
-          <span><b>2</b> EFF verifies institution</span>
-          <span><b>3</b> Partner profile launches</span>
+          <span><b>2</b> Partnership activates</span>
+          <span><b>3</b> Logo and profile appear</span>
           <span><b>4</b> Students receive the referral pathway</span>
         </div>
-        <div className="notice"><ShieldCheck/><span>Only approved institutions appear in the public directory. Institute designation is earned later through verified continuity practices and outcomes.</span></div>
+        <div className="notice"><ShieldCheck/><span>Completed registrations appear in the public directory immediately. EFF may review, correct, pause, or remove a profile later. Institute designation is earned separately through demonstrated continuity practices and outcomes.</span></div>
       </aside>
       <form action={submitPartnerApplication} className="application-form partner-application-form">
         {error&&<div className="notice error-text" role="alert">{error}</div>}
@@ -69,7 +69,7 @@ export default async function PartnerOnboarding({searchParams}:{searchParams:Pro
         </fieldset>
 
         <label>What should EFF know about your institution’s readiness? <span className="optional">optional</span><textarea name="applicationNote" maxLength={1800} placeholder="Existing emergency aid, retention procedures, leadership support, or a proposed pilot campus…"/></label>
-        <div className="partner-submit-note"><CheckCircle2/><span>Submitting is free. EFF will verify the representative and institution before publishing the school’s name or logo.</span></div>
+        <div className="partner-submit-note"><CheckCircle2/><span>Submitting is free. The institution will immediately become an Every Future Fulfilled Partner Campus, and its logo, pledge, and public profile will appear in the national directory. EFF may pause or remove a profile if a concern is reported.</span></div>
         <button className="button">Submit partnership application</button>
       </form>
     </div></section>

@@ -13,7 +13,7 @@ export default async function PartnerJoin({searchParams}:{searchParams:Promise<{
   return <main className="partner-join-page">
     <section className="resource-hero">
       <div className="shell partner-join-head">
-        <div><Link className="back-link" href="/partners">← Partnership overview</Link><div className="eyebrow">100% free institution account</div><h1>Become an <span>EFF Partner Campus.</span></h1><p>One authorized representative can begin the application. Your school will not appear publicly until EFF verifies and approves the partnership.</p></div>
+        <div><Link className="back-link" href="/partners">← Partnership overview</Link><div className="eyebrow">100% free institution account</div><h1>Become an <span>EFF Partner Campus.</span></h1><p>One authorized representative can register the institution. After the Continuity Pledge is completed, the school’s logo and profile are recognized immediately in the national directory.</p></div>
         <aside className="resource-promise"><Building2/><strong>No membership fee.</strong><small>No setup fee. No student referral fee. Partnership participation does not guarantee funding or case outcomes.</small></aside>
       </div>
     </section>
@@ -25,10 +25,10 @@ export default async function PartnerJoin({searchParams}:{searchParams:Promise<{
             "You are authorized to represent the college or begin an institutional partnership conversation.",
             "Your institution is a U.S. postsecondary school or recognized higher-education organization.",
             "You can identify a student-success, retention, enrollment, financial-aid, or student-affairs liaison.",
-            "You understand that EFF verifies every institution before publishing its logo or profile."
+            "You understand that EFF may review, pause, correct, or remove a public profile if a concern is reported."
           ].map(item=><div key={item}><CheckCircle2/><span>{item}</span></div>)}
         </div>
-        <div className="notice"><ShieldCheck/><span>Institution information may be verified against NCES/IPEDS and the school’s official website. Public profiles never display private staff phone numbers unless the institution chooses to publish them.</span></div>
+        <div className="notice"><ShieldCheck/><span>The partnership activates when the Continuity Pledge is submitted. EFF may later review institution information against NCES/IPEDS and the school’s official website, and may correct, pause, or remove a profile if needed. Private staff phone numbers are never displayed publicly.</span></div>
       </div>
       <div className="partner-signup-card">
         {user?<>
@@ -36,7 +36,7 @@ export default async function PartnerJoin({searchParams}:{searchParams:Promise<{
           <Link className="button" href="/partners/onboarding">Continue application</Link>
           <p className="muted">Signed in as {user.email}</p>
         </>:<>
-          <div className="eyebrow">Step 1 of 2</div><h3>Create the representative account</h3><p>The partnership profile is completed after email verification.</p>
+          <div className="eyebrow">Step 1 of 2</div><h3>Create the representative account</h3><p>Verify the representative email, complete the Continuity Pledge, and the partnership profile will activate immediately.</p>
           {error&&<p className="notice error-text" role="alert">{error}</p>}
           <form action={signUp} className="partner-signup-form">
             <input type="hidden" name="next" value="/partners/onboarding"/>

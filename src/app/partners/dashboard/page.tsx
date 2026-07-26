@@ -14,7 +14,7 @@ export const metadata:Metadata={title:"Partner Institution Portal"};
 
 const statusCopy:Record<string,[string,string]>={
   draft:["Draft","Complete the application before EFF can review the institution."],
-  pending:["Verification in progress","EFF is reviewing the representative, institution, and Continuity Pledge."],
+    pending:["Activation in progress","Your completed registration is being activated as an EFF Partner Campus."],
   approved:["Approved partner","The partnership is approved. EFF is preparing the public launch."],
   active:["Active partner","Your institution is publicly recognized as an Every Future Fulfilled partner."],
   paused:["Partnership paused","The public profile is temporarily paused while EFF and the institution review next steps."],
@@ -40,7 +40,7 @@ export default async function PartnerDashboard({searchParams}:{searchParams:Prom
     [Boolean(institution.liaison_department),"Campus liaison department named"],
     [Boolean(institution.logo_url),"Official logo supplied"],
     [Boolean(institution.public_summary),"Public continuity commitment written"],
-    [institution.status==="approved"||institution.status==="active","Institution verified by EFF"],
+    [institution.status==="active","Continuity Pledge completed"],
     [institution.public_profile&&institution.status==="active","Public partner profile launched"]
   ] as const;
   const complete=readiness.filter(item=>item[0]).length;
@@ -50,7 +50,7 @@ export default async function PartnerDashboard({searchParams}:{searchParams:Prom
       <form action={signOut}><button className="button outline">Sign out</button></form>
     </div></section>
     <section className="section"><div className="shell">
-      {query.submitted&&<div className="notice success-text"><CheckCircle2/>Partnership application submitted. EFF will verify the institution before it appears publicly.</div>}
+      {query.submitted&&<div className="notice success-text"><CheckCircle2/>Partnership activated. Your institution’s logo, pledge, and profile are now recognized in the EFF partner directory.</div>}
       {query.saved&&<div className="notice success-text"><CheckCircle2/>Partner profile saved.</div>}
       {query.error&&<div className="notice error-text">{query.error}</div>}
       <div className="partner-dashboard-grid">
@@ -82,7 +82,7 @@ export default async function PartnerDashboard({searchParams}:{searchParams:Prom
         </section>
         <section className="card">
           <div className="card-icon"><FileText/></div><h3>Partner launch materials</h3>
-          <p>After approval, EFF will provide language for student-success teams, a referral notice, a website badge, and guidance for introducing the partnership internally.</p>
+          <p>After activation, EFF provides language for student-success teams, a referral notice, a website badge, and guidance for introducing the partnership internally.</p>
           <ul>
             <li>Campus liaison launch checklist</li>
             <li>Student referral language</li>
@@ -93,7 +93,7 @@ export default async function PartnerDashboard({searchParams}:{searchParams:Prom
       </div>
 
       <section className="partner-profile-editor">
-        <div><div className="eyebrow">Institution profile</div><h2>Keep the partnership information current.</h2><p>EFF may re-verify official links and logo ownership before public display.</p></div>
+        <div><div className="eyebrow">Institution profile</div><h2>Keep the partnership information current.</h2><p>Profile updates appear publicly when saved. EFF may review official links and logo ownership afterward and correct, pause, or remove content if needed.</p></div>
         <form action={updatePartnerProfile} className="application-form">
           <input type="hidden" name="institutionId" value={institution.id}/>
           <div className="form-grid">
