@@ -9,7 +9,7 @@ export async function GET(_: Request, {params}: {params: Promise<{slug: string}>
     const ambassador = await getPublicReachAmbassador(slug);
     if (!ambassador) return NextResponse.json({error: "Profile not found"}, {status: 404});
     return NextResponse.json({ambassador}, {
-      headers: {"Cache-Control": "public, max-age=60, s-maxage=300, stale-while-revalidate=600"},
+      headers: {"Cache-Control": "no-store, max-age=0"},
     });
   } catch {
     return NextResponse.json({error: "Profile unavailable"}, {status: 503});
