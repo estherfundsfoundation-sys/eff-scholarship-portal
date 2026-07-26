@@ -14,7 +14,8 @@ export default async function ReachAmbassadorDirectoryPage() {
       <p>REACH Ambassadors connect classmates and communities to practical resources, encouragement, and pathways that help students stay enrolled.</p>
       <div className="resource-actions">
         <Link className="button" href="https://reach.estherfundsfoundation.org">Explore the REACH Action Hub</Link>
-        <Link className="button outline" href="/reach/claim">Claim an invited account</Link>
+        <Link className="button light" href="/reach/apply">Apply to become an ambassador</Link>
+        <Link className="button outline" href="/reach/claim">Claim my ambassador account</Link>
       </div>
     </div></section>
     <section className="section white"><div className="shell">

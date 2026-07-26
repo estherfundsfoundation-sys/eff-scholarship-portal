@@ -1,5 +1,5 @@
 import Link from "next/link";
-import {BookOpenCheck, Camera, CheckCircle2, Globe2, MapPin, ShieldCheck, UserRoundCheck} from "lucide-react";
+import {Award, BookOpenCheck, Camera, CheckCircle2, Download, Globe2, GraduationCap, MapPin, MessageCircle, Palette, ShieldCheck, UserRoundCheck} from "lucide-react";
 import {requireReachAmbassador} from "@/lib/reach/ambassador";
 import {submitReachActivity, submitReachProfile} from "./actions";
 
@@ -37,10 +37,30 @@ export default async function ReachAmbassadorPage({
     {params.profileSubmitted && <div className="notice"><UserRoundCheck size={18}/><strong>Your public profile is live.</strong> You may update it whenever you need to.</div>}
     {params.error && <div className="notice error-text" role="alert">{params.error}</div>}
 
+    <section className="reach-onboarding-panel">
+      <div>
+        <div className="eyebrow">Your REACH onboarding</div>
+        <h3>{ambassador.certified_at ? "You are a certified REACH Campus Ambassador." : "Complete training before representing REACH."}</h3>
+        <p>{ambassador.certified_at
+          ? `Certification earned with a score of ${ambassador.training_score}%. Keep using the approved tools and brand rules in this workspace.`
+          : "The EFF-hosted course covers the five REACH pillars, care packages, safe student support, workshops, crisis response, professionalism, brand rules, and your first 30 days."}</p>
+        <div className="resource-actions">
+          <Link className="button" href="/reach/ambassador/training"><GraduationCap size={18}/>{ambassador.certified_at ? "Review training" : "Start certification"}</Link>
+          {ambassador.certified_at && <a className="button light" href="/reach/ambassador/certificate"><Award size={18}/>Download certificate</a>}
+          <a className="button outline" href="/reach/ambassador/acceptance-letter"><Download size={18}/>Acceptance letter</a>
+        </div>
+      </div>
+      <div className="reach-onboarding-links">
+        <a href="https://groupme.com/join_group/115383772/RY1wMSj8" target="_blank" rel="noopener noreferrer"><MessageCircle/><span><strong>Official GroupMe</strong><small>Updates, questions, and community</small></span></a>
+        <a href="https://canva.link/ylmn6n7bgocjlcp" target="_blank" rel="noopener noreferrer"><Palette/><span><strong>Introduction graphic</strong><small>Share from your personal account only</small></span></a>
+        <div><ShieldCheck/><span><strong>Brand rule</strong><small>No unofficial EFF or REACH pages, groups, fundraisers, or accounts without written approval.</small></span></div>
+      </div>
+    </section>
+
     <div className="stats admin-stats" style={{marginTop:24}}>
       <div className="stat"><strong>{resources?.length ?? 0}</strong><span>Available resources</span></div>
       <div className="stat"><strong>{submissions?.length ?? 0}</strong><span>Activities submitted</span></div>
-      <div className="stat"><strong>{submissions?.filter(item=>item.status==="published").length ?? 0}</strong><span>Published impact stories</span></div>
+      <div className="stat"><strong>{ambassador.certified_at ? "Certified" : "Not yet"}</strong><span>Training status</span></div>
     </div>
 
     <section className="reach-profile-editor" style={{marginTop:36}}>
