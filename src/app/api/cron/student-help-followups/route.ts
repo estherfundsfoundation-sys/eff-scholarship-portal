@@ -1,6 +1,8 @@
 import {NextRequest,NextResponse} from "next/server";
 import {emailFrom,getResend} from "@/lib/email";
 import {createAdminClient} from "@/lib/supabase/admin";
+import {createHelpDeskToken,hashHelpDeskToken} from "@/lib/help-desk/tokens";
+import {sendSecureCaseNotification} from "@/lib/help-desk/email";
 
 export async function GET(request:NextRequest){
   if(!process.env.CRON_SECRET||request.headers.get("authorization")!==`Bearer ${process.env.CRON_SECRET}`)return NextResponse.json({error:"Unauthorized"},{status:401});
@@ -11,31 +13,21 @@ export async function GET(request:NextRequest){
   if(error)return NextResponse.json({error:"Follow-up queue unavailable"},{status:500});
   let sent=0;
   for(const record of cases??[]){
-    const studentName=record.preferred_name||record.student_name;
-    const result=await getResend().emails.send({from:emailFrom,to:record.email,replyTo:"nationals@estherfundsinc.org",subject:`EFF follow-up for case ${record.case_code}`,text:`Hello ${studentName},
-
-This is a follow-up for your EFF Student Help Desk case.
-
-Case: ${record.case_code}
-School: ${record.school_name}
-Topic: ${record.issue_type}
-
-Please reply with your case number in the subject and tell us:
-1. What changed since your last update?
-2. Which school office responded?
-3. What deadline or promised follow-up date applies now?
-4. Is the issue resolved?
-
-${record.essentials_requested?`Your ${record.essentials_term} Student Essentials request status is: ${String(record.essentials_status).replaceAll("_"," ")}. Assistance is limited to $100 per approved student for the selected term and is not guaranteed.`:""}
-
-Do not send passwords, Social Security numbers, tax returns, bank details, or unredacted IDs by email.
-
-Esther Funds Foundation`});
-    if(result.error)continue;
+    const token=createHelpDeskToken(record.id);
+    const {data:conversation}=await admin.from("help_desk_conversations").upsert({
+      case_id:record.id,access_token_hash:hashHelpDeskToken(token),status:"unassigned",updated_at:now
+    },{onConflict:"case_id"}).select("id,status").single();
+    if(!conversation)continue;
     const followUpCount=(record.follow_up_count??0)+1;
+    const essentials=record.essentials_requested?`\n\nYour ${record.essentials_term} Student Essentials request status is ${String(record.essentials_status).replaceAll("_"," ")}. Assistance is limited, separately reviewed, and not guaranteed.`:"";
+    await admin.from("help_desk_messages").insert({
+      conversation_id:conversation.id,sender_type:"system",
+      body:`EFF follow-up ${followUpCount}: please reply securely with (1) what changed, (2) which school office responded, (3) the current deadline or promised response date, and (4) whether the issue is resolved.${essentials}`
+    });
+    try{await sendSecureCaseNotification(record.email,record.case_code,token,`Secure EFF follow-up — ${record.case_code}`);}catch(error){console.error("Secure student follow-up failed",error);continue;}
     const next=new Date(Date.now()+(followUpCount<2?4:7)*24*60*60*1000).toISOString();
-    await admin.from("student_help_cases").update({status:"follow_up_due",last_follow_up_at:now,next_follow_up_at:next,follow_up_count:followUpCount,updated_at:now}).eq("id",record.id);
-    await admin.from("student_help_case_events").insert({case_id:record.id,event_type:"automatic_follow_up",summary:`Automatic follow-up ${followUpCount} sent to student.`});
+    await admin.from("student_help_cases").update({status:"follow_up_due",secure_access_issued_at:now,last_follow_up_at:now,next_follow_up_at:next,follow_up_count:followUpCount,updated_at:now}).eq("id",record.id);
+    await admin.from("student_help_case_events").insert({case_id:record.id,event_type:"automatic_secure_follow_up",summary:`Automatic follow-up ${followUpCount} posted in the secure Help Desk; notification email sent without case details.`});
     sent++;
   }
   const {data:schoolCases}=await admin.from("student_help_cases")

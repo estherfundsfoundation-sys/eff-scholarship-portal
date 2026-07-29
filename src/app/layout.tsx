@@ -1,12 +1,12 @@
 import type {Metadata} from "next";
 import Image from "next/image";
 import Link from "next/link";
-import {ExternalLink, Mail} from "lucide-react";
+import {ExternalLink, Headphones} from "lucide-react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: {default: "Esther Funds Foundation Scholarship Portal", template: "%s | EFF Scholarship Portal"},
-  description: "Scholarships, grants, emergency resources, student support, and leadership training from Esther Funds Foundation.",
+  title: {default: "Esther Funds Foundation Portal", template: "%s | EFF Portal"},
+  description: "Scholarships, grants, emergency resources, student support, volunteer service, and leadership training from Esther Funds Foundation.",
   icons: {icon: "/brand/eff-logo.png"},
 };
 
@@ -18,20 +18,20 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
         <div className="utility">
           <div className="shell">
             <a href="https://www.estherfundsfoundation.org" target="_blank" rel="noopener noreferrer">Visit estherfundsfoundation.org <ExternalLink size={13}/></a>
-            <a href="mailto:nationals@estherfundsinc.org"><Mail size={13}/> Questions? Email our national team</a>
+            <Link href="/help-desk"><Headphones size={13}/> Contact the National Help Desk</Link>
           </div>
         </div>
         <header className="nav">
           <div className="shell nav-inner">
             <Link className="brand" href="/">
               <Image className="brand-logo" src="/brand/eff-logo.png" alt="Esther Funds Foundation — Every Future Fulfilled" width={68} height={68} priority/>
-              <span className="brand-copy"><strong>Esther Funds Foundation</strong><small>Scholarship Portal</small></span>
+              <span className="brand-copy"><strong>Esther Funds Foundation</strong><small>National Student Portal</small></span>
             </Link>
             <nav className="nav-links" aria-label="Primary">
-              <Link href="/resources">I Need Help Now</Link>
+              <Link href="/help-desk">National Help Desk</Link>
               <Link href="/programs">EFF Programs</Link>
               <Link href="/scholarships">Scholarship Directory</Link>
-              <Link href="/partners">Partner Schools</Link>
+              <Link href="/resources">Student Resources</Link>
               <Link href="/academy">Leadership Academy</Link>
               <Link className="button" href="/dashboard">My portal</Link>
             </nav>
@@ -43,7 +43,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
             <div>
               <div className="brand">
                 <Image className="footer-logo" src="/brand/eff-logo.png" alt="" width={86} height={86}/>
-                <span className="brand-copy"><strong>Esther Funds Foundation</strong><small>Scholarship Portal</small></span>
+                <span className="brand-copy"><strong>Esther Funds Foundation</strong><small>National Student Portal</small></span>
               </div>
               <p>We are working to prevent college dropouts around the world.</p>
               <small>© {new Date().getFullYear()} Esther Funds Foundation</small>
@@ -51,19 +51,20 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
             <div>
               <strong>Explore</strong>
               <p>
-                <Link href="/resources">I Need Help Now</Link><br/>
+                <Link href="/help-desk">National Help Desk</Link><br/>
+                <Link href="/resources">Student resources</Link><br/>
                 <Link href="/programs">EFF programs</Link><br/>
                 <Link href="/scholarships">Scholarship directory</Link><br/>
-                <Link href="/partners">College Continuity Partners</Link><br/>
                 <Link href="/academy">Leadership Training Academy</Link><br/>
-                <Link href="/dashboard">Applicant portal</Link><br/>
+                <Link href="/dashboard">My portal</Link><br/>
                 <a href="https://www.estherfundsfoundation.org" target="_blank" rel="noopener noreferrer">Foundation website</a>
               </p>
             </div>
             <div>
-              <strong>Need help?</strong>
-              <p><a href="mailto:nationals@estherfundsinc.org">nationals@estherfundsinc.org</a></p>
+              <strong>Help and service</strong>
+              <p><Link href="/help-desk">Open or continue a Help Desk case</Link></p>
               <p>
+                <Link href="/help-desk/volunteer">Volunteer at the National Help Desk</Link><br/>
                 <Link href="/account-help">Account help</Link><br/>
                 <Link href="/accessibility">Accessibility</Link><br/>
                 <Link href="/privacy">Privacy</Link><br/>
