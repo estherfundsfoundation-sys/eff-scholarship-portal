@@ -12,7 +12,7 @@ export default function HelpDeskLanding() {
       <div className="eyebrow">Esther Funds Foundation National Help Desk</div>
       <h1>You do not have to navigate college barriers alone.</h1>
       <p>Open one secure case and work with a trained EFF volunteer when one is available. We listen, help organize the next step, and connect you to the resource or office that owns the decision.</p>
-      <div className="hero-actions"><Link className="button light" href="/resources/student-help#open-case">Open a secure case</Link><Link className="button lavender" href="/resources">Browse resources now</Link></div>
+      <div className="hero-actions"><Link className="button light" href="/resources/student-help#open-case">Get Help Now</Link><Link className="button lavender" href="/resources">Browse resources now</Link></div>
     </div><aside className="help-desk-promise"><Headphones/><h2>A relationship—not a random inbox.</h2><p>Your conversation stays connected to one EFF case, even when a different trained volunteer continues the next shift.</p><small>EFF volunteers are not therapists, attorneys, financial-aid administrators, or funding decisionmakers.</small></aside></div></section>
     <section className="section white"><div className="shell"><div className="section-head"><div><div className="eyebrow">How it works</div><h2>Secure help that can continue after one person signs off.</h2></div></div><div className="cards help-desk-feature-grid">
       <article className="card"><LockKeyhole/><h3>One private case</h3><p>Verify your email, then use the secure case link for messages. Ordinary email notifications never include your private story.</p></article>
