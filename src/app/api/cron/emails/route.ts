@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
       to: message.recipient,
       replyTo: templateKey === "partner_invitation" ? "nationals@estherfundsinc.org" : undefined,
       subject: rendered.subject,
-      html: `${rendered.html}<p>Questions? Contact <a href="mailto:nationals@estherfundsinc.org">nationals@estherfundsinc.org</a>.</p>`,
+      html: `${rendered.html}<p>Need support? Continue securely through the <a href="https://portal.estherfundsfoundation.org/help-desk">EFF National Help Desk</a>.</p>`,
     });
     if (!result.error) {
       const now = new Date().toISOString();
