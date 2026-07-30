@@ -7,6 +7,10 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const next = request.nextUrl.searchParams.get("next");
 
+  if (pathname === "/admin/student-help") {
+    return NextResponse.redirect(new URL("/help-desk/admin", request.url));
+  }
+
   if (["/sign-in", "/sign-up"].includes(pathname) && next?.startsWith("/help-desk/")) {
     const contextual = helpDeskSignInForDestination(next);
     if (contextual) return NextResponse.redirect(new URL(contextual, request.url));
@@ -22,7 +26,8 @@ export async function middleware(request: NextRequest) {
     "/help-desk/volunteer/onboarding", "/help-desk/volunteer/console",
   ].some((path) => pathname.startsWith(path));
   const helpDeskStaffProtected = pathname.startsWith("/help-desk/admin");
-  const protectedPath = scholarshipProtected || helpDeskVolunteerProtected || helpDeskStaffProtected;
+  const techDeskStaffProtected = pathname.startsWith("/tech-desk/admin");
+  const protectedPath = scholarshipProtected || helpDeskVolunteerProtected || helpDeskStaffProtected || techDeskStaffProtected;
   const authEntryPath = ["/sign-in", "/sign-up"].includes(pathname);
   if (!protectedPath && !authEntryPath) return response;
 
@@ -31,7 +36,11 @@ export async function middleware(request: NextRequest) {
   if (!supabaseUrl || !supabaseKey) {
     if (!protectedPath) return response;
     const url = request.nextUrl.clone();
-    url.pathname = pathname.startsWith("/help-desk/") ? "/help-desk/account-help" : "/account-help";
+    url.pathname = pathname.startsWith("/tech-desk/")
+      ? "/tech-desk/account-help"
+      : pathname.startsWith("/help-desk/")
+        ? "/help-desk/account-help"
+        : "/account-help";
     url.searchParams.set("reason", "portal-unavailable");
     return NextResponse.redirect(url);
   }
@@ -56,6 +65,11 @@ export async function middleware(request: NextRequest) {
     }
     if (helpDeskStaffProtected) {
       const url = new URL("/help-desk/staff/sign-in", request.url);
+      url.searchParams.set("next", `${pathname}${request.nextUrl.search}`);
+      return NextResponse.redirect(url);
+    }
+    if (techDeskStaffProtected) {
+      const url = new URL("/tech-desk/staff/sign-in", request.url);
       url.searchParams.set("next", `${pathname}${request.nextUrl.search}`);
       return NextResponse.redirect(url);
     }
