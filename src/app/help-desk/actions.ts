@@ -19,6 +19,10 @@ import {
   requireHelpDeskStaff,
   requireHelpDeskVolunteer,
 } from "@/lib/help-desk-server";
+import {
+  buildVolunteerApplicationRecord,
+  isHelpDeskVolunteerModuleKey,
+} from "@/lib/help-desk-volunteer";
 import {createAdminClient} from "@/lib/supabase/admin";
 
 const tokenHash = (token: string) =>
@@ -293,25 +297,30 @@ export async function saveVolunteerApplication(formData: FormData) {
   ) {
     redirect("/help-desk/volunteer/onboarding?error=Complete+the+required+application+and+agreements.");
   }
-  await admin.from("help_desk_volunteer_profiles").upsert(
-    {
-      user_id: user.id,
-      legal_name: legalName,
-      preferred_name: preferredName || null,
+  const acceptedAt = new Date().toISOString();
+  const {error} = await admin.from("help_desk_volunteer_profiles").upsert(
+    buildVolunteerApplicationRecord({
+      userId: user.id,
       email: user.email!,
-      time_zone: timeZone,
-      age_confirmed: true,
-      personal_email_confirmed: true,
+      legalName,
+      preferredName,
+      timeZone,
       motivation,
-      experience: experience || null,
-      availability_notes: availability,
-      agreements_accepted: true,
-      status: "training",
-      onboarding_step: "training",
-      updated_at: new Date().toISOString(),
-    },
+      experience,
+      availability,
+      acceptedAt,
+    }),
     {onConflict: "user_id"},
   );
+  if (error) {
+    console.error("Help Desk volunteer application save failed", {
+      code: error.code,
+      message: error.message,
+    });
+    redirect(
+      "/help-desk/volunteer/onboarding?error=Your+application+could+not+be+saved.+No+training+progress+was+lost.+Please+try+again+or+open+a+Tech+Desk+ticket.",
+    );
+  }
   redirect("/help-desk/volunteer/onboarding?stage=training&saved=1");
 }
 
@@ -319,10 +328,10 @@ export async function completeVolunteerModule(formData: FormData) {
   const {admin, user, profile} = await requireHelpDeskVolunteer();
   if (!profile) redirect("/help-desk/volunteer/onboarding");
   const moduleKey = String(formData.get("moduleKey") ?? "");
-  if (!["listen","privacy","boundaries","routing","safety","quality"].includes(moduleKey)) {
+  if (!isHelpDeskVolunteerModuleKey(moduleKey)) {
     redirect("/help-desk/volunteer/onboarding?stage=training");
   }
-  await admin.from("help_desk_volunteer_training").upsert(
+  const {error} = await admin.from("help_desk_volunteer_training").upsert(
     {
       volunteer_id: user.id,
       module_key: moduleKey,
@@ -333,7 +342,20 @@ export async function completeVolunteerModule(formData: FormData) {
     },
     {onConflict: "volunteer_id,module_key"},
   );
+  if (error) {
+    console.error("Help Desk volunteer module save failed", {
+      code: error.code,
+      message: error.message,
+      moduleKey,
+    });
+    redirect(
+      "/help-desk/volunteer/onboarding?stage=training&error=This+module+could+not+be+saved.+Please+try+again+before+continuing.",
+    );
+  }
   revalidatePath("/help-desk/volunteer/onboarding");
+  redirect(
+    `/help-desk/volunteer/onboarding?stage=training&completed=${encodeURIComponent(moduleKey)}`,
+  );
 }
 
 export async function submitVolunteerAssessment(formData: FormData) {
@@ -344,21 +366,39 @@ export async function submitVolunteerAssessment(formData: FormData) {
   ).length;
   const score = correct * 25;
   if (score < 100) {
-    await admin
+    const {error} = await admin
       .from("help_desk_volunteer_profiles")
       .update({training_score: score, status: "training", onboarding_step: "assessment"})
       .eq("user_id", user.id);
+    if (error) {
+      console.error("Help Desk volunteer assessment score save failed", {
+        code: error.code,
+        message: error.message,
+      });
+      redirect(
+        "/help-desk/volunteer/onboarding?stage=assessment&error=Your+assessment+could+not+be+saved.+Please+try+again.",
+      );
+    }
     redirect(`/help-desk/volunteer/onboarding?stage=assessment&score=${score}`);
   }
-  const {count} = await admin
+  const {count, error: countError} = await admin
     .from("help_desk_volunteer_training")
     .select("id", {count: "exact", head: true})
     .eq("volunteer_id", user.id)
     .eq("completed", true);
+  if (countError) {
+    console.error("Help Desk volunteer module verification failed", {
+      code: countError.code,
+      message: countError.message,
+    });
+    redirect(
+      "/help-desk/volunteer/onboarding?stage=training&error=We+could+not+verify+your+completed+modules.+Please+try+again.",
+    );
+  }
   if ((count ?? 0) < 6) {
     redirect("/help-desk/volunteer/onboarding?stage=training&error=Complete+all+six+training+modules+before+the+assessment.");
   }
-  await admin
+  const {error: completionError} = await admin
     .from("help_desk_volunteer_profiles")
     .update({
       training_score: 100,
@@ -368,6 +408,15 @@ export async function submitVolunteerAssessment(formData: FormData) {
       updated_at: new Date().toISOString(),
     })
     .eq("user_id", user.id);
+  if (completionError) {
+    console.error("Help Desk volunteer training completion save failed", {
+      code: completionError.code,
+      message: completionError.message,
+    });
+    redirect(
+      "/help-desk/volunteer/onboarding?stage=assessment&error=Your+completed+assessment+could+not+be+saved.+Please+try+again.",
+    );
+  }
   redirect("/help-desk/volunteer/onboarding?stage=approval&score=100");
 }
 
