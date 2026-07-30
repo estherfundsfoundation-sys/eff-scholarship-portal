@@ -5,7 +5,7 @@ import {ExternalLink, Mail} from "lucide-react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: {default: "Esther Funds Foundation Scholarship Portal", template: "%s | EFF Scholarship Portal"},
+  title: {default: "Esther Funds Foundation Portal", template: "%s | Esther Funds Foundation Portal"},
   description: "Scholarships, grants, emergency resources, student support, and leadership training from Esther Funds Foundation.",
   icons: {icon: "/brand/eff-logo.png"},
 };
@@ -25,7 +25,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
           <div className="shell nav-inner">
             <Link className="brand" href="/">
               <Image className="brand-logo" src="/brand/eff-logo.png" alt="Esther Funds Foundation — Every Future Fulfilled" width={68} height={68} priority/>
-              <span className="brand-copy"><strong>Esther Funds Foundation</strong><small>Scholarship Portal</small></span>
+              <span className="brand-copy"><strong>Esther Funds Foundation</strong><small>Portal</small></span>
             </Link>
             <nav className="nav-links" aria-label="Primary">
               <Link href="/help-desk">National Student Help Desk</Link>
@@ -44,7 +44,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
             <div>
               <div className="brand">
                 <Image className="footer-logo" src="/brand/eff-logo.png" alt="" width={86} height={86}/>
-                <span className="brand-copy"><strong>Esther Funds Foundation</strong><small>Scholarship Portal</small></span>
+                <span className="brand-copy"><strong>Esther Funds Foundation</strong><small>Portal</small></span>
               </div>
               <p>We are working to prevent college dropouts around the world.</p>
               <small>© {new Date().getFullYear()} Esther Funds Foundation</small>
