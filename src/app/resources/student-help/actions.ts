@@ -36,7 +36,7 @@ const hash=(token:string)=>createHash("sha256").update(token).digest("hex");
 const escapeHtml=(text:string)=>text.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
 
 export async function submitStudentHelpCase(formData:FormData){
-  if(value(formData,"companyWebsite"))redirect("/resources/student-help?case=pending");
+  if(value(formData,"companyWebsite"))redirect("/help-desk/open-case?case=pending");
   const parsed=schema.safeParse({
     studentName:value(formData,"studentName"),preferredName:value(formData,"preferredName"),email:value(formData,"email").toLowerCase(),phone:value(formData,"phone"),
     schoolName:value(formData,"schoolName"),schoolState:value(formData,"schoolState"),schoolType:value(formData,"schoolType"),collegeUnitid:value(formData,"collegeUnitid"),studentLevel:value(formData,"studentLevel"),
@@ -47,7 +47,7 @@ export async function submitStudentHelpCase(formData:FormData){
     essentialsExplanation:value(formData,"essentialsExplanation"),preferredPaymentMethod:value(formData,"preferredPaymentMethod"),
     authorizeEffContact:value(formData,"authorizeEffContact"),privacyConsent:value(formData,"privacyConsent"),accuracyCertified:value(formData,"accuracyCertified")
   });
-  if(!parsed.success)redirect(`/resources/student-help?error=${encodeURIComponent("Please complete every required field. Fall Essentials requests may not exceed $100.")}#open-case`);
+  if(!parsed.success)redirect(`/help-desk/open-case?error=${encodeURIComponent("Please complete every required field. Fall Essentials requests may not exceed $100.")}#open-case`);
   const requestHeaders=await headers();const ip=requestHeaders.get("x-forwarded-for")?.split(",")[0]?.trim()||"unknown";
   const ipHash=createHash("sha256").update(`${process.env.CRON_SECRET||"eff-student-help"}:${ip}`).digest("hex");
   const host=requestHeaders.get("x-forwarded-host")||requestHeaders.get("host")||"portal.estherfundsfoundation.org";
@@ -68,8 +68,8 @@ export async function submitStudentHelpCase(formData:FormData){
     verification_token_hash:hash(rawToken),verification_expires_at:new Date(Date.now()+24*60*60*1000).toISOString(),ip_hash:ipHash
   };
   const saved=await admin.from("student_help_cases").insert(record);
-  if(saved.error){console.error("National help case save failed",saved.error);redirect(`/resources/student-help?error=${encodeURIComponent("Your case could not be saved. Please try again.")}#open-case`);}
-  const verifyUrl=`${origin}/resources/student-help/verify?token=${rawToken}`;
+  if(saved.error){console.error("National help case save failed",saved.error);redirect(`/help-desk/open-case?error=${encodeURIComponent("Your case could not be saved. Please try again.")}#open-case`);}
+  const verifyUrl=`${origin}/help-desk/verify?token=${rawToken}`;
   try{
     const studentName=parsed.data.preferredName||parsed.data.studentName;
     const safeStudentName=escapeHtml(studentName);const safeSchoolName=escapeHtml(schoolName);
@@ -103,7 +103,7 @@ Every Future Fulfilled`});
   }catch(error){
     console.error("National help verification email failed",error);
     await admin.from("student_help_cases").update({status:"delivery_failed"}).eq("id",id);
-    redirect(`/resources/student-help?error=${encodeURIComponent("We saved your case but could not send verification. Email EFF with only your case number.")}&code=${caseCode}#open-case`);
+    redirect(`/help-desk/open-case?error=${encodeURIComponent("We saved your case but could not send verification. Email EFF with only your case number.")}&code=${caseCode}#open-case`);
   }
-  redirect(`/resources/student-help?case=pending&code=${caseCode}#open-case`);
+  redirect(`/help-desk/open-case?case=pending&code=${caseCode}#open-case`);
 }

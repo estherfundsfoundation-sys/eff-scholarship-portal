@@ -28,12 +28,12 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
               <span className="brand-copy"><strong>Esther Funds Foundation</strong><small>Scholarship Portal</small></span>
             </Link>
             <nav className="nav-links" aria-label="Primary">
-              <Link href="/resources">I Need Help Now</Link>
+              <Link href="/help-desk">National Student Help Desk</Link>
               <Link href="/programs">EFF Programs</Link>
               <Link href="/scholarships">Scholarship Directory</Link>
               <Link href="/partners">Partner Schools</Link>
               <Link href="/academy">Leadership Academy</Link>
-              <Link className="button" href="/dashboard">My portal</Link>
+              <Link className="button" href="/dashboard">Scholarship Applications</Link>
             </nav>
           </div>
         </header>
@@ -51,7 +51,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
             <div>
               <strong>Explore</strong>
               <p>
-                <Link href="/resources">I Need Help Now</Link><br/>
+                <Link href="/help-desk">National Student Help Desk</Link><br/>
                 <Link href="/programs">EFF programs</Link><br/>
                 <Link href="/scholarships">Scholarship directory</Link><br/>
                 <Link href="/partners">College Continuity Partners</Link><br/>

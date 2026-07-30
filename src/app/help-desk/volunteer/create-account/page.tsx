@@ -1,0 +1,12 @@
+import type {Metadata} from "next";
+import Link from "next/link";
+import {createHelpDeskVolunteerAccount} from "@/app/help-desk/actions";
+
+export const metadata: Metadata = {title: "Create Your Help Desk Volunteer Account"};
+
+type Query = {error?: string};
+
+export default async function CreateVolunteerAccount({searchParams}: {searchParams: Promise<Query>}) {
+  const query = await searchParams;
+  return <main className="section help-desk-auth-page"><div className="shell" style={{maxWidth:720}}><section className="card"><div className="eyebrow">National Help Desk onboarding</div><h1>Create Your EFF National Help Desk Volunteer Account</h1><p>Your verified account will connect your training, certification, shifts, assigned cases, and service-hour record.</p><div className="notice">Already have an EFF Scholarship Portal or other verified EFF account? <Link className="card-link" href="/help-desk/volunteer/sign-in">Use the same email and sign in</Link>. We will connect the volunteer profile without creating a duplicate account.</div>{query.error&&<div className="notice error-text" role="alert">{query.error}</div>}<form action={createHelpDeskVolunteerAccount} className="application-form"><div className="form-grid"><label>Legal name<input name="legalName" required minLength={2} autoComplete="name"/></label><label>Preferred name <span className="optional">optional</span><input name="preferredName" autoComplete="nickname"/></label><label>Email address<input name="email" type="email" required autoComplete="email"/></label><label>Time zone<select name="timeZone" required defaultValue="America/New_York"><option value="America/New_York">Eastern</option><option value="America/Chicago">Central</option><option value="America/Denver">Mountain</option><option value="America/Los_Angeles">Pacific</option><option value="America/Anchorage">Alaska</option><option value="Pacific/Honolulu">Hawaii</option></select></label><label className="full-field">Password<input name="password" type="password" required minLength={10} autoComplete="new-password"/><small>At least 10 characters.</small></label></div><label className="check"><input type="checkbox" name="ageConfirmed" required/><span>I confirm that I meet the volunteer age requirements communicated by EFF.</span></label><label className="check"><input type="checkbox" name="personalEmailConfirmed" required/><span>I am using my own email address and can securely access this inbox.</span></label><button className="button">Create Help Desk Volunteer Account</button></form></section></div></main>;
+}
