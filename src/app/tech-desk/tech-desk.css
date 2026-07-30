@@ -1,0 +1,119 @@
+body:has(.tech-desk-shell) > .utility,
+body:has(.tech-desk-shell) > .nav,
+body:has(.tech-desk-shell) > .footer { display:none; }
+body:has(.tech-desk-shell) { background:#f7f3eb; }
+.tech-desk-shell { --td-purple:#42127f;--td-deep:#23084f;--td-violet:#6c35aa;--td-lavender:#b799e3;--td-cream:#f5f0e6;--td-mint:#5cd6b5;--td-blue:#5c8ff5;--td-ink:#211532;min-height:100vh;color:var(--td-ink);background:radial-gradient(circle at 8% 6%,rgba(183,153,227,.24),transparent 23rem),linear-gradient(180deg,#fff 0%,#f8f5ef 100%); }
+.tech-desk-trust { background:var(--td-deep);color:#fff;font-size:.78rem;letter-spacing:.02em; }
+.tech-desk-trust .shell,.tech-desk-header-inner { display:flex;align-items:center;justify-content:space-between;gap:20px; }
+.tech-desk-trust .shell { min-height:36px; }
+.tech-desk-trust span,.tech-desk-brand,.tech-desk-footer a,.tech-desk-header nav a { display:inline-flex;align-items:center;gap:7px; }
+.tech-desk-header { position:sticky;top:0;z-index:45;background:rgba(255,255,255,.94);border-bottom:1px solid rgba(66,18,127,.14);box-shadow:0 14px 36px rgba(35,8,79,.08);backdrop-filter:blur(18px); }
+.tech-desk-header-inner { min-height:86px; }
+.tech-desk-brand { color:var(--td-deep);text-decoration:none;flex:0 0 auto; }
+.tech-desk-brand img { object-fit:contain; }
+.tech-desk-brand span { display:grid;gap:1px; }
+.tech-desk-brand strong { letter-spacing:.14em;font-size:1rem; }
+.tech-desk-brand small { color:var(--td-purple);font-family:Georgia,serif;font-style:italic; }
+.tech-desk-header nav { display:flex;align-items:center;justify-content:flex-end;gap:18px; }
+.tech-desk-header nav a,.tech-desk-ticket-nav a,.tech-desk-admin-nav a { color:var(--td-deep);font-weight:800;text-decoration:none; }
+.tech-desk-header nav a:hover,.tech-desk-ticket-nav a:hover,.tech-desk-admin-nav a:hover { color:var(--td-violet); }
+.tech-desk-hero { position:relative;overflow:hidden;color:#fff;background:linear-gradient(120deg,rgba(35,8,79,.98),rgba(66,18,127,.94) 55%,rgba(108,53,170,.9)); }
+.tech-desk-hero::before { content:"";position:absolute;inset:-45% -12% auto auto;width:720px;height:720px;border:1px solid rgba(255,255,255,.17);border-radius:50%;box-shadow:0 0 0 70px rgba(255,255,255,.035),0 0 0 145px rgba(255,255,255,.025);animation:techPulse 9s ease-in-out infinite; }
+.tech-desk-hero::after { content:"";position:absolute;left:-5rem;bottom:-7rem;width:20rem;height:20rem;background:radial-gradient(circle,var(--td-mint),transparent 66%);opacity:.13; }
+@keyframes techPulse { 50% { transform:scale(1.08) rotate(10deg);opacity:.7; } }
+.tech-desk-hero-grid { position:relative;z-index:1;display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:60px;min-height:620px;padding-top:80px;padding-bottom:80px; }
+.tech-desk-kicker { display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid rgba(255,255,255,.32);border-radius:999px;background:rgba(255,255,255,.1);font-size:.8rem;font-weight:850;letter-spacing:.08em;text-transform:uppercase; }
+.tech-desk-hero h1,.tech-desk-ticket-hero h1 { margin:18px 0;color:#fff;font-size:clamp(3.4rem,7vw,7rem);line-height:.88;letter-spacing:-.04em;text-transform:uppercase; }
+.tech-desk-hero p { max-width:760px;color:rgba(255,255,255,.9);font-size:1.15rem; }
+.tech-desk-hero small { display:block;margin-top:18px;color:rgba(255,255,255,.74); }
+.tech-desk-console { padding:30px;border:1px solid rgba(255,255,255,.22);border-radius:28px;background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.07));box-shadow:0 35px 90px rgba(9,0,30,.42);backdrop-filter:blur(14px); }
+.tech-desk-console-head { display:flex;align-items:center;gap:12px;margin-bottom:22px; }
+.tech-desk-console-head svg { color:var(--td-mint); }
+.tech-desk-console-list { display:grid;gap:12px; }
+.tech-desk-console-row { display:grid;grid-template-columns:14px 1fr auto;align-items:center;gap:12px;padding:14px;border-radius:14px;background:rgba(255,255,255,.08); }
+.tech-desk-console-row>span:first-child { width:10px;height:10px;border-radius:50%;background:var(--td-mint);box-shadow:0 0 0 5px rgba(92,214,181,.12); }
+.tech-desk-console-row small { color:rgba(255,255,255,.72); }
+.tech-desk-strip { background:var(--td-cream);border-bottom:1px solid rgba(66,18,127,.12); }
+.tech-desk-strip .shell { display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding-top:26px;padding-bottom:26px; }
+.tech-desk-strip div { display:grid;gap:3px; }
+.tech-desk-strip strong { color:var(--td-purple);font-size:1.55rem; }
+.tech-desk-card-grid,.tech-desk-step-grid,.tech-desk-status-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px; }
+.tech-desk-card-grid article,.tech-desk-step-grid article,.tech-desk-status-card { padding:28px;border:1px solid rgba(66,18,127,.13);border-radius:22px;background:#fff;box-shadow:0 18px 48px rgba(35,8,79,.07); }
+.tech-desk-card-grid article { min-height:260px;transition:transform .2s ease,box-shadow .2s ease; }
+.tech-desk-card-grid article:hover { transform:translateY(-4px);box-shadow:0 24px 55px rgba(35,8,79,.12); }
+.tech-desk-card-grid svg,.tech-desk-step-grid svg,.tech-desk-auth-aside>svg,.tech-desk-ticket-page .card>svg,.tech-desk-admin-page .card>svg { color:var(--td-purple); }
+.tech-desk-boundary { color:#fff;background:var(--td-deep); }
+.tech-desk-boundary-grid { display:grid;grid-template-columns:1fr 1fr;gap:40px; }
+.tech-desk-boundary h2,.tech-desk-boundary h3 { color:#fff; }
+.tech-desk-boundary article { padding:28px;border:1px solid rgba(255,255,255,.18);border-radius:22px;background:rgba(255,255,255,.06); }
+.tech-desk-form-grid,.tech-desk-access-grid,.tech-desk-auth-grid { display:grid;grid-template-columns:minmax(0,1.2fr) minmax(310px,.8fr);gap:32px;align-items:start; }
+.tech-desk-form,.tech-desk-access-form,.tech-desk-auth-form { display:grid;gap:18px;margin-top:22px; }
+.tech-desk-form .two { display:grid;grid-template-columns:1fr 1fr;gap:16px; }
+.tech-desk-form label,.tech-desk-access-form label,.tech-desk-auth-form label { display:grid;gap:7px;font-weight:800; }
+.tech-desk-form input,.tech-desk-form select,.tech-desk-form textarea,.tech-desk-access-form input,.tech-desk-auth-form input,.tech-desk-admin-page select { width:100%;min-height:48px; }
+.tech-desk-form textarea { min-height:130px;resize:vertical; }
+.tech-desk-form fieldset { padding:18px;border:1px solid rgba(66,18,127,.14);border-radius:16px; }
+.tech-desk-form .check { display:grid;grid-template-columns:auto 1fr;align-items:start;gap:10px;font-weight:600; }
+.tech-desk-form .check input { width:18px;min-height:18px;margin-top:3px; }
+.tech-desk-honeypot { position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important; }
+.tech-desk-aside,.tech-desk-auth-aside { display:grid;gap:15px;padding:28px;border:1px solid rgba(66,18,127,.14);border-radius:22px;background:var(--td-cream); }
+.tech-desk-aside .danger { padding:16px;border-left:4px solid #b3405b;background:#fff; }
+.tech-desk-ticket-hero { color:#fff;background:linear-gradient(115deg,var(--td-deep),var(--td-purple)); }
+.tech-desk-ticket-hero .shell { min-height:270px;display:flex;align-items:center;justify-content:space-between;gap:32px; }
+.tech-desk-ticket-hero h1 { font-size:clamp(2.6rem,5vw,4.8rem); }
+.tech-desk-ticket-badge { display:grid;justify-items:center;gap:5px;min-width:210px;padding:24px;border-radius:22px;background:rgba(255,255,255,.12); }
+.tech-desk-ticket-badge strong { text-transform:capitalize; }
+.tech-desk-ticket-nav,.tech-desk-admin-nav { display:flex;flex-wrap:wrap;gap:12px 22px;padding-top:20px;padding-bottom:20px;border-bottom:1px solid rgba(66,18,127,.14); }
+.tech-desk-ticket-grid { display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.35fr);gap:26px;padding-top:32px;padding-bottom:70px; }
+.tech-desk-ticket-grid>div,.tech-desk-ticket-grid aside { display:grid;align-content:start;gap:22px; }
+.tech-desk-health-line { display:flex;align-items:center;gap:10px;padding:14px;border-radius:14px;background:var(--td-cream); }
+.tech-desk-health-dot { width:11px;height:11px;border-radius:50%;background:#8791a3; }
+.tech-desk-health-dot.operational { background:#2ca76c;box-shadow:0 0 0 5px rgba(44,167,108,.12); }
+.tech-desk-health-dot.degraded { background:#e39b2d;box-shadow:0 0 0 5px rgba(227,155,45,.12); }
+.tech-desk-health-dot.outage { background:#cc3855;box-shadow:0 0 0 5px rgba(204,56,85,.12); }
+.tech-desk-diagnosis-steps { padding-left:22px; }
+.tech-desk-diagnosis-steps li { margin:10px 0; }
+.tech-desk-message-list { display:grid;gap:12px;margin:18px 0; }
+.tech-desk-message { max-width:86%;padding:16px 18px;border-radius:18px 18px 18px 4px;background:var(--td-cream);white-space:pre-wrap; }
+.tech-desk-message.student { justify-self:end;border-radius:18px 18px 4px 18px;background:#e9ddf6; }
+.tech-desk-message>div { display:flex;justify-content:space-between;gap:14px;margin-bottom:7px; }
+.tech-desk-history { list-style:none;padding:0; }
+.tech-desk-history li { display:grid;grid-template-columns:12px 1fr;gap:12px;padding:10px 0; }
+.tech-desk-history li>span { width:10px;height:10px;margin-top:5px;border-radius:50%;background:var(--td-lavender);box-shadow:0 0 0 5px rgba(183,153,227,.2); }
+.tech-desk-status-card { display:grid;gap:10px; }
+.tech-desk-status-card header { display:flex;align-items:center;justify-content:space-between;gap:10px; }
+.tech-desk-status-card .status { width:max-content; }
+.tech-desk-knowledge { display:grid;gap:16px; }
+.tech-desk-knowledge details { padding:22px;border:1px solid rgba(66,18,127,.14);border-radius:18px;background:#fff; }
+.tech-desk-knowledge summary { cursor:pointer;color:var(--td-deep);font-size:1.1rem;font-weight:850; }
+.tech-desk-admin-page>.shell { max-width:1520px; }
+.tech-desk-admin-head { display:flex;align-items:flex-start;justify-content:space-between;gap:28px; }
+.tech-desk-admin-stats { display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;margin:26px 0; }
+.tech-desk-admin-stats article { display:grid;gap:5px;padding:18px;border-radius:18px;background:var(--td-cream);border:1px solid rgba(66,18,127,.12); }
+.tech-desk-admin-stats strong { color:var(--td-purple);font-size:1.7rem; }
+.tech-desk-admin-page .card { margin-top:24px; }
+.tech-desk-admin-columns { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px; }
+.tech-desk-footer { padding:54px 0;color:#fff;background:var(--td-deep); }
+.tech-desk-footer-grid { display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:40px; }
+.tech-desk-footer a { color:#fff; }
+@media (prefers-reduced-motion:reduce) { .tech-desk-hero::before { animation:none; } .tech-desk-card-grid article { transition:none; } }
+@media (max-width:1000px) {
+  .tech-desk-header { position:static; }
+  .tech-desk-header-inner,.tech-desk-ticket-hero .shell,.tech-desk-admin-head { align-items:flex-start;flex-direction:column;padding-top:18px;padding-bottom:18px; }
+  .tech-desk-header nav { width:100%;justify-content:flex-start;overflow-x:auto;padding-bottom:5px; }
+  .tech-desk-header nav a { white-space:nowrap; }
+  .tech-desk-hero-grid,.tech-desk-form-grid,.tech-desk-access-grid,.tech-desk-auth-grid,.tech-desk-ticket-grid { grid-template-columns:1fr; }
+  .tech-desk-card-grid,.tech-desk-step-grid,.tech-desk-status-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .tech-desk-admin-stats { grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+@media (max-width:680px) {
+  .tech-desk-trust .shell { align-items:flex-start;flex-direction:column;gap:4px;padding-top:8px;padding-bottom:8px; }
+  .tech-desk-brand strong { font-size:.82rem; }
+  .tech-desk-hero-grid { min-height:auto;padding-top:54px;padding-bottom:54px; }
+  .tech-desk-hero h1 { font-size:clamp(2.9rem,16vw,4.9rem); }
+  .tech-desk-strip .shell,.tech-desk-card-grid,.tech-desk-step-grid,.tech-desk-status-grid,.tech-desk-boundary-grid,.tech-desk-form .two,.tech-desk-footer-grid,.tech-desk-admin-stats,.tech-desk-admin-columns { grid-template-columns:1fr; }
+  .tech-desk-ticket-badge { width:100%; }
+  .tech-desk-message { max-width:100%; }
+  .tech-desk-ticket-nav,.tech-desk-admin-nav { flex-wrap:nowrap;overflow-x:auto; }
+  .tech-desk-ticket-nav a,.tech-desk-admin-nav a { white-space:nowrap; }
+}
