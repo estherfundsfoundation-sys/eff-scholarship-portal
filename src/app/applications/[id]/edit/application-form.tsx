@@ -2,10 +2,10 @@
 
 import {createBrowserClient} from "@supabase/ssr";
 import {useRef,useState,type FormEvent,type ReactNode} from "react";
+import {ALL_UPLOAD_KINDS} from "@/lib/application-fields";
 import {saveApplication} from "./actions";
 
 const allowedTypes=new Set(["application/pdf","image/jpeg","image/png","image/webp"]);
-const uploadKinds=["headshot","enrollment_proof","financial_need_proof","supporting_document"];
 
 export function ApplicationForm({applicationId,children}:{applicationId:string;children:ReactNode}){
   const bypassUpload=useRef(false);
@@ -16,7 +16,7 @@ export function ApplicationForm({applicationId,children}:{applicationId:string;c
     if(bypassUpload.current){bypassUpload.current=false;return}
     const form=event.currentTarget;
     const submitter=(event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement|null;
-    const files=uploadKinds.flatMap(kind=>{
+    const files=ALL_UPLOAD_KINDS.flatMap(kind=>{
       const input=form.elements.namedItem(kind) as HTMLInputElement|null;
       const file=input?.files?.[0];
       return file?[{kind,input:input!,file}]:[];
