@@ -70,6 +70,9 @@ export default async function TechDeskHome() {
               <Link className="button light" href="/tech-desk/access">
                 Access My Ticket
               </Link>
+              <Link className="button light" href="/tech-desk/diagnose">
+                Instant Tech Check
+              </Link>
             </div>
             <small>Free support for official Esther Funds Foundation platforms.</small>
           </div>
@@ -103,6 +106,7 @@ export default async function TechDeskHome() {
             <article><Headphones/><h3>Open a new ticket</h3><p>Tell us which EFF platform, the exact page, what happened, and what you already tried.</p><Link className="card-link" href="/tech-desk/open-ticket">Report a technical problem →</Link></article>
             <article><LockKeyhole/><h3>Continue a ticket</h3><p>Use your Tech Desk ticket number and verified email to receive a time-limited secure link.</p><Link className="card-link" href="/tech-desk/access">Access my secure ticket →</Link></article>
             <article><Activity/><h3>Check platform status</h3><p>See the latest public health checks for official EFF websites before submitting a duplicate report.</p><Link className="card-link" href="/tech-desk/status">View EFF platform status →</Link></article>
+            <article><Bot/><h3>Fix common issues now</h3><p>Use the credit-independent checker and searchable answers for passwords, email, applications, MyEFF, REACH, uploads, and links.</p><Link className="card-link" href="/tech-desk/diagnose">Run an instant tech check →</Link></article>
           </div>
         </div>
       </section>
@@ -116,6 +120,8 @@ export default async function TechDeskHome() {
               <li>Recognize common password, email, upload, session, permission, API, link, and outage errors</li>
               <li>Check public EFF site health and optional read-only provider signals</li>
               <li>Email safe next steps, reminders, and resolution confirmation</li>
+              <li>Search product-specific answers and volunteer runbooks without AI credits</li>
+              <li>Compare exact ticket, profile, imported-record, application, and REACH relationships for authorized staff</li>
               <li>Auto-close inactive tickets after follow-up while preserving history</li>
             </ul>
           </article>

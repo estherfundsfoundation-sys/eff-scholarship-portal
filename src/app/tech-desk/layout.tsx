@@ -46,10 +46,11 @@ export default function TechDeskLayout({children}: {children: React.ReactNode}) 
           </Link>
           <nav aria-label="EFF Tech Desk">
             <Link href="/tech-desk">Tech Desk</Link>
+            <Link href="/tech-desk/diagnose">Instant Tech Check</Link>
+            <Link href="/tech-desk/common-questions">Common Questions</Link>
             <Link href="/tech-desk/open-ticket">Open a Ticket</Link>
             <Link href="/tech-desk/access">Access My Ticket</Link>
             <Link href="/tech-desk/status"><Activity size={15}/> Platform Status</Link>
-            <Link href="/tech-desk/knowledge">Help Library</Link>
           </nav>
         </div>
       </header>
@@ -66,6 +67,8 @@ export default function TechDeskLayout({children}: {children: React.ReactNode}) 
             <p><Link href="/tech-desk/open-ticket"><Headphones size={14}/> Open a Ticket</Link></p>
             <p><Link href="/tech-desk/access"><LockKeyhole size={14}/> Access My Ticket</Link></p>
             <p><Link href="/tech-desk/status"><Activity size={14}/> Platform Status</Link></p>
+            <p><Link href="/tech-desk/diagnose">Instant Tech Check</Link></p>
+            <p><Link href="/tech-desk/common-questions">Common Questions</Link></p>
           </div>
           <div>
             <strong>Other EFF support</strong>

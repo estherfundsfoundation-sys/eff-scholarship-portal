@@ -62,4 +62,45 @@ describe("EFF Tech Desk safety and routing", () => {
     expect(diagnosis.steps.join(" ")).toMatch(/newest/i);
     expect(diagnosis.steps.join(" ")).toMatch(/Do not create a second account/i);
   });
+
+  it("recognizes the missing REACH claim route as a system issue", () => {
+    const diagnosis = classifyTechIssue({
+      category: "broken_link",
+      description: "My REACH ambassador claim link gives a 404",
+      urgency: "fully_blocked",
+    });
+    expect(diagnosis.code).toBe("REACH_CLAIM_404");
+    expect(diagnosis.priority).toBe("P1");
+    expect(diagnosis.steps.join(" ")).toMatch(/\/reach\/claim/);
+  });
+
+  it("recognizes missing MyEFF membership permissions", () => {
+    const diagnosis = classifyTechIssue({
+      category: "session_access",
+      description: "MyEFF says permission denied and the membership record could not load",
+      urgency: "fully_blocked",
+    });
+    expect(diagnosis.code).toBe("MYEFF_PROFILE_PERMISSION");
+    expect(diagnosis.requiresStaffReview).toBe(true);
+  });
+
+  it("preserves an application when the portal says it already exists", () => {
+    const diagnosis = classifyTechIssue({
+      category: "scholarship_application",
+      description: "Name Your Need says an application already exists but it is missing",
+      urgency: "fully_blocked",
+    });
+    expect(diagnosis.code).toBe("APPLICATION_ALREADY_EXISTS");
+    expect(diagnosis.steps.join(" ")).toMatch(/Do not create a second/i);
+  });
+
+  it("recognizes protected Vercel links", () => {
+    const diagnosis = classifyTechIssue({
+      category: "broken_link",
+      description: "The EFF button opened a protected Vercel login screen",
+      urgency: "fully_blocked",
+    });
+    expect(diagnosis.code).toBe("PROTECTED_VERCEL_PAGE");
+    expect(diagnosis.requiresStaffReview).toBe(true);
+  });
 });

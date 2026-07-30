@@ -20,6 +20,25 @@ const officialHostnames = new Set([
   "www.estherfundsfoundation.org",
   "portal.estherfundsfoundation.org",
   "my.estherfundsfoundation.org",
+  "pretty-girls-who-serve.vercel.app",
+  "miss-pgws-2027.vercel.app",
+  "eff-essentials.vercel.app",
+  "classroom-points-peach.vercel.app",
+  "eff-reach-action-hub.vercel.app",
+  "eff-chapter-networ.vercel.app",
+  "miss-bgr-autumn-2026.vercel.app",
+  "eff-connect-three.vercel.app",
+  "rooted-in-soul-site.vercel.app",
+  "vote-to-reach-liveboard.vercel.app",
+  "eff-success-navigator.vercel.app",
+  "aniya-night-time.vercel.app",
+  "eff-membership-hub.vercel.app",
+  "every-future-funded-academy.vercel.app",
+  "eff-scholarship-directory-one.vercel.app",
+  "boogie-bobbys-bayou-bash.vercel.app",
+  "reach-universe.vercel.app",
+  "black-girls-read-rise.vercel.app",
+  "esthers-light.vercel.app",
   "policy.estherfundsfoundation.org",
   "fundraise.estherfundsfoundation.org",
   "partner.estherfundsfoundation.org",
@@ -30,13 +49,30 @@ const officialHostnames = new Set([
 ]);
 
 export const techDeskProducts = [
+  {slug: "pretty-girls-who-serve", name: "Pretty Girls Who Serve"},
   {slug: "portal", name: "EFF Student Portal"},
+  {slug: "miss-pgws-2027", name: "Miss PGWS 2027"},
   {slug: "myeff", name: "MyEFF Membership Portal"},
   {slug: "policy", name: "EFF Policy Platform"},
-  {slug: "fundraise", name: "EFF Fundraising Platform"},
-  {slug: "partner", name: "EFF Partnership Platform"},
+  {slug: "eff-essentials", name: "EFF Essentials"},
   {slug: "back-to-school", name: "EFF Back to School Platform"},
+  {slug: "classroom-points", name: "EFF Classroom Points"},
+  {slug: "reach-action-hub", name: "EFF REACH Action Hub"},
   {slug: "academy", name: "EFF Leadership Academy"},
+  {slug: "chapter-network", name: "EFF Chapter Network"},
+  {slug: "miss-bgr-autumn-2026", name: "Miss BGR Autumn 2026"},
+  {slug: "eff-connect", name: "EFF Connect"},
+  {slug: "rooted-in-soul", name: "Rooted in Soul"},
+  {slug: "vote-to-reach-liveboard", name: "Vote to REACH Liveboard"},
+  {slug: "success-navigator", name: "EFF Success Navigator"},
+  {slug: "aniya-night-time", name: "Aniya Night Time"},
+  {slug: "membership-hub", name: "EFF Membership Hub"},
+  {slug: "funded-academy", name: "Every Future Funded Academy"},
+  {slug: "scholarship-directory", name: "EFF Scholarship Directory"},
+  {slug: "boogie-bobbys-bayou-bash", name: "Boogie Bobby's Bayou Bash"},
+  {slug: "reach-universe", name: "REACH Universe"},
+  {slug: "black-girls-read-rise", name: "Black Girls Read & Rise"},
+  {slug: "esthers-light", name: "Esther's Light"},
   {slug: "main-site", name: "Esther Funds Foundation Website"},
   {slug: "shop", name: "EFF Shop"},
   {slug: "other", name: "Another EFF Platform"},
@@ -173,6 +209,105 @@ export function classifyTechIssue(input: {
 
   let diagnosis: TechDeskDiagnosis;
   if (
+    contains(text, ["reach", "ambassador"]) &&
+    contains(text, ["404", "not found", "claim link", "claim page"])
+  ) {
+    diagnosis = {
+      code: "REACH_CLAIM_404",
+      title: "REACH claim route or invitation needs review",
+      summary:
+        "The invitation is pointing to a missing or outdated REACH route. Use the secure Student Portal claim page.",
+      steps: [
+        "Open https://portal.estherfundsfoundation.org/reach/claim.",
+        "Use the email that received the REACH invitation.",
+        "Do not create a second EFF account.",
+        "Keep one verified ticket open if the invitation is not recognized.",
+      ],
+      confidence: 0.99,
+      priority: "P1",
+      requiresStaffReview: true,
+      proposedAction: "review_reach_claim_route",
+    };
+  } else if (
+    contains(text, ["reach", "ambassador"]) &&
+    contains(text, ["workspace", "cannot see", "can't see", "missing", "never claimed"])
+  ) {
+    diagnosis = {
+      code: "REACH_WORKSPACE_MISSING",
+      title: "REACH account-to-ambassador relationship review",
+      summary:
+        "The account may be signed in without being connected to the matching ambassador record.",
+      steps: [
+        "Confirm the account email matches the invitation email.",
+        "Open the REACH claim page once.",
+        "Do not create another EFF account.",
+        "EFF staff must verify the ambassador-to-account relationship before changing it.",
+      ],
+      confidence: 0.96,
+      priority: "P1",
+      requiresStaffReview: true,
+      proposedAction: "review_reach_account_relationship",
+    };
+  } else if (
+    contains(text, ["myeff", "membership", "member profile"]) &&
+    contains(text, ["permission denied", "could not load", "loading your membership", "record could not load"])
+  ) {
+    diagnosis = {
+      code: "MYEFF_PROFILE_PERMISSION",
+      title: "MyEFF membership relationship or permission review",
+      summary:
+        "The account is reaching MyEFF, but its authenticated user may not be connected to an authorized member profile.",
+      steps: [
+        "Sign out of MyEFF and close duplicate tabs.",
+        "Open MyEFF in a private browser window.",
+        "Use Claim an existing membership if the record was imported.",
+        "Keep one ticket open so EFF can verify the member-profile relationship.",
+      ],
+      confidence: 0.97,
+      priority: "P1",
+      requiresStaffReview: true,
+      proposedAction: "review_myeff_profile_permissions",
+    };
+  } else if (
+    contains(text, ["application already exists", "application exists", "cannot start a new"]) ||
+    (contains(text, ["name your need"]) && contains(text, ["missing", "not showing", "cannot see", "can't see"]))
+  ) {
+    diagnosis = {
+      code: "APPLICATION_ALREADY_EXISTS",
+      title: "Existing application needs account reconciliation",
+      summary:
+        "An application or imported record already exists and should be preserved instead of duplicated.",
+      steps: [
+        "Do not create a second account or application.",
+        "Use the email connected to the original submission.",
+        "Record the exact program name and deadline.",
+        "EFF staff will compare the verified profile, imported record, and application owner.",
+      ],
+      confidence: 0.97,
+      priority: "P1",
+      requiresStaffReview: true,
+      proposedAction: "review_application_identity_relationship",
+    };
+  } else if (
+    contains(text, ["vercel login", "vercel access", "protected deployment", "sso-api"])
+  ) {
+    diagnosis = {
+      code: "PROTECTED_VERCEL_PAGE",
+      title: "Protected deployment link",
+      summary:
+        "An EFF page is using a protected deployment hostname instead of a stable public production address.",
+      steps: [
+        "Return to the EFF page containing the link.",
+        "Record the source page and button text.",
+        "Copy the protected destination.",
+        "Use only a verified public EFF address while staff corrects the source link.",
+      ],
+      confidence: 0.98,
+      priority: "P1",
+      requiresStaffReview: true,
+      proposedAction: "replace_protected_deployment_link",
+    };
+  } else if (
     contains(text, [
       "invalid api key",
       "api key",

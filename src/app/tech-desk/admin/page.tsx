@@ -156,6 +156,8 @@ export default async function TechDeskAdmin() {
         <nav className="tech-desk-admin-nav" aria-label="Tech Desk administration">
           <a href="#operations">Operations</a>
           <a href="#tickets">Tickets</a>
+          <Link href="/tech-desk/admin/lookup">Ticket & Account Lookup</Link>
+          <Link href="/tech-desk/admin/runbooks">Volunteer Runbooks</Link>
           <a href="#systems">System Health</a>
           <a href="#remediation">Remediation</a>
           <a href="#email">Email Delivery</a>
