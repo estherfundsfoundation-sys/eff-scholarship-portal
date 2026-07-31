@@ -2,6 +2,29 @@
 export async function saveTemplate(formData:FormData){const {supabase,user}=await requireAdmin();const id=String(formData.get("template_id"));const subject=String(formData.get("subject")??"").trim();const body=String(formData.get("body")??"").trim();if(!subject||!body)throw new Error("Subject and body are required.");const {error}=await supabase.from("email_templates").update({subject,body}).eq("id",id);if(error)throw new Error("Template could not be saved.");await supabase.from("audit_events").insert({actor_id:user.id,action:"email_template_updated",target_type:"email_template",target_id:id});revalidatePath("/admin/communications")}
 export async function retryFailedMessage(formData:FormData){const {supabase}=await requireAdmin();const id=String(formData.get("message_id")??"");const {error}=await supabase.rpc("retry_failed_message",{p_message_id:id});if(error)throw new Error(error.message);revalidatePath("/admin/communications")}
 
+export async function queueNameYourNeedReceipts(formData:FormData){
+  const {supabase}=await requireSuperAdmin();
+  const confirmation=String(formData.get("confirmation")??"");
+  const {data,error}=await supabase.rpc("queue_name_your_need_receipts",{
+    p_confirmation:confirmation,
+  });
+  if(error)redirect(`/admin/communications?receiptError=${encodeURIComponent(error.message)}`);
+  revalidatePath("/admin/communications");
+  redirect(`/admin/communications?receiptQueued=${Number(data??0)}`);
+}
+
+export async function retryNameYourNeedReceiptFailures(formData:FormData){
+  const {supabase}=await requireSuperAdmin();
+  const confirmation=String(formData.get("confirmation")??"");
+  const {data,error}=await supabase.rpc(
+    "retry_name_your_need_receipt_failures",
+    {p_confirmation:confirmation},
+  );
+  if(error)redirect(`/admin/communications?receiptError=${encodeURIComponent(error.message)}`);
+  revalidatePath("/admin/communications");
+  redirect(`/admin/communications?receiptRetried=${Number(data??0)}`);
+}
+
 const partnerSubject="Invitation for {{name}}: Become a Free Every Future Fulfilled Partner Campus";
 const partnerBody=`<p>Hello {{name}} Student Success Team,</p>
 <p>Esther Funds Foundation invites your institution to become an <strong>Every Future Fulfilled Partner Campus</strong>—a national college-continuity partnership designed around one promise: before a student stops out because of a solvable barrier, we step in together.</p>
