@@ -16,7 +16,7 @@ export async function middleware(request: NextRequest) {
     if (contextual) return NextResponse.redirect(new URL(contextual, request.url));
   }
 
-  const scholarshipProtected = [
+  const scholarshipProtected = pathname !== "/admin/sign-in" && [
     "/dashboard", "/profile", "/applications", "/admin", "/partners/dashboard",
     "/partners/onboarding", "/careers/dashboard", "/careers/profile",
     "/careers/applications", "/careers/apply", "/careers/board-onboarding",
