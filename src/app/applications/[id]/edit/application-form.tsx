@@ -3,7 +3,7 @@
 import {createBrowserClient} from "@supabase/ssr";
 import {useRef,useState,type FormEvent,type ReactNode} from "react";
 import {allApplicationUploadKinds} from "@/lib/application-form-config";
-import {saveApplication} from "./actions";
+import {markDocumentCurrent,saveApplication} from "./actions";
 
 const allowedTypes=new Set(["application/pdf","image/jpeg","image/png","image/webp"]);
 
@@ -40,11 +40,12 @@ export function ApplicationForm({applicationId,children}:{applicationId:string;c
         const path=`${user.id}/${applicationId}/${kind}/${crypto.randomUUID()}-${safeName}`;
         const uploaded=await supabase.storage.from("application-documents").upload(path,file,{contentType:file.type,upsert:false});
         if(uploaded.error)throw new Error(`Could not upload ${file.name}. Please retry.`);
-        const attached=await supabase.from("documents").insert({application_id:applicationId,owner_id:user.id,storage_path:path,kind,filename:file.name,content_type:file.type,size_bytes:file.size});
-        if(attached.error){
+        const attached=await supabase.from("documents").insert({application_id:applicationId,owner_id:user.id,storage_path:path,kind,filename:file.name,content_type:file.type,size_bytes:file.size}).select("id").single();
+        if(attached.error||!attached.data){
           await supabase.storage.from("application-documents").remove([path]);
           throw new Error(`Could not attach ${file.name}. Please retry.`);
         }
+        await markDocumentCurrent(applicationId,kind,attached.data.id);
         input.value="";
       }
 

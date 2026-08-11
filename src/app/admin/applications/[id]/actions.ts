@@ -69,6 +69,21 @@ export async function correctInstitutionAndDocuments(formData:FormData){
   redirect(`/admin/applications/${id}?correction_saved=1`);
 }
 
+export async function keepApplicationDocument(formData:FormData){
+  const {user}=await requireAdmin();
+  const admin=createAdminClient();
+  const applicationId=String(formData.get("application_id")??"");
+  const documentId=String(formData.get("document_id")??"");
+  const {data:document}=await admin.from("documents").select("id,kind,filename").eq("id",documentId).eq("application_id",applicationId).is("replaced_by",null).maybeSingle();
+  if(!document)throw new Error("The selected active document could not be found.");
+  const {error}=await admin.from("documents").update({replaced_by:document.id}).eq("application_id",applicationId).eq("kind",document.kind).is("replaced_by",null).neq("id",document.id);
+  if(error)throw new Error("The duplicate documents could not be retired.");
+  await admin.from("internal_notes").insert({application_id:applicationId,author_id:user.id,body:`Document correction: kept ${document.filename} as the current ${document.kind.replaceAll("_"," ")} and retired prior active files of that type.`});
+  await admin.from("audit_events").insert({actor_id:user.id,action:"application_document_selected_current",target_type:"application",target_id:applicationId,metadata_safe:{document_id:document.id,document_kind:document.kind}});
+  revalidatePath(`/admin/applications/${applicationId}`);
+  revalidatePath(`/applications/${applicationId}`);
+}
+
 export async function transitionApplication(formData: FormData) {const {supabase}=await requireAdmin();const id=String(formData.get("application_id"));const result=await supabase.rpc("staff_transition_application",{p_application_id:id,p_new_status:String(formData.get("new_status")),p_reason:String(formData.get("reason")??""),p_applicant_note:String(formData.get("applicant_note")??"")});if(result.error)redirect(`/admin/applications/${id}?status_error=${encodeURIComponent(result.error.message)}`);revalidatePath(`/admin/applications/${id}`);revalidatePath("/admin/applications");redirect(`/admin/applications/${id}?status_updated=1`)}
 export async function addInternalNote(formData: FormData) {const {supabase,user}=await requireAdmin();const id=String(formData.get("application_id"));const body=String(formData.get("body")??"").trim();if(body)await supabase.from("internal_notes").insert({application_id:id,author_id:user.id,body});revalidatePath(`/admin/applications/${id}`)}
 export async function requestInformation(formData: FormData) {const {supabase,user}=await requireAdmin();const id=String(formData.get("application_id"));const item=String(formData.get("item")??"").trim();const due=String(formData.get("due_at")??"")||null;if(item){await supabase.from("information_requests").insert({application_id:id,requested_by:user.id,item,due_at:due});await supabase.rpc("staff_transition_application",{p_application_id:id,p_new_status:"additional_information_needed",p_reason:"Additional information requested",p_applicant_note:item})}revalidatePath(`/admin/applications/${id}`)}
