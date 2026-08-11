@@ -16,3 +16,18 @@ export async function GET(request:Request){
   const destination=type==="recovery"?"/forgot-password":"/sign-up";
   return NextResponse.redirect(new URL(`${destination}?error=${encodeURIComponent("That secure link is invalid or expired. Request a new link and use only the newest email.")}`,url.origin));
 }
+
+export async function POST(request:Request){
+  const url=new URL(request.url);
+  const formData=await request.formData();
+  const tokenHash=String(formData.get("token_hash")??"");
+  const type=String(formData.get("type")??"") as EmailOtpType;
+  const next=safeInternalPath(formData.get("next"));
+  if(tokenHash&&type){
+    const supabase=await createClient();
+    const {error}=await supabase.auth.verifyOtp({type,token_hash:tokenHash});
+    if(!error)return NextResponse.redirect(new URL(next,url.origin),303);
+  }
+  const destination=type==="recovery"?"/forgot-password":"/account-help";
+  return NextResponse.redirect(new URL(`${destination}?error=${encodeURIComponent("That secure link is invalid or expired. Request a new link and use only the newest email.")}`,url.origin),303);
+}

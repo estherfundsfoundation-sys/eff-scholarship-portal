@@ -262,7 +262,7 @@ export async function createHelpDeskVolunteerAccount(formData: FormData) {
   if (!hash) {
     redirect("/help-desk/volunteer/sign-in?create=1&error=We+could+not+create+the+verification+link.");
   }
-  const verifyUrl = new URL("/auth/confirm", await publicOrigin());
+  const verifyUrl = new URL("/auth/secure-link", await publicOrigin());
   verifyUrl.searchParams.set("token_hash", hash);
   verifyUrl.searchParams.set("type", "signup");
   verifyUrl.searchParams.set("next", "/help-desk/volunteer/onboarding");
@@ -452,7 +452,7 @@ export async function requestHelpDeskPasswordReset(formData: FormData) {
     const admin = createAdminClient();
     const {data, error} = await admin.auth.admin.generateLink({type: "recovery", email});
     if (error || !data.properties?.hashed_token) throw error;
-    const url = new URL("/auth/confirm", await publicOrigin());
+    const url = new URL("/auth/secure-link", await publicOrigin());
     url.searchParams.set("token_hash", data.properties.hashed_token);
     url.searchParams.set("type", "recovery");
     url.searchParams.set("next", `/help-desk/reset-password?context=${context}`);
