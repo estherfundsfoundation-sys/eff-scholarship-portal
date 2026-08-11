@@ -217,6 +217,9 @@ export const allApplicationUploadKinds = [
 ];
 
 export function friendlySubmissionError(message: string) {
+  if (/all eligibility requirements must be met/i.test(message)) {
+    return "Review the eligibility section: every answer must be Yes to submit. Pay special attention to ‘Are you an undergraduate who has not earned a bachelor’s degree?’ If you are an undergraduate and do not already have a bachelor’s degree, the accurate answer is Yes.";
+  }
   const match = message.match(/A required answer is missing:\s*([a-z0-9_]+)/i);
   if (!match) return message;
 

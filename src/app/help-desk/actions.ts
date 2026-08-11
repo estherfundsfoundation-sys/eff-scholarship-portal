@@ -262,7 +262,7 @@ export async function createHelpDeskVolunteerAccount(formData: FormData) {
   if (!hash) {
     redirect("/help-desk/volunteer/sign-in?create=1&error=We+could+not+create+the+verification+link.");
   }
-  const verifyUrl = new URL("/auth/confirm", await publicOrigin());
+  const verifyUrl = new URL("/auth/secure-link", await publicOrigin());
   verifyUrl.searchParams.set("token_hash", hash);
   verifyUrl.searchParams.set("type", "signup");
   verifyUrl.searchParams.set("next", "/help-desk/volunteer/onboarding");
@@ -452,7 +452,7 @@ export async function requestHelpDeskPasswordReset(formData: FormData) {
     const admin = createAdminClient();
     const {data, error} = await admin.auth.admin.generateLink({type: "recovery", email});
     if (error || !data.properties?.hashed_token) throw error;
-    const url = new URL("/auth/confirm", await publicOrigin());
+    const url = new URL("/auth/secure-link", await publicOrigin());
     url.searchParams.set("token_hash", data.properties.hashed_token);
     url.searchParams.set("type", "recovery");
     url.searchParams.set("next", `/help-desk/reset-password?context=${context}`);
@@ -521,6 +521,39 @@ export async function addStaffCaseMessage(formData: FormData) {
     .update({last_team_message_at: new Date().toISOString(), updated_at: new Date().toISOString()})
     .eq("id", caseId);
   revalidatePath("/help-desk/admin");
+  revalidatePath(`/help-desk/admin/cases/${caseId}`);
+}
+
+export async function updateHelpDeskCaseStatus(formData: FormData) {
+  const {user} = await requireHelpDeskStaff();
+  const caseId = String(formData.get("caseId") ?? "");
+  const status = String(formData.get("status") ?? "");
+  const nextFollowUpAt = String(formData.get("nextFollowUpAt") ?? "").trim();
+  const staffNote = String(formData.get("staffNote") ?? "").trim().slice(0, 4000);
+  const allowed = ["new", "reviewing", "waiting_on_student", "referred_to_school", "follow_up_due", "resolved", "closed"];
+  if (!z.string().uuid().safeParse(caseId).success || !allowed.includes(status)) return;
+  const admin = createAdminClient();
+  const now = new Date().toISOString();
+  const {data: record} = await admin
+    .from("student_help_cases")
+    .select("case_code")
+    .eq("id", caseId)
+    .maybeSingle();
+  await admin.from("student_help_cases").update({
+    status,
+    next_follow_up_at: nextFollowUpAt ? new Date(nextFollowUpAt).toISOString() : null,
+    staff_note: staffNote || null,
+    assigned_staff_id: user.id,
+    closed_at: ["resolved", "closed"].includes(status) ? now : null,
+    updated_at: now,
+  }).eq("id", caseId);
+  await admin.from("student_help_case_events").insert({
+    case_id: caseId,
+    event_type: "staff_status_updated",
+    summary: `Authorized staff changed case status to ${status.replaceAll("_", " ")}.`,
+  });
+  revalidatePath("/help-desk/admin");
+  if (record?.case_code) revalidatePath(`/help-desk/admin/cases/${record.case_code}`);
 }
 
 export async function updateVolunteerStatus(formData: FormData) {

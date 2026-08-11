@@ -122,4 +122,10 @@ describe("service scholarship application configuration", () => {
       "Please complete the required field: Will you be enrolled full time during the award period?",
     );
   });
+
+  it("explains the commonly misunderstood undergraduate eligibility question", () => {
+    expect(friendlySubmissionError("All eligibility requirements must be met.")).toContain(
+      "Are you an undergraduate who has not earned a bachelor’s degree?",
+    );
+  });
 });
