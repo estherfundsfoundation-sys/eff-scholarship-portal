@@ -552,6 +552,64 @@ export async function addStaffTechMessage(formData: FormData) {
   revalidatePath(`/tech-desk/tickets/${ticket.ticket_code}`);
 }
 
+export async function closeDuplicateTechTicket(formData: FormData) {
+  const {user} = await requireTechDeskStaff();
+  const ticketId = value(formData, "ticketId");
+  const primaryTicketCode = value(formData, "primaryTicketCode")
+    .trim()
+    .toUpperCase();
+  if (
+    !z.string().uuid().safeParse(ticketId).success ||
+    !/^EFF-TECH-\d{4}-[A-F0-9]{8}$/.test(primaryTicketCode)
+  ) {
+    return;
+  }
+
+  const admin = createAdminClient();
+  const [{data: duplicate}, {data: primary}] = await Promise.all([
+    admin
+      .from("tech_desk_tickets")
+      .select("id,ticket_code,email")
+      .eq("id", ticketId)
+      .maybeSingle(),
+    admin
+      .from("tech_desk_tickets")
+      .select("id,ticket_code,email")
+      .eq("ticket_code", primaryTicketCode)
+      .maybeSingle(),
+  ]);
+  if (
+    !duplicate ||
+    !primary ||
+    duplicate.id === primary.id ||
+    duplicate.email.trim().toLowerCase() !== primary.email.trim().toLowerCase()
+  ) {
+    return;
+  }
+
+  const now = new Date().toISOString();
+  await admin
+    .from("tech_desk_tickets")
+    .update({
+      status: "closed_by_staff",
+      resolved_at: now,
+      closed_at: now,
+      next_follow_up_at: null,
+      updated_at: now,
+    })
+    .eq("id", duplicate.id);
+  await admin.from("tech_desk_events").insert({
+    ticket_id: duplicate.id,
+    actor_user_id: user.id,
+    event_type: "duplicate_ticket_closed",
+    summary_safe: `Duplicate ticket closed without another student email; work continues in ${primary.ticket_code}.`,
+    metadata_safe: {primary_ticket_id: primary.id},
+  });
+  revalidatePath("/tech-desk/admin");
+  revalidatePath(`/tech-desk/tickets/${duplicate.ticket_code}`);
+  revalidatePath(`/tech-desk/tickets/${primary.ticket_code}`);
+}
+
 export async function rerunTechDiagnosis(formData: FormData) {
   const {user} = await requireTechDeskStaff();
   const ticketId = value(formData, "ticketId");

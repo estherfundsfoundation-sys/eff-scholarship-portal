@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import {
   addStaffTechMessage,
+  closeDuplicateTechTicket,
   decideRemediationJob,
   rerunTechDiagnosis,
   runTechHealthCheck,
@@ -257,6 +258,20 @@ export default async function TechDeskAdmin() {
                             </select>
                           </label>
                           <button className="button">Email and Save Update</button>
+                        </form>
+                        <form action={closeDuplicateTechTicket} className="stack">
+                          <label>
+                            Primary ticket code
+                            <input
+                              name="primaryTicketCode"
+                              required
+                              placeholder="EFF-TECH-2026-XXXXXXXX"
+                            />
+                          </label>
+                          <input type="hidden" name="ticketId" value={ticket.id}/>
+                          <button className="button outline">
+                            Close Duplicate Without Emailing
+                          </button>
                         </form>
                         <div className="hero-actions">
                           <form action={rerunTechDiagnosis}>
