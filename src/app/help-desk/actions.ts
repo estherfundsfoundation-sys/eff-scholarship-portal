@@ -521,6 +521,39 @@ export async function addStaffCaseMessage(formData: FormData) {
     .update({last_team_message_at: new Date().toISOString(), updated_at: new Date().toISOString()})
     .eq("id", caseId);
   revalidatePath("/help-desk/admin");
+  revalidatePath(`/help-desk/admin/cases/${caseId}`);
+}
+
+export async function updateHelpDeskCaseStatus(formData: FormData) {
+  const {user} = await requireHelpDeskStaff();
+  const caseId = String(formData.get("caseId") ?? "");
+  const status = String(formData.get("status") ?? "");
+  const nextFollowUpAt = String(formData.get("nextFollowUpAt") ?? "").trim();
+  const staffNote = String(formData.get("staffNote") ?? "").trim().slice(0, 4000);
+  const allowed = ["new", "reviewing", "waiting_on_student", "referred_to_school", "follow_up_due", "resolved", "closed"];
+  if (!z.string().uuid().safeParse(caseId).success || !allowed.includes(status)) return;
+  const admin = createAdminClient();
+  const now = new Date().toISOString();
+  const {data: record} = await admin
+    .from("student_help_cases")
+    .select("case_code")
+    .eq("id", caseId)
+    .maybeSingle();
+  await admin.from("student_help_cases").update({
+    status,
+    next_follow_up_at: nextFollowUpAt ? new Date(nextFollowUpAt).toISOString() : null,
+    staff_note: staffNote || null,
+    assigned_staff_id: user.id,
+    closed_at: ["resolved", "closed"].includes(status) ? now : null,
+    updated_at: now,
+  }).eq("id", caseId);
+  await admin.from("student_help_case_events").insert({
+    case_id: caseId,
+    event_type: "staff_status_updated",
+    summary: `Authorized staff changed case status to ${status.replaceAll("_", " ")}.`,
+  });
+  revalidatePath("/help-desk/admin");
+  if (record?.case_code) revalidatePath(`/help-desk/admin/cases/${record.case_code}`);
 }
 
 export async function updateVolunteerStatus(formData: FormData) {
