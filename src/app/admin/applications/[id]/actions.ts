@@ -7,6 +7,7 @@ import {createAdminClient} from "@/lib/supabase/admin";
 
 const correctionDocumentKinds = ["enrollment_proof", "financial_need_proof"] as const;
 const allowedCorrectionTypes = new Set(["application/pdf", "image/jpeg", "image/png", "image/webp"]);
+const allowedImportHost=(hostname:string)=>hostname.endsWith(".oaiusercontent.com");
 
 export async function correctInstitutionAndDocuments(formData:FormData){
   const {user}=await requireAdmin();
@@ -19,27 +20,43 @@ export async function correctInstitutionAndDocuments(formData:FormData){
   const {data:application,error:applicationError}=await admin.from("applications").select("id,applicant_id,profiles!applications_applicant_id_fkey(institution)").eq("id",id).single();
   if(applicationError||!application)throw new Error("The application could not be found.");
   const profile=application.profiles as unknown as {institution:string|null};
-  const files=correctionDocumentKinds.flatMap(kind=>{
+  const files=[] as Array<{kind:(typeof correctionDocumentKinds)[number];filename:string;contentType:string;size:number;body:File|ArrayBuffer}>;
+  for(const kind of correctionDocumentKinds){
     const file=formData.get(kind);
-    if(!(file instanceof File)||file.size===0)return [];
-    if(file.size>10485760)throw new Error(`${kind.replaceAll("_"," ")} exceeds the 10 MB limit.`);
-    if(!allowedCorrectionTypes.has(file.type))throw new Error(`${kind.replaceAll("_"," ")} must be a PDF, JPG, PNG, or WebP file.`);
-    return [{kind,file}];
-  });
+    if(file instanceof File&&file.size>0){
+      if(file.size>10485760)throw new Error(`${kind.replaceAll("_"," ")} exceeds the 10 MB limit.`);
+      if(!allowedCorrectionTypes.has(file.type))throw new Error(`${kind.replaceAll("_"," ")} must be a PDF, JPG, PNG, or WebP file.`);
+      files.push({kind,filename:file.name,contentType:file.type,size:file.size,body:file});
+      continue;
+    }
+    const source=String(formData.get(`${kind}_source_url`)??"").trim();
+    if(!source)continue;
+    const sourceName=String(formData.get(`${kind}_source_filename`)??"").trim().replace(/[^a-zA-Z0-9._-]/g,"_");
+    let sourceUrl:URL;
+    try{sourceUrl=new URL(source);}catch{throw new Error(`The ${kind.replaceAll("_"," ")} source URL is invalid.`)}
+    if(sourceUrl.protocol!=="https:"||!allowedImportHost(sourceUrl.hostname))throw new Error("Staff document imports must use an approved time-limited attachment source.");
+    const response=await fetch(sourceUrl,{redirect:"follow",signal:AbortSignal.timeout(20000)});
+    const finalUrl=new URL(response.url);
+    const contentType=(response.headers.get("content-type")??"").split(";")[0].toLowerCase();
+    if(!response.ok||finalUrl.protocol!=="https:"||!allowedImportHost(finalUrl.hostname)||!allowedCorrectionTypes.has(contentType))throw new Error(`The ${kind.replaceAll("_"," ")} source could not be verified.`);
+    const body=await response.arrayBuffer();
+    if(body.byteLength===0||body.byteLength>10485760)throw new Error(`The ${kind.replaceAll("_"," ")} source must be between 1 byte and 10 MB.`);
+    files.push({kind,filename:sourceName||`${kind}.${contentType==="application/pdf"?"pdf":contentType.split("/")[1]||"bin"}`,contentType,size:body.byteLength,body});
+  }
   const now=new Date().toISOString();
   const profileUpdate=await admin.from("profiles").update({institution,updated_at:now}).eq("id",application.applicant_id);
   const answerUpdate=await admin.from("application_answers").upsert({application_id:id,question_key:"institution",value:institution,updated_at:now},{onConflict:"application_id,question_key"});
   if(profileUpdate.error||answerUpdate.error)throw new Error("The institution correction could not be saved.");
   const replacedKinds:string[]=[];
-  for(const {kind,file} of files){
-    const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+  for(const {kind,filename,contentType,size,body} of files){
+    const safeName=filename.replace(/[^a-zA-Z0-9._-]/g,"_");
     const path=`${application.applicant_id}/${id}/${kind}/${randomUUID()}-${safeName}`;
-    const uploaded=await admin.storage.from("application-documents").upload(path,file,{contentType:file.type,upsert:false});
-    if(uploaded.error)throw new Error(`Could not upload ${file.name}. The institution correction was saved, but the document was not replaced.`);
-    const inserted=await admin.from("documents").insert({application_id:id,owner_id:application.applicant_id,storage_path:path,kind,filename:file.name,content_type:file.type,size_bytes:file.size}).select("id").single();
+    const uploaded=await admin.storage.from("application-documents").upload(path,body,{contentType,upsert:false});
+    if(uploaded.error)throw new Error(`Could not upload ${filename}. The institution correction was saved, but the document was not replaced.`);
+    const inserted=await admin.from("documents").insert({application_id:id,owner_id:application.applicant_id,storage_path:path,kind,filename,content_type:contentType,size_bytes:size}).select("id").single();
     if(inserted.error||!inserted.data){
       await admin.storage.from("application-documents").remove([path]);
-      throw new Error(`Could not attach ${file.name}. The institution correction was saved, but the document was not replaced.`);
+      throw new Error(`Could not attach ${filename}. The institution correction was saved, but the document was not replaced.`);
     }
     const replaced=await admin.from("documents").update({replaced_by:inserted.data.id}).eq("application_id",id).eq("kind",kind).is("replaced_by",null).neq("id",inserted.data.id);
     if(replaced.error)throw new Error(`The new ${kind.replaceAll("_"," ")} was attached, but the prior document could not be retired.`);
