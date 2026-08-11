@@ -2,9 +2,95 @@
 import {revalidatePath} from "next/cache";
 import {redirect} from "next/navigation";
 import {requireAdmin} from "@/lib/auth/staff";
+import {emailFrom, getResend} from "@/lib/email";
+import {createReachClaimToken} from "@/lib/reach/claim-token";
 import {createAdminClient} from "@/lib/supabase/admin";
 
 const clean = (value: FormDataEntryValue | null, max: number) => String(value ?? "").trim().slice(0, max);
+
+const escapeHtml = (text: string) => text.replace(/[&<>"']/g, character => ({
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  "\"": "&quot;",
+  "'": "&#039;",
+}[character] ?? character));
+
+export async function inviteReachAmbassador(formData: FormData) {
+  const {user} = await requireAdmin();
+  const admin = createAdminClient();
+  const fullName = clean(formData.get("fullName"), 100);
+  const email = clean(formData.get("email"), 320).toLowerCase();
+  const institution = clean(formData.get("institution"), 180);
+  if (fullName.length < 2 || institution.length < 2 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    redirect("/admin/reach?error=Enter+the+ambassador%27s+name%2C+institution%2C+and+a+valid+invitation+email.");
+  }
+
+  const now = new Date();
+  const expiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString();
+  const {token, tokenHash} = createReachClaimToken();
+  const {data: ambassador, error: rosterError} = await admin
+    .from("reach_ambassadors")
+    .upsert({
+      email,
+      full_name: fullName,
+      institution,
+      active: true,
+      invited_at: now.toISOString(),
+      accepted_at: now.toISOString(),
+      claim_token_hash: tokenHash,
+      claim_token_expires_at: expiresAt,
+      claim_link_sent_at: now.toISOString(),
+      updated_at: now.toISOString(),
+    }, {onConflict: "email"})
+    .select("id,email,full_name,user_id,claimed_at")
+    .single();
+  if (rosterError || !ambassador) {
+    redirect("/admin/reach?error=The+ambassador+record+could+not+be+prepared.");
+  }
+
+  const claimUrl = new URL("/reach/claim", process.env.NEXT_PUBLIC_APP_URL ?? "https://portal.estherfundsfoundation.org");
+  claimUrl.searchParams.set("token", token);
+  const firstName = escapeHtml(fullName.split(/\s+/)[0] || "Ambassador");
+  const delivery = await getResend().emails.send({
+    from: emailFrom,
+    to: email,
+    replyTo: "nationals@estherfundsinc.org",
+    subject: "Set up your EFF REACH Ambassador account",
+    html: `<div style="font-family:Arial,sans-serif;line-height:1.65;color:#2b1740;max-width:680px;margin:auto">
+      <div style="background:#42127F;color:#fff;padding:28px"><div style="font-size:13px;letter-spacing:.12em;color:#D8C3F1;font-weight:700">ESTHER FUNDS FOUNDATION · REACH</div><h1 style="margin:8px 0 0">Your ambassador account is ready</h1></div>
+      <div style="padding:28px;border:1px solid #ded2e8">
+        <p>Hello ${firstName},</p>
+        <p>Welcome to REACH! We have prepared your official EFF REACH Campus Ambassador account for <strong>${escapeHtml(institution)}</strong>.</p>
+        <p><a href="${claimUrl.toString()}" style="display:inline-block;background:#42127F;color:#fff;padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:700">Set up my REACH account</a></p>
+        <p>Open the button above, then sign in with an existing EFF Portal account or create one using any email address you control. After connecting the invitation, your ambassador workspace will be available in the portal.</p>
+        <p>The private link expires in 24 hours. Please do not forward it or share passwords or verification codes. If an email-security page opens first, choose <strong>Continue Securely</strong>.</p>
+        <p>Your REACH Action Hub is available at <a href="https://reach.estherfundsfoundation.org/">reach.estherfundsfoundation.org</a>.</p>
+        <p><strong>The REACH Team</strong><br/>Esther Funds Foundation</p>
+      </div>
+    </div>`,
+    text: `Hello ${fullName.split(/\s+/)[0] || "Ambassador"},\n\nWelcome to REACH! We prepared your official EFF REACH Campus Ambassador account for ${institution}.\n\nSet up your account with this private link:\n${claimUrl.toString()}\n\nOpen the link, then sign in with an existing EFF Portal account or create one using any email you control. The link expires in 24 hours. Do not forward it or share passwords or verification codes.\n\nREACH Action Hub: https://reach.estherfundsfoundation.org/\n\nThe REACH Team\nEsther Funds Foundation`,
+  });
+  if (delivery.error) {
+    await admin.from("reach_ambassadors").update({
+      claim_token_hash: null,
+      claim_token_expires_at: null,
+      claim_link_sent_at: null,
+      updated_at: new Date().toISOString(),
+    }).eq("id", ambassador.id).eq("claim_token_hash", tokenHash);
+    redirect("/admin/reach?error=The+roster+was+updated%2C+but+the+private+setup+email+could+not+be+sent.");
+  }
+
+  await admin.from("audit_events").insert({
+    actor_id: user.id,
+    action: ambassador.claimed_at ? "reach_ambassador_reinvited" : "reach_ambassador_invited_by_admin",
+    target_type: "reach_ambassador",
+    target_id: ambassador.id,
+    metadata_safe: {institution: institution.slice(0, 100), already_claimed: Boolean(ambassador.claimed_at)},
+  });
+  revalidatePath("/admin/reach");
+  redirect(`/admin/reach?invited=${encodeURIComponent(email)}`);
+}
 
 export async function addReachResource(formData: FormData) {
   const {user} = await requireAdmin();

@@ -1,14 +1,14 @@
 import Link from "next/link";
 import {requireAdmin} from "@/lib/auth/staff";
 import {createAdminClient} from "@/lib/supabase/admin";
-import {addReachResource, setReachResourceActive} from "./actions";
+import {addReachResource, inviteReachAmbassador, setReachResourceActive} from "./actions";
 
 type AmbassadorRow = {id:string;email:string;login_email:string|null;full_name:string|null;institution:string|null};
 
 export default async function ReachAdminPage({
   searchParams,
 }: {
-  searchParams:Promise<{error?:string;resource?:string}>;
+  searchParams:Promise<{error?:string;resource?:string;invited?:string}>;
 }) {
   const params = await searchParams;
   await requireAdmin();
@@ -31,6 +31,7 @@ export default async function ReachAdminPage({
     <p>Manage the approved ambassador roster, publish workshop tools, and see the profiles and campus impact ambassadors have chosen to publish.</p>
     {params.error && <div className="notice error-text">{params.error}</div>}
     {params.resource && <div className="notice">Resource added.</div>}
+    {params.invited && <div className="notice">The REACH roster is updated and a private setup link was emailed to {params.invited}.</div>}
     <div className="stats admin-stats">
       <div className="stat"><strong>{ambassadors?.length ?? 0}</strong><span>Approved ambassadors</span></div>
       <div className="stat"><strong>{claimed}</strong><span>Accounts claimed</span></div>
@@ -39,6 +40,14 @@ export default async function ReachAdminPage({
     </div>
 
     <div className="admin-columns" style={{marginTop:30}}>
+      <form action={inviteReachAmbassador} className="card stack">
+        <div className="eyebrow">Ambassador access</div><h3>Add or re-invite an approved ambassador</h3>
+        <p className="muted">This creates the approved roster record and sends a private, 24-hour account setup link. Use only after National Office approval.</p>
+        <label>Full name<input name="fullName" required maxLength={100}/></label>
+        <label>Invitation email<input name="email" type="email" required maxLength={320}/></label>
+        <label>Institution<input name="institution" required maxLength={180}/></label>
+        <button className="button">Add to roster and email setup link</button>
+      </form>
       <form action={addReachResource} className="card stack">
         <div className="eyebrow">Resource library</div><h3>Add a workshop or outreach resource</h3>
         <label>Title<input name="title" required maxLength={180}/></label>
