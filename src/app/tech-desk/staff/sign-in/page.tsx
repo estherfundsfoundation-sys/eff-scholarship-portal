@@ -1,6 +1,7 @@
 import type {Metadata} from "next";
 import Link from "next/link";
 import {AlertTriangle, LockKeyhole, ShieldCheck} from "lucide-react";
+import {requestNationalStaffSignInLink} from "@/app/auth/actions";
 import {signInTechDeskStaff} from "@/app/tech-desk/actions";
 import {safeTechDeskDestination} from "@/lib/tech-desk";
 
@@ -60,6 +61,16 @@ export default async function TechDeskStaffSignIn({
             <button className="button">
               <ShieldCheck/> Sign In to Tech Desk Administration
             </button>
+          </form>
+          <hr/>
+          <h2>Passwordless national access</h2>
+          <form action={requestNationalStaffSignInLink} className="stack tech-desk-auth-form">
+            <input type="hidden" name="next" value={next}/>
+            <label>
+              Authorized national email
+              <input name="email" type="email" required autoComplete="email"/>
+            </label>
+            <button className="button outline">Email My Secure Sign-In Link</button>
           </form>
           <p><Link href="/tech-desk/password-reset">Reset staff password</Link></p>
           <p><Link href="/tech-desk">Return to the EFF Tech Desk</Link></p>
