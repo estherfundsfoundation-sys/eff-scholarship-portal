@@ -22,6 +22,7 @@ export async function middleware(request: NextRequest) {
     "/careers/applications", "/careers/apply", "/careers/board-onboarding",
     "/careers/board-invite",
   ].some((path) => pathname.startsWith(path));
+  const scholarshipStaffProtected = pathname.startsWith("/admin/") && pathname !== "/admin/sign-in";
   const helpDeskVolunteerProtected = [
     "/help-desk/volunteer/onboarding", "/help-desk/volunteer/console",
   ].some((path) => pathname.startsWith(path));
@@ -58,6 +59,11 @@ export async function middleware(request: NextRequest) {
   const {data: {user}} = await supabase.auth.getUser();
 
   if (protectedPath && !user) {
+    if (scholarshipStaffProtected) {
+      const url = new URL("/admin/sign-in", request.url);
+      url.searchParams.set("next", `${pathname}${request.nextUrl.search}`);
+      return NextResponse.redirect(url);
+    }
     if (helpDeskVolunteerProtected) {
       const url = new URL("/help-desk/volunteer/sign-in", request.url);
       url.searchParams.set("next", `${pathname}${request.nextUrl.search}`);
