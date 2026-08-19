@@ -334,6 +334,48 @@ export function classifyTechIssue(input: {
       proposedAction: "review_production_configuration",
     };
   } else if (
+    input.category === "scholarship_application" &&
+    contains(text, [
+      "reconsider",
+      "reconsideration",
+      "requested amount",
+      "amount requested",
+      "corrected amount",
+      "school changed",
+      "change my school",
+      "post-deadline",
+      "application decision",
+      "decision on my",
+      "clarification regarding",
+    ]) &&
+    !contains(text, [
+      "cannot submit",
+      "can't submit",
+      "could not submit",
+      "not showing",
+      "can't see",
+      "cannot see",
+      "upload failed",
+      "error message",
+    ])
+  ) {
+    diagnosis = {
+      code: "APPLICATION_POLICY_REQUEST",
+      title: "Application clarification for scholarship staff",
+      summary:
+        "This request concerns a submitted application, requested amount, school update, or decision rather than a reproducible technical failure.",
+      steps: [
+        "Do not create a duplicate application or Tech Desk ticket.",
+        "Keep the existing application ID and ticket number for the record.",
+        "Scholarship staff will document the clarification on the existing application when appropriate.",
+        "A clarification does not guarantee reconsideration, selection, eligibility, or funding.",
+      ],
+      confidence: 0.96,
+      priority: "P3",
+      requiresStaffReview: true,
+      proposedAction: "route_application_clarification",
+    };
+  } else if (
     input.category === "password_sign_in" ||
     contains(text, ["password", "login", "log in", "sign in", "not recognized"])
   ) {

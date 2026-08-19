@@ -103,4 +103,14 @@ describe("EFF Tech Desk safety and routing", () => {
     expect(diagnosis.code).toBe("PROTECTED_VERCEL_PAGE");
     expect(diagnosis.requiresStaffReview).toBe(true);
   });
+
+  it("routes application reconsideration requests without calling them technical blocks", () => {
+    const diagnosis = classifyTechIssue({
+      category: "scholarship_application",
+      description: "I am requesting reconsideration with a corrected requested amount.",
+      urgency: "question",
+    });
+    expect(diagnosis.code).toBe("APPLICATION_POLICY_REQUEST");
+    expect(diagnosis.summary).toMatch(/rather than a reproducible technical failure/i);
+  });
 });

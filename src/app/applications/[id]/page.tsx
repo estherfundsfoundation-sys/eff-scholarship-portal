@@ -6,6 +6,12 @@ import {acceptAward,respondToRequest,withdrawApplication} from "./actions";
 
 type Request={id:string;item:string;due_at:string|null;response:string|null;resolved_at:string|null};
 
+const easternDateTime = (value:string) => new Intl.DateTimeFormat("en-US", {
+  dateStyle:"short",
+  timeStyle:"medium",
+  timeZone:"America/New_York",
+}).format(new Date(value))+" ET";
+
 export default async function ApplicationDetail({params,searchParams}:{params:Promise<{id:string}>;searchParams:Promise<{submitted?:string}>}){
   const {id}=await params;
   const submitted=(await searchParams).submitted==="1";
@@ -39,7 +45,7 @@ export default async function ApplicationDetail({params,searchParams}:{params:Pr
       {decision&&<div className="notice"><strong>Decision: {decision.decision}</strong><br/>{decision.applicant_explanation||"Please contact EFF if you have questions about this decision."}</div>}
       {award&&<section className="award-card"><div className="eyebrow">Your award</div><h3>${Number(award.amount).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</h3>{award.conditions&&<p>{award.conditions}</p>}<p>Accept by: <strong>{award.acceptance_deadline?new Date(`${award.acceptance_deadline}T12:00:00`).toLocaleDateString():"Contact EFF"}</strong></p>{award.accepted_at?<p className="notice"><strong>Accepted</strong> on {new Date(award.accepted_at).toLocaleString()}</p>:<form action={acceptAward}><input type="hidden" name="application_id" value={id}/><button className="button">Accept award</button></form>}</section>}
       <h3>Status timeline</h3>
-      {history.length?<ol>{history.sort((x,y)=>x.created_at.localeCompare(y.created_at)).map((h,i)=><li key={`${h.created_at}-${i}`}><strong>{applicantLabels[h.new_status]??h.new_status}</strong> — {new Date(h.created_at).toLocaleString()}{h.applicant_note&&<p>{h.applicant_note}</p>}</li>)}</ol>:<p className="muted">Your draft has been created. Status updates will appear here.</p>}
+      {history.length?<ol>{history.sort((x,y)=>x.created_at.localeCompare(y.created_at)).map((h,i)=><li key={`${h.created_at}-${i}`}><strong>{applicantLabels[h.new_status]??h.new_status}</strong> — {easternDateTime(h.created_at)}{h.applicant_note&&<p>{h.applicant_note}</p>}</li>)}</ol>:<p className="muted">Your draft has been created. Status updates will appear here.</p>}
       {mayWithdraw&&<details style={{marginTop:24}}><summary>Withdraw this application</summary><form action={withdrawApplication} className="stack"><input type="hidden" name="application_id" value={id}/><label>Reason (optional)<textarea name="reason" rows={3}/></label><button className="button outline">Continue to withdrawal confirmation</button></form></details>}
     </div>
   </div></main>;
