@@ -356,6 +356,21 @@ const sweAdapter: SourceAdapter = {
 };
 
 const directAdapters: Record<string, SourceAdapter> = {
+  open_scholarships: {
+    key: "open_scholarships",
+    parse(raw, sourceUrl) {
+      type OpenRecord={name?:string;sponsor?:string;status?:string;award?:{amount_min?:number|null;amount_max?:number|null;currency?:string};deadline?:{type?:string;date?:string|null;notes?:string|null};eligibility?:{education_level?:string[];tags?:string[]};links?:{apply_url?:string|null;info_url?:string|null};provenance?:{source_url?:string;last_verified?:string}};
+      let payload:{results?:OpenRecord[]};try{payload=JSON.parse(raw) as {results?:OpenRecord[]};}catch{return []}
+      const levelMap:Record<string,string>={"high-school-senior":"high school","high-school":"high school","undergraduate":"undergraduate","graduate":"graduate","doctoral":"graduate","trade":"trade school"};
+      return (payload.results??[]).flatMap((item):ParsedScholarship[]=>{
+        const notes=item.deadline?.notes??"";if(item.status!=="active"||/applications? (?:are|is) (?:now )?closed|closed for/i.test(notes))return [];
+        const target=item.links?.apply_url||item.links?.info_url||item.provenance?.source_url;if(!item.name||!target)return [];
+        const min=item.award?.amount_min,max=item.award?.amount_max,currency=item.award?.currency??"USD";const money=new Intl.NumberFormat("en-US",{style:"currency",currency,maximumFractionDigits:0});
+        const amount=min&&max&&min!==max?`${money.format(min)}–${money.format(max)}`:max?money.format(max):min?money.format(min):null;
+        return [{title:item.name,sponsor:item.sponsor??null,amountText:amount,deadlineText:item.deadline?.date??(item.deadline?.type==="rolling"?"rolling":"varies"),originalUrl:target,sourceUrl:item.provenance?.source_url??sourceUrl,academicLevels:[...new Set((item.eligibility?.education_level??[]).map(x=>levelMap[x]??x))],categoryTags:item.eligibility?.tags??[]}];
+      });
+    },
+  },
   uncf: uncfAdapter,
   tmcf: providerProgram(
     "tmcf",

@@ -36,6 +36,24 @@ join public.external_sources source on source.id=observation.source_id
 where observation.scholarship_id=scholarship.id
   and source.permission_status in ('written_permission','public_domain','open_license','official_provider');
 
+-- General search engines remain useful discovery links, but their compiled catalogs are not
+-- republished or counted unless a separate primary/provider source verifies the same record.
+update public.external_scholarships scholarship
+set verification_status='needs_verification', verified_at=null
+where exists (
+  select 1 from public.source_observations observation
+  join public.external_sources source on source.id=observation.source_id
+  where observation.scholarship_id=scholarship.id
+    and source.key in ('fastweb','scholarships_com','bigfuture','scholarships360','bold','going_merry','niche','unigo','petersons','sallie_mae','careeronestop','chegg','appily','scholarshipowl','scholarship_america')
+)
+and not exists (
+  select 1 from public.source_observations observation
+  join public.external_sources source on source.id=observation.source_id
+  where observation.scholarship_id=scholarship.id
+    and source.key not in ('fastweb','scholarships_com','bigfuture','scholarships360','bold','going_merry','niche','unigo','petersons','sallie_mae','careeronestop','chegg','appily','scholarshipowl','scholarship_america')
+    and source.permission_status in ('written_permission','public_domain','open_license','official_provider')
+);
+
 create index if not exists scholarship_verified_deadline_idx
 on public.external_scholarships(verification_status,deadline,archived_at)
 where published_at is not null;

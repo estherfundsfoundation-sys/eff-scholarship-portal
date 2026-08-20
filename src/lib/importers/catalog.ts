@@ -1,5 +1,6 @@
-export type ResourceSource={key:string;name:string;url:string;tags:string[];levels:string[]};
+export type ResourceSource={key:string;name:string;url:string;tags:string[];levels:string[];permissionStatus?:"discovery_only"|"official_provider"|"open_license";permissionNotes?:string};
 export const RESOURCE_SOURCES:ResourceSource[]=[
+{key:"open_scholarships",name:"Open Scholarships by Grudged LLC",url:"https://scholarships.grudged.io/scholarships.json",tags:["open-data"],levels:["high school","undergraduate","graduate"],permissionStatus:"open_license",permissionNotes:"CC BY 4.0 data; attribution required: Open Scholarships by Grudged LLC — https://github.com/Grudged/open-scholarships."},
 {key:"fastweb",name:"Fastweb Scholarship Search",url:"https://www.fastweb.com/",tags:["general-search"],levels:["high school","undergraduate","graduate"]},
 {key:"scholarships_com",name:"Scholarships.com",url:"https://www.scholarships.com/",tags:["general-search"],levels:["high school","undergraduate","graduate"]},
 {key:"bigfuture",name:"College Board BigFuture Scholarship Search",url:"https://bigfuture.collegeboard.org/scholarship-search",tags:["general-search"],levels:["high school","undergraduate"]},

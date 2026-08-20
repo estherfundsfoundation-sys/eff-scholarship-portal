@@ -1,11 +1,20 @@
 import { describe, expect, it } from "vitest";
 import {
+  adapterFor,
   jlvAdapter,
   scholarshipCollectiveAdapter,
   uncfAdapter,
 } from "./adapters";
 
 describe("trusted source adapters", () => {
+  it("imports active CC BY records and excludes explicitly closed opportunities", () => {
+    const rows=adapterFor("open_scholarships").parse(JSON.stringify({results:[
+      {name:"Open Future Award",sponsor:"Example Foundation",status:"active",award:{amount_max:2500,currency:"USD"},deadline:{type:"annual",date:"2026-12-01"},eligibility:{education_level:["high-school-senior"],tags:["first-gen"]},links:{info_url:"https://provider.test/open"},provenance:{source_url:"https://provider.test/open"}},
+      {name:"Closed Award",status:"active",deadline:{type:"annual",date:null,notes:"Applications are now closed"},links:{info_url:"https://provider.test/closed"}}
+    ]}),"https://scholarships.grudged.io/scholarships.json");
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({title:"Open Future Award",amountText:"$2,500",deadlineText:"2026-12-01",academicLevels:["high school"]});
+  });
   it("extracts current Scholarship Collective titles, links, levels, and due dates", () => {
     const rows = scholarshipCollectiveAdapter.parse(
       `
