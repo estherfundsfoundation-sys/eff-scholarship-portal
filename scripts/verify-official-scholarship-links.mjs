@@ -1,0 +1,7 @@
+import{readFile}from"node:fs/promises";import{resolve}from"node:path";
+const file=resolve(process.cwd(),"supabase/migrations/20260819230000_official_university_scholarships.sql");
+const sql=await readFile(file,"utf8");const payload=sql.match(/jsonb_to_recordset\(\$eff\$(\[[^]*?\])\$eff\$/)?.[1];if(!payload)throw new Error("Migration payload is missing");
+const urls=[...new Set(JSON.parse(payload).map(row=>row.canonical_url))];const failures=[];let cursor=0,checked=0;
+async function verify(url){for(let attempt=1;attempt<=3;attempt++){try{const response=await fetch(url,{method:"HEAD",redirect:"follow",headers:{"User-Agent":"EstherFundsFoundation-LinkVerifier/1.0 (+https://portal.estherfundsfoundation.org/scholarships)"}});if(response.ok)return;if(![429,500,502,503,504].includes(response.status)){failures.push({url,status:response.status});return;}}catch(error){if(attempt===3){failures.push({url,error:error instanceof Error?error.message:"request failed"});return;}}await new Promise(resolve=>setTimeout(resolve,500*attempt));}}
+async function worker(){while(cursor<urls.length){const index=cursor++;await verify(urls[index]);checked++;if(checked%250===0)console.log(`${checked}/${urls.length}`);}}
+await Promise.all(Array.from({length:8},worker));console.log(JSON.stringify({checked,passed:checked-failures.length,failed:failures.length,failures:failures.slice(0,25)}));if(failures.length)process.exitCode=1;
