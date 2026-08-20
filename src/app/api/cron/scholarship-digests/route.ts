@@ -10,7 +10,7 @@ export async function GET(request:NextRequest){
  const db=createAdminClient(),cutoff=new Date(Date.now()-6.5*86400000).toISOString(),today=new Date().toISOString().slice(0,10);
  const[{data:matchProfiles,error:profileError},{data:scholarships,error:scholarshipError},{data:resources,error:resourceError}]=await Promise.all([
   db.from("student_match_profiles").select("*").eq("weekly_matches",true).or(`last_digest_queued_at.is.null,last_digest_queued_at.lt.${cutoff}`).order("last_digest_queued_at",{ascending:true,nullsFirst:true}).limit(50),
-  db.from("external_scholarships").select("id,slug,title,sponsor,summary,amount_text,amount_numeric,deadline_kind,deadline,eligibility").eq("verification_status","verified_current").not("published_at","is",null).is("archived_at",null).or(`deadline.gte.${today},deadline.is.null`).limit(3000),
+  db.from("external_scholarships").select("id,slug,title,sponsor,summary,amount_text,amount_numeric,deadline_kind,deadline,eligibility").eq("verification_status","verified_current").not("published_at","is",null).is("archived_at",null).or(`deadline.gte.${today},deadline.is.null`).limit(5000),
   db.from("student_resource_sources").select("id,title,category,official_url,source_type,state_code").is("archived_at",null).in("availability_status",["verified_open","seasonal"]).limit(500)
  ]);
  if(profileError||scholarshipError||resourceError)return NextResponse.json({error:"Digest data unavailable"},{status:500});
