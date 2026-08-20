@@ -18,6 +18,28 @@ create table if not exists public.student_match_profiles (
   updated_at timestamptz not null default now()
 );
 
+alter table public.external_scholarships
+  add column if not exists verification_status text not null default 'needs_verification'
+    check (verification_status in ('needs_verification','verified_current','needs_recheck','source_closed')),
+  add column if not exists verified_at timestamptz,
+  add column if not exists last_checked_at timestamptz,
+  add column if not exists institution_unitid integer references public.college_directory(unitid) on delete set null,
+  add column if not exists source_license text;
+
+update public.external_scholarships scholarship
+set verification_status='verified_current',
+    verified_at=coalesce(scholarship.verified_at,observation.last_seen_at),
+    last_checked_at=coalesce(scholarship.last_checked_at,observation.last_seen_at),
+    source_license=source.permission_status
+from public.source_observations observation
+join public.external_sources source on source.id=observation.source_id
+where observation.scholarship_id=scholarship.id
+  and source.permission_status in ('written_permission','public_domain','open_license','official_provider');
+
+create index if not exists scholarship_verified_deadline_idx
+on public.external_scholarships(verification_status,deadline,archived_at)
+where published_at is not null;
+
 create table if not exists public.student_resource_sources (
   id uuid primary key default gen_random_uuid(),
   source_type text not null check (source_type in ('institution','local','state','national','international')),

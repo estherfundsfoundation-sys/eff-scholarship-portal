@@ -6,7 +6,7 @@ type Params={q?:string;level?:string;deadline?:string;sort?:string;page?:string}
 const PAGE_SIZE=24;
 export default async function Scholarships({searchParams}:{searchParams:Promise<Params>}){
   const params=await searchParams;const page=Math.max(1,Number.parseInt(params.page??"1",10)||1);const db=await createClient();
-  let query=db.from("external_scholarships").select("id,slug,title,sponsor,amount_text,amount_numeric,deadline_kind,deadline,original_url,eligibility",{count:"exact"}).not("published_at","is",null).is("archived_at",null);
+  let query=db.from("external_scholarships").select("id,slug,title,sponsor,amount_text,amount_numeric,deadline_kind,deadline,original_url,eligibility",{count:"exact"}).eq("verification_status","verified_current").not("published_at","is",null).is("archived_at",null);
   if(params.q)query=query.textSearch("title",params.q,{type:"websearch",config:"english"});
   if(params.deadline==="rolling")query=query.eq("deadline_kind","rolling");else query=query.or(`deadline.gte.${new Date().toISOString().slice(0,10)},deadline.is.null`);
   if(params.level&&params.level!=="all")query=query.contains("eligibility",{academic_levels:[params.level]});

@@ -89,6 +89,16 @@ export async function verifyLiveScholarshipLinks() {
     if (archiveError) throw archiveError;
   }
 
+  const checkedAt = new Date().toISOString();
+  const healthyIds = results.filter((item) => item.reachable).map((item) => item.id);
+  if (healthyIds.length) {
+    const { error: checkedError } = await db
+      .from("external_scholarships")
+      .update({ last_checked_at: checkedAt, verification_status: "verified_current" })
+      .in("id", healthyIds);
+    if (checkedError) throw checkedError;
+  }
+
   return {
     checked: results.length,
     reachable: results.filter((item) => item.reachable).length,
