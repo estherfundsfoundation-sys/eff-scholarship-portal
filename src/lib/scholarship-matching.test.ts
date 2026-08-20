@@ -1,0 +1,7 @@
+import{describe,expect,it,vi}from"vitest";import{rankScholarships,scoreScholarship}from"./scholarship-matching";
+const base={id:"1",slug:"hbcu-stem",title:"HBCU STEM",deadline_kind:"date",deadline:"2027-01-01",eligibility:{academic_levels:["undergraduate"],majors:["computer science","engineering"],states:["ga"]}};
+describe("explainable scholarship matching",()=>{
+ it("ranks matching student criteria above conflicting criteria",()=>{vi.setSystemTime(new Date("2026-08-19"));const good=scoreScholarship({academic_level:"undergraduate",fields_of_study:["Computer Science"],state_code:"GA"},base);const poor=scoreScholarship({academic_level:"graduate",fields_of_study:["History"],state_code:"NY"},base);expect(good.score).toBeGreaterThan(poor.score);expect(good.reasons.length).toBeGreaterThanOrEqual(2);expect(poor.cautions.length).toBeGreaterThanOrEqual(2);vi.useRealTimers();});
+ it("does not claim eligibility when provider data is incomplete",()=>{const result=scoreScholarship({}, {...base,eligibility:{}});expect(result.confidence).toBe("broad");expect(result.cautions.join(" ")).toMatch(/incomplete/i);});
+ it("returns a stable limited ordering",()=>{const results=rankScholarships({academic_level:"undergraduate"},[base,{...base,id:"2",slug:"graduate",eligibility:{academic_levels:["graduate"]}}],1);expect(results).toHaveLength(1);expect(results[0].scholarship.slug).toBe("hbcu-stem");});
+});
