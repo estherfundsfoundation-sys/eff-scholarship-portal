@@ -1,0 +1,9 @@
+const BLOCKED=/password|passcode|otp|verification|security code|captcha|signature|social security|ssn|credit card|card number|cvv|routing|bank account/i;
+const MAP=[
+  {key:"firstName",match:/first|given/i},{key:"lastName",match:/last|family|surname/i},{key:"email",match:/e-?mail/i},
+  {key:"phone",match:/phone|mobile|telephone/i},{key:"dateOfBirth",match:/birth|dob/i},{key:"highSchool",match:/high school|secondary school/i},
+  {key:"graduationYear",match:/graduation year|graduate year/i},{key:"gpa",match:/\bgpa\b|grade point/i},{key:"intendedMajor",match:/intended major|academic interest|program of study/i}
+];
+function description(el){const labels=el.labels?[...el.labels].map(x=>x.innerText).join(" "):"";return [labels,el.name,el.id,el.placeholder,el.getAttribute("aria-label"),el.autocomplete].filter(Boolean).join(" ");}
+function fill(profile){let count=0;for(const el of document.querySelectorAll("input:not([type=hidden]):not([type=submit]):not([type=button]),textarea,select")){const text=description(el);if(BLOCKED.test(text)||el.disabled||el.readOnly||el.value)continue;const rule=MAP.find(item=>item.match.test(text));const value=rule&&profile[rule.key];if(!value)continue;if(el.tagName==="SELECT"){const option=[...el.options].find(o=>o.value.toLowerCase()===String(value).toLowerCase()||o.text.toLowerCase()===String(value).toLowerCase());if(!option)continue;el.value=option.value;}else el.value=value;el.dispatchEvent(new Event("input",{bubbles:true}));el.dispatchEvent(new Event("change",{bubbles:true}));el.style.outline="3px solid #b799e3";el.dataset.effApplyAgent="review";count++;}return count;}
+chrome.runtime.onMessage.addListener((message,_sender,reply)=>{if(message.type==="EFF_ROUTE_STATUS")reply({secure:location.protocol==="https:",title:document.title});if(message.type==="EFF_PREVIEW_FILL")reply({count:location.protocol==="https:"?fill(message.profile):0});});

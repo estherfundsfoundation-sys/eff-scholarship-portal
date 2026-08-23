@@ -1,0 +1,7 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><link rel="stylesheet" href="popup.css"><title>EFF Apply Agent</title></head><body>
+<header><strong>EFF Apply Agent</strong><small>Every Future Fulfilled.</small></header>
+<main><p id="route">Checking this application page…</p><div id="notice"></div>
+<button id="fill">Preview safe autofill</button><button id="save" class="secondary">Update my local profile</button>
+<p class="fine">The agent never clicks Submit, enters passwords, verification codes, CAPTCHA responses, signatures, or payment information.</p></main>
+<dialog id="profile"><form method="dialog"><h2>Local application profile</h2><label>First name<input name="firstName" autocomplete="given-name"></label><label>Last name<input name="lastName" autocomplete="family-name"></label><label>Email<input name="email" type="email" autocomplete="email"></label><label>Phone<input name="phone" autocomplete="tel"></label><label>Date of birth<input name="dateOfBirth" type="date"></label><label>High school<input name="highSchool"></label><label>Graduation year<input name="graduationYear"></label><label>GPA<input name="gpa"></label><label>Intended major<input name="intendedMajor"></label><menu><button value="cancel" class="secondary">Cancel</button><button id="store" value="default">Save locally</button></menu></form></dialog>
+<script src="popup.js"></script></body></html>

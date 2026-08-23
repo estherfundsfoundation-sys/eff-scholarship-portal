@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run --dir src",
     "test:applyall": "vitest run src/lib/applyall",
+    "test:apply-agent": "node extension/eff-apply-agent/test.mjs",
     "test:e2e": "playwright test",
     "audit:links": "node scripts/audit-portal-links.mjs"
   },
