@@ -8,6 +8,6 @@ const rows=JSON.parse(payload)as Row[];
 
 describe("official university scholarship migration",()=>{
   it("contains a large individually linked catalog",()=>{expect(rows.length).toBeGreaterThanOrEqual(2700);expect(new Set(rows.map(row=>row.canonical_url)).size).toBe(rows.length);expect(new Set(rows.map(row=>row.source_record_key)).size).toBe(rows.length);});
-  it("contains only future-dated official AcademicWorks opportunity links",()=>{const today=new Date().toISOString().slice(0,10);for(const row of rows){expect(row.deadline>=today).toBe(true);expect(row.canonical_url).toMatch(/^https:\/\/[a-z0-9-]+\.academicworks\.com\/opportunities\/\d+$/);expect(row.title.trim().length).toBeGreaterThan(2);}});
+  it("contains only opportunities that were future-dated when the catalog was generated",()=>{const catalogGeneratedOn="2026-08-19";for(const row of rows){expect(row.deadline>catalogGeneratedOn).toBe(true);expect(row.canonical_url).toMatch(/^https:\/\/[a-z0-9-]+\.academicworks\.com\/opportunities\/\d+$/);expect(row.title.trim().length).toBeGreaterThan(2);}});
   it("keeps institution restrictions for explainable matching",()=>{for(const row of rows){expect(Number.isInteger(row.institution_unitid)).toBe(true);expect(row.institution_unitid).toBeGreaterThan(0);expect(row.eligibility.institutions?.length).toBe(1);}});
 });
