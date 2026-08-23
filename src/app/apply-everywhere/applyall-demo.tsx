@@ -25,7 +25,7 @@ export default function ApplyAllDemo(){
   const ready=missing.length===0&&allActions;
   const next=(target:Step)=>{setStep(target);window.scrollTo({top:0,behavior:"smooth"});};
 
-  return <main className="applyall">
+  return <div className="applyall">
     <section className="applyall-top"><div className="shell">
       <div className="applyall-brand"><span><Sparkles/> {APPLYALL_BRAND.publicName}</span><strong>{APPLYALL_BRAND.slogan}</strong></div>
       <div className="applyall-progress" aria-label="Application progress">{steps.map((item,index)=><div key={item} className={steps.indexOf(step)>=index?"active":""}><span>{steps.indexOf(step)>index?<Check/>:index+1}</span><small>{labels[item]}</small></div>)}</div>
@@ -76,7 +76,7 @@ export default function ApplyAllDemo(){
       <div className="applyall-next"><GraduationCap/><div><span>{APPLYALL_BRAND.nextMoves}</span><h2>Your journey continues.</h2><ol><li>Begin FAFSA readiness</li><li>Review scholarship matches</li><li>Track admissions portals</li></ol></div></div>
       <button className="button outline" onClick={()=>{setStep("WELCOME");setSelected([]);setAnswers({});setActions({fee:false,verify:false});setAuthorized(false)}}>Restart demonstration</button>
     </Workspace>}
-  </main>;
+  </div>;
 }
 
 function Workspace({title,intro,children}:{title:string;intro:string;children:React.ReactNode}){return <section className="applyall-workspace"><div className="shell"><span className="applyall-kicker">EFF ApplyAll demonstration</span><h1>{title}</h1><p className="applyall-lead">{intro}</p>{children}</div></section>}
