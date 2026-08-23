@@ -23,6 +23,10 @@
                   {
                       "path":  "/api/cron/tech-desk",
                       "schedule":  "11 * * * *"
+                  },
+                  {
+                      "path":  "/api/cron/student-support",
+                      "schedule":  "37 12 * * *"
                   }
               ]
 }
