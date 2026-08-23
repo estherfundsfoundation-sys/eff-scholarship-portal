@@ -8,11 +8,11 @@
 - Deterministic domain engine for preflight, tasks, snapshot hashes, authorization invalidation, and idempotent mock receipts.
 - Application-driver contract and approved-origin guard.
 - Supabase foundation migration with separate ApplyAll data, RLS, route governance, feature flags, snapshots, batches, and receipts.
+- Student account handoff, separate ApplyAll profile activation, protected dashboard, and database-backed saved-school selections.
 - Unit and Playwright demonstration tests.
 
 ## Not yet implemented
 
-- Production account onboarding and database-backed autosave.
 - Background browser worker and persistent queue.
 - Staff Application Atlas UI, parent UI, navigator UI, file storage/scanning, route-change monitor, production observability, and real university routes.
 - Any live build or live submission. All live flags are disabled.

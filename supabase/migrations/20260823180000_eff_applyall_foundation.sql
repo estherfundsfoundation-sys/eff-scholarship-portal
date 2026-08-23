@@ -118,6 +118,15 @@ select id,'ipeds.'||unitid::text,'unmapped','UNMAPPED',false,false,false,
 from public.applyall_institutions where is_demonstration=false
 on conflict(route_key,version) do nothing;
 
+alter table public.applyall_regions enable row level security;
+alter table public.applyall_states enable row level security;
+alter table public.applyall_region_states enable row level security;
+alter table public.applyall_institutions enable row level security;
+alter table public.applyall_route_versions enable row level security;
+alter table public.applyall_canonical_concepts enable row level security;
+alter table public.applyall_route_events enable row level security;
+alter table public.applyall_audit_logs enable row level security;
+alter table public.applyall_feature_flags enable row level security;
 alter table public.applyall_profiles enable row level security;
 alter table public.applyall_passport_answers enable row level security;
 alter table public.applyall_school_selections enable row level security;
@@ -129,6 +138,10 @@ alter table public.applyall_batch_items enable row level security;
 alter table public.applyall_receipts enable row level security;
 alter table public.applyall_supporter_permissions enable row level security;
 
+create policy "public reads applyall regions" on public.applyall_regions for select using (true);
+create policy "public reads applyall states" on public.applyall_states for select using (true);
+create policy "public reads applyall region states" on public.applyall_region_states for select using (true);
+create policy "public reads active applyall institutions" on public.applyall_institutions for select using (active=true);
 create policy "students own applyall profile" on public.applyall_profiles for all using (user_id=auth.uid()) with check (user_id=auth.uid());
 create policy "students own passport answers" on public.applyall_passport_answers for all using (exists(select 1 from public.applyall_profiles p where p.id=profile_id and p.user_id=auth.uid())) with check (exists(select 1 from public.applyall_profiles p where p.id=profile_id and p.user_id=auth.uid()));
 create policy "students own school selections" on public.applyall_school_selections for all using (exists(select 1 from public.applyall_profiles p where p.id=profile_id and p.user_id=auth.uid())) with check (exists(select 1 from public.applyall_profiles p where p.id=profile_id and p.user_id=auth.uid()));
