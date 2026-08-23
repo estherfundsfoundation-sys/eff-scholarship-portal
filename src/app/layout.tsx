@@ -30,6 +30,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
             <nav className="nav-links" aria-label="Primary">
               <Link href="/resources">Get Help</Link>
               <Link href="/scholarships">Find Scholarships</Link>
+              <Link href="/apply-everywhere">Apply Everywhere</Link>
               <Link href="/programs">Apply</Link>
               <Link href="/academy">Learn</Link>
               <Link className="button" href="/dashboard">My Portal</Link>
@@ -54,6 +55,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
                 <Link href="/tech-desk">EFF Tech Desk</Link><br/>
                 <Link href="/programs">EFF programs</Link><br/>
                 <Link href="/scholarships">Scholarship directory</Link><br/>
+                <Link href="/apply-everywhere">EFF Apply Everywhere</Link><br/>
                 <Link href="/partners">College Continuity Partners</Link><br/>
                 <Link href="/academy">Leadership Training Academy</Link><br/>
                 <Link href="/dashboard">Applicant portal</Link><br/>

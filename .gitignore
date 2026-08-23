@@ -6,6 +6,8 @@ coverage
 *.log
 *.tsbuildinfo
 .vercel
+test-results/
+playwright-report/
 work/
 supabase/.temp/
 
