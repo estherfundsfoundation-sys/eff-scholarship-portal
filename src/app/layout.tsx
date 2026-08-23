@@ -28,13 +28,11 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
               <span className="brand-copy"><strong>Esther Funds Foundation</strong><small>Portal</small></span>
             </Link>
             <nav className="nav-links" aria-label="Primary">
-              <Link href="/help-desk">National Student Help Desk</Link>
-              <Link href="/tech-desk">EFF Tech Desk</Link>
-              <Link href="/programs">EFF Programs</Link>
-              <Link href="/scholarships">Scholarship Directory</Link>
-              <Link href="/partners">Partner Schools</Link>
-              <Link href="/academy">Leadership Academy</Link>
-              <Link className="button" href="/dashboard">Scholarship Applications</Link>
+              <Link href="/resources">Get Help</Link>
+              <Link href="/scholarships">Find Scholarships</Link>
+              <Link href="/programs">Apply</Link>
+              <Link href="/academy">Learn</Link>
+              <Link className="button" href="/dashboard">My Portal</Link>
             </nav>
           </div>
         </header>
