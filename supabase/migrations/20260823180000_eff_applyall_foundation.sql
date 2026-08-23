@@ -13,7 +13,7 @@ create table public.applyall_regions (id uuid primary key default gen_random_uui
 create table public.applyall_states (code text primary key check (length(code)=2), name text not null unique);
 create table public.applyall_region_states (region_id uuid references public.applyall_regions(id) on delete cascade, state_code text references public.applyall_states(code), primary key(region_id,state_code));
 create table public.applyall_institutions (
-  id uuid primary key default gen_random_uuid(), name text not null, state_code text not null references public.applyall_states(code), city text,
+  id uuid primary key default gen_random_uuid(), unitid bigint unique, name text not null, state_code text not null references public.applyall_states(code), city text,
   institution_type text not null, public_private text, level text, hbcu boolean not null default false, online_available boolean not null default false,
   website text, admissions_website text, application_url text, application_platform text, source_url text, source_verified_at timestamptz,
   is_demonstration boolean not null default false, active boolean not null default true, created_at timestamptz not null default now()
@@ -98,6 +98,25 @@ insert into public.applyall_feature_flags(key,enabled) values
 insert into public.applyall_states(code,name) values ('AL','Alabama'),('AR','Arkansas'),('FL','Florida'),('GA','Georgia'),('KY','Kentucky'),('LA','Louisiana'),('MS','Mississippi'),('NC','North Carolina'),('OK','Oklahoma'),('SC','South Carolina'),('TN','Tennessee'),('TX','Texas'),('VA','Virginia'),('WV','West Virginia');
 with region as (insert into public.applyall_regions(name) values ('Southern Launch') returning id)
 insert into public.applyall_region_states(region_id,state_code) select region.id,state.code from region cross join public.applyall_states state;
+
+-- Reuse the portal's sourced NCES/IPEDS directory. Presence means discoverable,
+-- not automation-ready. Every real route begins UNMAPPED with execution disabled.
+insert into public.applyall_institutions(unitid,name,state_code,city,institution_type,public_private,level,hbcu,website,admissions_website,application_url,source_url,source_verified_at,is_demonstration,active)
+select unitid,name,state,city,
+  case when level_code=1 then 'FOUR_YEAR' when level_code=2 then 'TWO_YEAR' else 'OTHER' end,
+  case when control_code=1 then 'PUBLIC' when control_code=2 then 'PRIVATE_NONPROFIT' when control_code=3 then 'PRIVATE_FOR_PROFIT' else 'UNKNOWN' end,
+  case when level_code=1 then 'FOUR_YEAR' when level_code=2 then 'TWO_YEAR' else 'OTHER' end,
+  hbcu,website,admissions_url,application_url,source_url,reviewed_at,false,active
+from public.college_directory
+where active=true and state in ('AL','AR','FL','GA','KY','LA','MS','NC','OK','SC','TN','TX','VA','WV')
+on conflict(unitid) do update set name=excluded.name,city=excluded.city,website=excluded.website,admissions_website=excluded.admissions_website,application_url=excluded.application_url,source_url=excluded.source_url,source_verified_at=excluded.source_verified_at,active=excluded.active;
+
+insert into public.applyall_route_versions(institution_id,route_key,version,lifecycle,allow_inspection,allow_build,allow_submit,manifest,semantic_fingerprint,last_verified_at)
+select id,'ipeds.'||unitid::text,'unmapped','UNMAPPED',false,false,false,
+  jsonb_build_object('application_url',application_url,'source_status','IPEDS-listed; route analysis required'),
+  md5(coalesce(application_url,'')||':'||coalesce(source_verified_at::text,'')),source_verified_at
+from public.applyall_institutions where is_demonstration=false
+on conflict(route_key,version) do nothing;
 
 alter table public.applyall_profiles enable row level security;
 alter table public.applyall_passport_answers enable row level security;

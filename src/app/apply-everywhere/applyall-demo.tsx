@@ -1,6 +1,7 @@
 "use client";
 
 import {useMemo,useState} from "react";
+import Link from "next/link";
 import {ArrowRight,Check,ChevronRight,FileCheck2,GraduationCap,LockKeyhole,MapPinned,ShieldCheck,Sparkles} from "lucide-react";
 import {APPLYALL_BRAND} from "@/lib/applyall/config";
 import {MOCK_INSTITUTIONS} from "@/lib/applyall/mock-routes";
@@ -35,6 +36,7 @@ export default function ApplyAllDemo(){
       <span className="applyall-kicker">One student-owned education journey</span><h1>Tell your story once.<br/><em>Go anywhere.</em></h1>
       <p>Build your Future Passport, prepare applications for supported colleges, complete only the actions that require you, and review everything before submission.</p>
       <button className="button" onClick={()=>next("SCHOOLS")}>Start my demonstration <ArrowRight/></button>
+      <Link className="button outline" href="/apply-everywhere/schools">Explore Southern colleges</Link>
       <p className="applyall-fine">EFF never invents answers, bypasses security, or submits to a school you did not select.</p>
     </div><div className="applyall-promise"><div><MapPinned/><strong>Select your schools</strong><span>Compare supported routes honestly.</span></div><div><FileCheck2/><strong>Answer once</strong><span>Repeated questions become one interview.</span></div><div><LockKeyhole/><strong>You stay in control</strong><span>Review and authorize the exact batch.</span></div></div></div></section>}
 
