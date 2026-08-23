@@ -17,7 +17,7 @@ export async function middleware(request: NextRequest) {
   }
 
   const scholarshipProtected = pathname !== "/admin/sign-in" && [
-    "/dashboard", "/profile", "/applications", "/portal-checkup", "/admin", "/partners/dashboard",
+    "/dashboard", "/profile", "/applications", "/portal-checkup", "/admin", "/partners/dashboard", "/apply-everywhere/dashboard",
     "/partners/onboarding", "/careers/dashboard", "/careers/profile",
     "/careers/applications", "/careers/apply", "/careers/board-onboarding",
     "/careers/board-invite",

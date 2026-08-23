@@ -1,0 +1,20 @@
+import type {MockInstitution, RouteQuestion} from "./types";
+
+const shared: RouteQuestion[] = [
+  {id:"legal-first",canonicalKey:"identity.legal_name.first",label:"Legal first name",help:"Use the name on your government-issued identification.",kind:"text",required:true},
+  {id:"legal-last",canonicalKey:"identity.legal_name.last",label:"Legal last name",help:"Use the name on your government-issued identification.",kind:"text",required:true},
+  {id:"email",canonicalKey:"contact.email",label:"Email address",help:"Use an address you check regularly.",kind:"email",required:true},
+  {id:"dob",canonicalKey:"identity.date_of_birth",label:"Date of birth",help:"Universities use this to match application records.",kind:"date",required:true,sensitive:true},
+  {id:"grad-date",canonicalKey:"education_history.high_school.graduation_date",label:"High-school graduation date",help:"Enter your expected or completed graduation date.",kind:"date",required:true},
+  {id:"gpa",canonicalKey:"academic_performance.gpa.unweighted",label:"Unweighted GPA",help:"Enter the value exactly as reported by your school.",kind:"number",required:true},
+  {id:"major",canonicalKey:"education_goals.primary_major",label:"What do you plan to study?",help:"Choose your current first-choice academic field.",kind:"select",required:true,options:["Nursing","Public Health","Business","Computer Science","Education"]},
+  {id:"housing",canonicalKey:"financial_readiness.housing_needed",label:"Will you need campus housing?",help:"This helps identify enrollment tasks; it is not a housing application.",kind:"select",required:true,options:["Yes","No","Not sure"]},
+];
+
+export const MOCK_INSTITUTIONS: MockInstitution[] = [
+  {id:"suncoast-demo",name:"Suncoast State College — Demonstration",state:"FL",type:"Two-year public college",hbcu:false,readiness:"APPLYALL_READY",routeKey:"mock.suncoast",routeVersion:"1.0.0",fee:0,checkpoint:"NONE",questions:[...shared,{id:"residency-fl",canonicalKey:"schools.suncoast.residency",label:"Florida residency selection",help:"Choose the statement that matches this demonstration.",kind:"select",required:true,schoolSpecific:true,options:["Florida resident","Nonresident","Unsure"]},{id:"cert-a",canonicalKey:"schools.suncoast.attestation",label:"I certify this demonstration application is accurate.",help:"Only you may make this certification.",kind:"checkbox",required:true,schoolSpecific:true,sensitive:true}]},
+  {id:"peach-demo",name:"Peach State University — Demonstration",state:"GA",type:"Four-year public university",hbcu:false,readiness:"APPLYALL_READY",routeKey:"mock.peach",routeVersion:"1.0.0",fee:35,checkpoint:"FEE",questions:[...shared,{id:"alternate",canonicalKey:"schools.peach.alternate_major",label:"Select an alternate major",help:"This is used only by this demonstration university.",kind:"select",required:true,schoolSpecific:true,options:["Public Health","Business","Education","Undecided"]},{id:"short",canonicalKey:"schools.peach.short_answer",label:"How will you contribute to campus?",help:"Write in your own voice. Maximum 100 words.",kind:"textarea",required:true,schoolSpecific:true,wordLimit:100}]},
+  {id:"heartland-demo",name:"Heartland HBCU — Demonstration",state:"AL",type:"Four-year private HBCU",hbcu:true,readiness:"APPLYALL_READY",routeKey:"mock.heartland",routeVersion:"1.0.0",fee:0,checkpoint:"EMAIL_VERIFICATION",questions:[...shared,{id:"essay",canonicalKey:"schools.heartland.essay",label:"Describe how leadership and service shaped your goals.",help:"Write in your own words. EFF will never invent an essay for you.",kind:"textarea",required:true,schoolSpecific:true,wordLimit:300},{id:"attest-h",canonicalKey:"schools.heartland.attestation",label:"I reviewed and approve my demonstration application.",help:"Only you may approve this statement.",kind:"checkbox",required:true,schoolSpecific:true,sensitive:true}]},
+];
+
+export const UNIQUE_QUESTIONS = Array.from(new Map(MOCK_INSTITUTIONS.flatMap((school)=>school.questions).map((q)=>[q.canonicalKey,q])).values());

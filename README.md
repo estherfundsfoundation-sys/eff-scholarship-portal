@@ -2,6 +2,8 @@
 
 Production portal for EFF-administered scholarships and grants, secure legacy applicant claiming, staff review/award operations, and an automatically refreshed directory of independent scholarships.
 
+The repository also contains the isolated **EFF Apply Everywhere** foundation at `/apply-everywhere`. Its first milestone is an explicitly fictional three-university ApplyAll demonstration; real university build and submission are disabled by default. See [docs/build-status.md](docs/build-status.md), [docs/architecture.md](docs/architecture.md), and [docs/live-submission-readiness.md](docs/live-submission-readiness.md).
+
 - Production: [he-flame.vercel.app](https://he-flame.vercel.app)
 - Foundation: [estherfundsfoundation.org](https://www.estherfundsfoundation.org)
 Support: `nationals@estherfundsinc.org`
@@ -22,6 +24,8 @@ Support: `nationals@estherfundsinc.org`
 4. Open `http://localhost:3000`.
 
 Run `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build` before release.
+
+Run `pnpm test:applyall` for the ApplyAll domain suite and `pnpm test:e2e` for the desktop/mobile demonstration journey.
 
 ## Production architecture
 
