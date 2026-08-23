@@ -48,6 +48,7 @@ export default async function AccountHelp({
       <div className="shell">
         {query.existing==="1"&&<div className="notice"><strong>We found an existing Name Your Need Scholarship application connected to your email address.</strong><br/>Please claim your existing application instead of submitting a new one.</div>}
         {recovery&&<div className="notice" role="status"><strong>{recovery.title}</strong><br/>{recovery.body}</div>}
+        {user&&<div className="notice"><strong>Already signed in?</strong><br/>Run the My Portal Checkup to confirm your profile, applications, uploads, requests, and submission status before opening a ticket.<br/><Link className="button outline" href="/portal-checkup">Run My Portal Checkup</Link></div>}
         <div className="account-help-grid">
           <article className="card">
             <UserPlus/>
