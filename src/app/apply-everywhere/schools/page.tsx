@@ -2,7 +2,7 @@ import Link from "next/link";
 import {createClient} from "@/lib/supabase/server";
 import {saveSchool} from "../actions";
 
-type School={id:string;name:string;city:string|null;state_code:string;institution_type:string;public_private:string|null;hbcu:boolean;application_url:string|null};
+type School={id:string;name:string;city:string|null;state_code:string;institution_type:string;public_private:string|null;hbcu:boolean;application_url:string|null;eff_member_status:string;eff_receiver_enabled:boolean};
 const states=["AL","AR","FL","GA","KY","LA","MS","NC","OK","SC","TN","TX","VA","WV"];
 
 export default async function SouthernSchoolsPage({searchParams}:{searchParams:Promise<{state?:string;q?:string;error?:string}>}){
