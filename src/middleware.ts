@@ -7,6 +7,10 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const next = request.nextUrl.searchParams.get("next");
 
+  if (pathname.startsWith("/apply-everywhere")) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
   if (pathname === "/admin/student-help") {
     return NextResponse.redirect(new URL("/help-desk/admin", request.url));
   }
@@ -17,7 +21,7 @@ export async function middleware(request: NextRequest) {
   }
 
   const scholarshipProtected = pathname !== "/admin/sign-in" && [
-    "/dashboard", "/profile", "/applications", "/portal-checkup", "/admin", "/partners/dashboard", "/apply-everywhere/dashboard",
+    "/dashboard", "/profile", "/applications", "/portal-checkup", "/admin", "/partners/dashboard",
     "/partners/onboarding", "/careers/dashboard", "/careers/profile",
     "/careers/applications", "/careers/apply", "/careers/board-onboarding",
     "/careers/board-invite",
