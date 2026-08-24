@@ -6,6 +6,13 @@ export async function middleware(request: NextRequest) {
   let response = NextResponse.next({request});
   const pathname = request.nextUrl.pathname;
   const next = request.nextUrl.searchParams.get("next");
+  const hostname = request.headers.get("host")?.split(":")[0].toLowerCase();
+
+  if (hostname === "selah.estherfundsfoundation.org" && pathname === "/") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/resources/selah";
+    return NextResponse.rewrite(url);
+  }
 
   if (pathname.startsWith("/apply-everywhere")) {
     return NextResponse.redirect(new URL("/", request.url));
