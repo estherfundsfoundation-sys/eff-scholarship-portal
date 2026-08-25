@@ -3,6 +3,7 @@
 import {revalidatePath} from "next/cache";
 import {redirect} from "next/navigation";
 import {requireAdmin} from "@/lib/auth/staff";
+import {createAdminClient} from "@/lib/supabase/admin";
 
 const errorPath=(id:string,message:string)=>`/admin/applications/${encodeURIComponent(id)}?action_error=${encodeURIComponent(message)}`;
 const successPath=(id:string,action:string)=>`/admin/applications/${encodeURIComponent(id)}?action_done=${encodeURIComponent(action)}`;
@@ -66,6 +67,42 @@ export async function requestInformation(formData:FormData){
   if(error)redirect(errorPath(id,error.message));
   refresh(id);
   redirect(successPath(id,"correction"));
+}
+
+const quickMessages:Record<string,{subject:string;message:string}>={
+  received:{subject:"We received your EFF application",message:"We received your application successfully. It is safely in our system, and you can use your secure portal to review its current status."},
+  reviewing:{subject:"Your EFF application is still under review",message:"Your application remains under review. Our team is carefully reviewing submitted information, and no additional action is required from you right now unless we contact you through the portal."},
+  more_time:{subject:"An update about your EFF application review",message:"Your application is still in our review process. Due to application volume, the review is taking additional time. Submission does not guarantee funding or an award, and we will post the official decision in your secure portal when review is complete."},
+  portal:{subject:"Please check your secure EFF portal",message:"There is an update connected to your application. Please sign in to your secure Esther Funds Foundation Portal to review the application record and any available next steps."},
+};
+
+export async function sendApplicationEmail(formData:FormData){
+  const {user}=await requireAdmin();
+  const admin=createAdminClient();
+  const id=String(formData.get("application_id")??"");
+  const preset=String(formData.get("preset")??"");
+  const configured=quickMessages[preset];
+  const subject=(configured?.subject??String(formData.get("subject")??"")).trim();
+  const message=(configured?.message??String(formData.get("message")??"")).trim();
+  if(!id||!subject||!message)redirect(errorPath(id,"Enter both an email subject and message."));
+  if(subject.length>160||message.length>4000)redirect(errorPath(id,"Keep the subject under 160 characters and the message under 4,000 characters."));
+
+  const {data:application,error:applicationError}=await admin.from("applications").select("id,profiles!applications_applicant_id_fkey(legal_name,preferred_name,primary_email)").eq("id",id).single();
+  if(applicationError||!application)redirect(errorPath(id,"The application could not be found."));
+  const profile=application.profiles as unknown as {legal_name:string|null;preferred_name:string|null;primary_email:string|null};
+  const recipient=String(profile?.primary_email??"").trim().toLowerCase();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient)||/(no-?reply|example\.(com|org)|test@)/i.test(recipient))redirect(errorPath(id,"This applicant does not have a deliverable email address."));
+  const {data:suppression}=await admin.from("email_suppressions").select("email").eq("email",recipient).maybeSingle();
+  if(suppression)redirect(errorPath(id,"Email delivery is suppressed for this applicant. Review the Communications page before retrying."));
+
+  const tenMinuteWindow=Math.floor(Date.now()/600000);
+  const messageType=preset||"custom";
+  const idempotencyKey=`application-staff-message:${id}:${messageType}:${tenMinuteWindow}`;
+  const {data:queued,error}=await admin.from("messages").upsert({application_id:id,recipient,idempotency_key:idempotencyKey,status:"queued",payload_private:{name:profile.preferred_name||profile.legal_name||"Applicant",status:subject,message,application_path:`/applications/${id}`},template_key:"application_staff_message",next_attempt_at:new Date().toISOString()},{onConflict:"idempotency_key",ignoreDuplicates:true}).select("id").maybeSingle();
+  if(error)redirect(errorPath(id,"The email could not be added to the protected delivery queue."));
+  await admin.from("audit_events").insert({actor_id:user.id,action:queued?"application_email_queued":"application_email_duplicate_prevented",target_type:"application",target_id:id,metadata_safe:{message_type:messageType,subject}});
+  refresh(id);
+  redirect(successPath(id,queued?"email_queued":"email_already_queued"));
 }
 
 export async function recordAward(formData:FormData){
