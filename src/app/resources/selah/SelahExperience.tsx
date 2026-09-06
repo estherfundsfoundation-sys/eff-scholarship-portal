@@ -47,6 +47,7 @@ export default function SelahExperience() {
   const [secondsLeft, setSecondsLeft] = useState(10 * 60);
   const [timerRunning, setTimerRunning] = useState(false);
   const [showControls, setShowControls] = useState(false);
+  const [audioError, setAudioError] = useState("");
   const audioRef = useRef<{context: AudioContext; master: GainNode; nodes: AudioScheduledSourceNode[]} | null>(null);
   const settingsRef = useRef({mood, sound, volume});
 
@@ -60,19 +61,36 @@ export default function SelahExperience() {
     setPlaying(false);
   }, []);
 
-  const startAudio = useCallback(() => {
+  const startAudio = useCallback(async () => {
     stopAudio();
+    setAudioError("");
     const current = settingsRef.current;
-    const AudioContextClass = window.AudioContext || (window as typeof window & {webkitAudioContext: typeof AudioContext}).webkitAudioContext;
-    const context = new AudioContextClass();
-    const master = context.createGain();
-    master.gain.setValueAtTime(0.0001, context.currentTime);
-    master.gain.exponentialRampToValueAtTime(Math.max(current.volume * 0.24, 0.001), context.currentTime + 2.4);
-    master.connect(context.destination);
-    const nodes: AudioScheduledSourceNode[] = [];
+    const AudioContextClass = window.AudioContext || (window as typeof window & {webkitAudioContext?: typeof AudioContext}).webkitAudioContext;
+    if (!AudioContextClass) {
+      setAudioError("This browser does not support Selah audio. Try Safari or Chrome.");
+      return;
+    }
+    try {
+      // iOS Safari creates Web Audio in a suspended state. Resume it inside the
+      // actual tap handler before building the sound graph.
+      const context = new AudioContextClass();
+      if (context.state === "suspended") await context.resume();
+      const master = context.createGain();
+      const limiter = context.createDynamicsCompressor();
+      limiter.threshold.value = -18;
+      limiter.knee.value = 18;
+      limiter.ratio.value = 4;
+      limiter.attack.value = 0.02;
+      limiter.release.value = 0.35;
+      master.gain.setValueAtTime(0.0001, context.currentTime);
+      master.gain.exponentialRampToValueAtTime(Math.max(current.volume * 0.65, 0.001), context.currentTime + 1.25);
+      master.connect(limiter).connect(context.destination);
+      const nodes: AudioScheduledSourceNode[] = [];
 
-    const chord = current.mood === "study" ? [146.83, 220, 293.66] : current.mood === "pray" ? [130.81, 196, 261.63] : [110, 164.81, 220];
-    chord.forEach((frequency, index) => {
+      // Keep the tones above the bass-only range so they remain audible through
+      // small phone speakers while staying soft and non-startling.
+      const chord = current.mood === "study" ? [220, 329.63, 440] : current.mood === "pray" ? [196, 293.66, 392] : [174.61, 261.63, 349.23];
+      chord.forEach((frequency, index) => {
       const oscillator = context.createOscillator();
       const gain = context.createGain();
       const filter = context.createBiquadFilter();
@@ -80,43 +98,57 @@ export default function SelahExperience() {
       oscillator.frequency.value = frequency;
       oscillator.detune.value = index * 3 - 3;
       filter.type = "lowpass";
-      filter.frequency.value = 620 + index * 130;
-      gain.gain.value = 0.035 / (index + 1);
+        filter.frequency.value = 760 + index * 180;
+        gain.gain.value = 0.05 / (index + 1);
       oscillator.connect(filter).connect(gain).connect(master);
       oscillator.start();
       nodes.push(oscillator);
-    });
+      });
 
-    const shimmer = context.createOscillator();
-    const shimmerGain = context.createGain();
-    shimmer.type = "sine";
-    shimmer.frequency.value = current.mood === "study" ? 587.33 : 523.25;
-    shimmerGain.gain.value = 0.004;
-    shimmer.connect(shimmerGain).connect(master);
-    shimmer.start();
-    nodes.push(shimmer);
+      const shimmer = context.createOscillator();
+      const shimmerGain = context.createGain();
+      shimmer.type = "sine";
+      shimmer.frequency.value = current.mood === "study" ? 659.25 : 523.25;
+      shimmerGain.gain.value = 0.012;
+      shimmer.connect(shimmerGain).connect(master);
+      shimmer.start();
+      nodes.push(shimmer);
 
-    if (current.sound !== "still") {
+      if (current.sound !== "still") {
       const noise = context.createBufferSource();
       const noiseGain = context.createGain();
       const noiseFilter = context.createBiquadFilter();
       noise.buffer = makeNoiseBuffer(context);
       noise.loop = true;
       noiseFilter.type = current.sound === "rain" ? "highpass" : "lowpass";
-      noiseFilter.frequency.value = current.sound === "rain" ? 1050 : 260;
-      noiseGain.gain.value = current.sound === "rain" ? 0.18 : 0.1;
+        noiseFilter.frequency.value = current.sound === "rain" ? 1050 : 320;
+        noiseGain.gain.value = current.sound === "rain" ? 0.18 : 0.11;
       noise.connect(noiseFilter).connect(noiseGain).connect(master);
       noise.start();
       nodes.push(noise);
+      }
+      audioRef.current = {context, master, nodes};
+      setPlaying(true);
+    } catch {
+      setPlaying(false);
+      setAudioError("Your phone paused the sound. Make sure media volume is on, then tap play again.");
     }
-    audioRef.current = {context, master, nodes};
-    setPlaying(true);
   }, [stopAudio]);
 
   useEffect(() => () => stopAudio(), [stopAudio]);
   useEffect(() => {
-    if (audioRef.current) audioRef.current.master.gain.setTargetAtTime(Math.max(volume * 0.24, 0.0001), audioRef.current.context.currentTime, 0.35);
+    if (audioRef.current) audioRef.current.master.gain.setTargetAtTime(Math.max(volume * 0.65, 0.0001), audioRef.current.context.currentTime, 0.2);
   }, [volume]);
+  useEffect(() => {
+    const resumeOnReturn = () => {
+      const audio = audioRef.current;
+      if (document.visibilityState === "visible" && playing && audio?.context.state === "suspended") {
+        void audio.context.resume().catch(() => setAudioError("Tap play once more to resume the sound."));
+      }
+    };
+    document.addEventListener("visibilitychange", resumeOnReturn);
+    return () => document.removeEventListener("visibilitychange", resumeOnReturn);
+  }, [playing]);
   useEffect(() => {
     if (!timerRunning) return;
     const id = window.setInterval(() => setSecondsLeft((value) => {
@@ -134,13 +166,13 @@ export default function SelahExperience() {
     const wasPlaying = playing;
     settingsRef.current.sound = next;
     setSound(next);
-    if (wasPlaying) window.setTimeout(startAudio, 0);
+    if (wasPlaying) void startAudio();
   };
   const chooseMood = (next: Mood) => {
     const wasPlaying = playing;
     settingsRef.current.mood = next;
     setMood(next);
-    if (wasPlaying) window.setTimeout(startAudio, 0);
+    if (wasPlaying) void startAudio();
   };
   const chooseVolume = (next: number) => {
     settingsRef.current.volume = next;
@@ -179,10 +211,11 @@ export default function SelahExperience() {
       <blockquote key={scripture}><p>“{scriptures[scripture].text}”</p><cite>{scriptures[scripture].ref}</cite></blockquote>
       <div className="selah-breathe" aria-label="Breathing guide"><span>Breathe in</span></div>
       <div className="selah-player">
-        <button className="selah-play" onClick={playing ? stopAudio : startAudio} aria-label={playing ? "Pause instrumental ambience" : "Play instrumental ambience"}>{playing ? <Pause /> : <Play />}</button>
+        <button className="selah-play" onClick={playing ? stopAudio : () => { void startAudio(); }} aria-label={playing ? "Pause instrumental ambience" : "Play instrumental ambience"}>{playing ? <Pause /> : <Play />}</button>
         <div><strong>{playing ? "Gentle instrumental ambience" : "Press play when you are ready"}</strong><span>{sound === "rain" ? "Soft rain + warm keys" : sound === "night" ? "Night hush + warm keys" : "Warm keys + quiet air"}</span></div>
         <button className="selah-mute" onClick={() => chooseVolume(volume > 0 ? 0 : .38)} aria-label={volume > 0 ? "Mute" : "Unmute"}>{volume > 0 ? <Volume2 /> : <VolumeX />}</button>
       </div>
+      {audioError && <button className="selah-audio-error" onClick={() => { void startAudio(); }}>{audioError}</button>}
     </section>
 
     <aside className={`selah-controls ${showControls ? "open" : ""}`} aria-label="Selah controls">
