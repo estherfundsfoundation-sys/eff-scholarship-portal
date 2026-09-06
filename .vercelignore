@@ -3,6 +3,7 @@
 .git
 .next
 node_modules
+package-lock.json
 .pnpm-store
 artifacts
 output
