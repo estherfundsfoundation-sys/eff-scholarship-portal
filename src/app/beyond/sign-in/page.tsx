@@ -1,0 +1,6 @@
+import type {Metadata} from "next";
+import Link from "next/link";
+import {signIn} from "@/app/auth/actions";
+
+export const metadata:Metadata={title:{absolute:"Sign In | EFF Beyond"}};
+export default async function BeyondSignIn({searchParams}:{searchParams:Promise<{error?:string;message?:string;next?:string}>}){const p=await searchParams;return <main className="beyond-form-page"><section><p className="beyond-kicker">My Beyond</p><h1>Come back to your <em>community.</em></h1><p>Your people, Circles, resources, events, and next steps are waiting in one place.</p></section><form action={signIn} className="beyond-form"><input type="hidden" name="next" value={p.next??"/dashboard"}/><p className="beyond-kicker dark">Member sign in</p><h2>Welcome back.</h2>{p.error&&<p className="beyond-alert" role="alert">{p.error}</p>}{p.message&&<p className="beyond-alert success" role="status">{p.message}</p>}<label>Email address<input name="email" type="email" autoComplete="email" required/></label><label>Password<input name="password" type="password" autoComplete="current-password" required/></label><button className="beyond-button">Open My Beyond</button><p><Link href="/forgot-password">Forgot your password?</Link></p><p>New here? <Link href="/beyond/join">Join Beyond</Link>.</p></form></main>}

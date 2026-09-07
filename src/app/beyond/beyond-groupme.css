@@ -1,0 +1,51 @@
+.beyond-community-bar {
+  min-height: 52px;
+  background: var(--purple-deep);
+  color: #fff !important;
+  padding: 12px clamp(22px, 5vw, 82px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-decoration: none;
+  text-align: center;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+
+.beyond-community-bar strong {
+  color: var(--lavender);
+  font-size: 0.64rem;
+  letter-spacing: 0.18em;
+  margin-right: 10px;
+}
+
+.beyond-community-bar svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+.beyond-button-secondary {
+  background: transparent !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+}
+
+.beyond-groupme-button svg:first-child {
+  width: 19px;
+  height: 19px;
+}
+
+@media (max-width: 700px) {
+  .beyond-community-bar {
+    align-items: flex-start;
+    text-align: left;
+    font-size: 0.74rem;
+  }
+
+  .beyond-community-bar strong {
+    display: block;
+    margin: 0 0 3px;
+  }
+}

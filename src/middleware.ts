@@ -8,6 +8,7 @@ export async function middleware(request: NextRequest) {
   const next = request.nextUrl.searchParams.get("next");
   const hostname = request.headers.get("host")?.split(":")[0].toLowerCase();
   const futureLinkHost = hostname === "mentor.estherfundsfoundation.org" || hostname?.startsWith("eff-futurelink");
+  const beyondHost = hostname === "beyond.estherfundsfoundation.org" || hostname?.startsWith("eff-beyond");
 
   if (hostname === "selah.estherfundsfoundation.org" && pathname === "/") {
     const url = request.nextUrl.clone();
@@ -18,6 +19,28 @@ export async function middleware(request: NextRequest) {
   if (futureLinkHost && pathname.startsWith("/future-link")) {
     const url = request.nextUrl.clone();
     url.pathname = pathname.slice("/future-link".length) || "/";
+    return NextResponse.redirect(url);
+  }
+
+  if (beyondHost && pathname.startsWith("/beyond")) {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname.slice("/beyond".length) || "/";
+    return NextResponse.redirect(url);
+  }
+
+  const beyondStandalonePath = pathname === "/" || ["/join", "/sign-up", "/sign-in", "/forgot-password", "/reset-password", "/onboarding", "/dashboard", "/explore", "/people"].some((path) => pathname === path || pathname.startsWith(`${path}/`)) || pathname === "/admin" || (pathname.startsWith("/admin/") && pathname !== "/admin/sign-in");
+  if (beyondHost && beyondStandalonePath) {
+    const url = request.nextUrl.clone();
+    if (pathname === "/") url.pathname = "/beyond";
+    else if (pathname === "/join" || pathname === "/sign-up") url.pathname = "/beyond/join";
+    else url.pathname = `/beyond${pathname}`;
+    return NextResponse.rewrite(url);
+  }
+
+  if (pathname.startsWith("/beyond")) {
+    const cleanPath = pathname.slice("/beyond".length) || "/";
+    const url = new URL(cleanPath, "https://beyond.estherfundsfoundation.org");
+    url.search = request.nextUrl.search;
     return NextResponse.redirect(url);
   }
 
