@@ -7,6 +7,7 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const next = request.nextUrl.searchParams.get("next");
   const hostname = request.headers.get("host")?.split(":")[0].toLowerCase();
+  const futureLinkHost = hostname === "mentor.estherfundsfoundation.org" || hostname?.startsWith("eff-futurelink");
 
   if (hostname === "selah.estherfundsfoundation.org" && pathname === "/") {
     const url = request.nextUrl.clone();
@@ -14,13 +15,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.rewrite(url);
   }
 
-  if (hostname === "mentor.estherfundsfoundation.org" && pathname.startsWith("/future-link")) {
+  if (futureLinkHost && pathname.startsWith("/future-link")) {
     const url = request.nextUrl.clone();
     url.pathname = pathname.slice("/future-link".length) || "/";
     return NextResponse.redirect(url);
   }
 
-  if (hostname === "mentor.estherfundsfoundation.org") {
+  if (futureLinkHost) {
     const url = request.nextUrl.clone();
     url.pathname = pathname === "/" ? "/future-link" : `/future-link${pathname}`;
     return NextResponse.rewrite(url);
