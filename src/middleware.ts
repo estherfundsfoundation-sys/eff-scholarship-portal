@@ -14,6 +14,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.rewrite(url);
   }
 
+  if (hostname === "mentor.estherfundsfoundation.org" && !pathname.startsWith("/future-link")) {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname === "/" ? "/future-link" : `/future-link${pathname}`;
+    return NextResponse.rewrite(url);
+  }
+
   if (pathname.startsWith("/apply-everywhere")) {
     return NextResponse.redirect(new URL("/", request.url));
   }
@@ -31,7 +37,7 @@ export async function middleware(request: NextRequest) {
     "/dashboard", "/profile", "/applications", "/portal-checkup", "/admin", "/partners/dashboard",
     "/partners/onboarding", "/careers/dashboard", "/careers/profile",
     "/careers/applications", "/careers/apply", "/careers/board-onboarding",
-    "/careers/board-invite",
+    "/careers/board-invite", "/future-link/dashboard",
   ].some((path) => pathname.startsWith(path));
   const scholarshipStaffProtected = pathname.startsWith("/admin/") && pathname !== "/admin/sign-in";
   const helpDeskVolunteerProtected = [
