@@ -21,7 +21,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  const futureLinkStandalonePath = pathname === "/" || pathname === "/sign-up" || pathname === "/sign-in" || ["/apply", "/dashboard", "/service-verification"].some((path) => pathname === path || pathname.startsWith(`${path}/`)) || (pathname === "/admin" || (pathname.startsWith("/admin/") && !pathname.startsWith("/admin/sign-in")));
+  const futureLinkStandalonePath = pathname === "/" || ["/sign-up", "/sign-in", "/forgot-password", "/reset-password"].includes(pathname) || ["/apply", "/dashboard", "/service-verification"].some((path) => pathname === path || pathname.startsWith(`${path}/`)) || (pathname === "/admin" || (pathname.startsWith("/admin/") && !pathname.startsWith("/admin/sign-in")));
   if (futureLinkHost && futureLinkStandalonePath) {
     const url = request.nextUrl.clone();
     url.pathname = pathname === "/" ? "/future-link" : `/future-link${pathname}`;

@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/emails",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/futurelink",
+      "schedule": "11 * * * *"
+    }
+  ]
+}
