@@ -1,31 +1,203 @@
-import {Award,BarChart3,Building2,ClipboardList,Database,FileDown,GraduationCap,HeartHandshake,Mail,MapPin,ScrollText,Settings,ShieldCheck,Star,UserRound,Users} from "lucide-react";
-import {requireStaff} from "@/lib/auth/staff";
+import {
+  Award,
+  BarChart3,
+  Brain,
+  Building2,
+  ClipboardList,
+  Database,
+  FileDown,
+  GraduationCap,
+  HeartHandshake,
+  Mail,
+  MapPin,
+  ScrollText,
+  Settings,
+  ShieldCheck,
+  Star,
+  UserRound,
+  Users,
+} from "lucide-react";
+import { requireStaff } from "@/lib/auth/staff";
 
-export default async function Admin(){
-  const {supabase,roles}=await requireStaff();
-  const statuses=["applied","review_by_admin","additional_information_needed","approved"] as const;
-  const counts=await Promise.all(statuses.map(status=>supabase.from("applications").select("id",{count:"exact",head:true}).eq("status",status)));
-  const {count:exceptions}=await supabase.from("scholarship_exceptions").select("id",{count:"exact",head:true}).is("resolved_at",null);
-  const cards=[
-    {title:"REACH Ambassador workspace",text:"Manage approved ambassadors, workshop resources, campus activity reports, and publication review.",href:"/admin/reach",icon:MapPin},
-    {title:"National Student Help Desk",text:"Route verified cases, approve first school outreach, automate follow-ups, and review Fall/Spring essentials requests.",href:"/admin/student-help",icon:HeartHandshake},
-    {title:"College Continuity Partners",text:"Review free institution applications, verify official logos, approve partner profiles, and manage earned Institute designations.",href:"/admin/partners",icon:Building2},
-    {title:"College Resource Directory",text:"Track official institution records, verified department coverage, source pages, and contact review dates.",href:"/admin/college-directory",icon:Database},
-    {title:"Student Stability Atlas",text:"Verify community, state, national, and international resources before they are shown to students.",href:"/admin/resource-atlas",icon:MapPin},
-    {title:"Scholarship coverage",text:"Track the verified-current count against the 3,000-record target without counting duplicates, expired links, or unapproved sources.",href:"/admin/scholarship-coverage",icon:Award},
-    {title:"Howard Help Desk",text:"Track verified reinstatement cases, advocacy delivery, Howard responses, outcomes, and petition support.",href:"/admin/howard-help",icon:GraduationCap},
-    {title:"Applicant Pool Dashboard",text:"Understand all Name Your Need students, claimed accounts, portal applications, statuses, programs, and awards in one place.",href:"/admin/applicant-pool",icon:BarChart3},
-    {title:"Applications",text:"Search submissions, review answers and documents, request information, and record decisions.",href:"/admin/applications",icon:ClipboardList},
-    {title:"Reviewer workspace",text:"Complete assigned rubrics, disclose conflicts, and submit locked reviews.",href:"/admin/reviews",icon:Star},
-    {title:"Staff and reviewers",text:"Invite individual staff accounts and grant permission-scoped roles.",href:"/admin/team",icon:Users},
-    {title:"Programs and forms",text:"Manage cycle dates, status, award configuration, and versioned application forms.",href:"/admin/programs",icon:Settings},
-    {title:"Applicant directory",text:"Find applicant profiles and their linked program applications.",href:"/admin/applicants",icon:UserRound},
-    {title:"Awards and disbursements",text:"Track acceptance, verification, scheduled and completed disbursements.",href:"/admin/awards",icon:Award},
-    {title:"Communications",text:"Review templates, queue state, retries, and delivery history.",href:"/admin/communications",icon:Mail},
-    {title:"Legacy applicant import",text:"Stage, reconcile, invite, and securely connect Name Your Need applicants.",href:"/admin/imports",icon:Database},
-    {title:"Trusted sources",text:`Monitor scholarship sources and ${exceptions??0} unresolved exceptions.`,href:"/admin/sources",icon:ShieldCheck},
-    {title:"Reports & CSV exports",text:"Download permission-scoped operational reports with audit logging.",href:"/admin/reports",icon:FileDown},
-    {title:"Audit log",text:"Inspect append-only accountability events and safe metadata.",href:"/admin/audit",icon:ScrollText},
+export default async function Admin() {
+  const { supabase, roles } = await requireStaff();
+  const statuses = [
+    "applied",
+    "review_by_admin",
+    "additional_information_needed",
+    "approved",
+  ] as const;
+  const counts = await Promise.all(
+    statuses.map((status) =>
+      supabase
+        .from("applications")
+        .select("id", { count: "exact", head: true })
+        .eq("status", status),
+    ),
+  );
+  const { count: exceptions } = await supabase
+    .from("scholarship_exceptions")
+    .select("id", { count: "exact", head: true })
+    .is("resolved_at", null);
+  const cards = [
+    {
+      title: "Ask EFF Knowledge Center",
+      text: "Review EFF facts, policies, history, public contacts, knowledge gaps, feedback, and AI runtime controls.",
+      href: "/admin/ask",
+      icon: Brain,
+    },
+    {
+      title: "REACH Ambassador workspace",
+      text: "Manage approved ambassadors, workshop resources, campus activity reports, and publication review.",
+      href: "/admin/reach",
+      icon: MapPin,
+    },
+    {
+      title: "National Student Help Desk",
+      text: "Route verified cases, approve first school outreach, automate follow-ups, and review Fall/Spring essentials requests.",
+      href: "/admin/student-help",
+      icon: HeartHandshake,
+    },
+    {
+      title: "College Continuity Partners",
+      text: "Review free institution applications, verify official logos, approve partner profiles, and manage earned Institute designations.",
+      href: "/admin/partners",
+      icon: Building2,
+    },
+    {
+      title: "College Resource Directory",
+      text: "Track official institution records, verified department coverage, source pages, and contact review dates.",
+      href: "/admin/college-directory",
+      icon: Database,
+    },
+    {
+      title: "Student Stability Atlas",
+      text: "Verify community, state, national, and international resources before they are shown to students.",
+      href: "/admin/resource-atlas",
+      icon: MapPin,
+    },
+    {
+      title: "Scholarship coverage",
+      text: "Track the verified-current count against the 3,000-record target without counting duplicates, expired links, or unapproved sources.",
+      href: "/admin/scholarship-coverage",
+      icon: Award,
+    },
+    {
+      title: "Howard Help Desk",
+      text: "Track verified reinstatement cases, advocacy delivery, Howard responses, outcomes, and petition support.",
+      href: "/admin/howard-help",
+      icon: GraduationCap,
+    },
+    {
+      title: "Applicant Pool Dashboard",
+      text: "Understand all Name Your Need students, claimed accounts, portal applications, statuses, programs, and awards in one place.",
+      href: "/admin/applicant-pool",
+      icon: BarChart3,
+    },
+    {
+      title: "Applications",
+      text: "Search submissions, review answers and documents, request information, and record decisions.",
+      href: "/admin/applications",
+      icon: ClipboardList,
+    },
+    {
+      title: "Reviewer workspace",
+      text: "Complete assigned rubrics, disclose conflicts, and submit locked reviews.",
+      href: "/admin/reviews",
+      icon: Star,
+    },
+    {
+      title: "Staff and reviewers",
+      text: "Invite individual staff accounts and grant permission-scoped roles.",
+      href: "/admin/team",
+      icon: Users,
+    },
+    {
+      title: "Programs and forms",
+      text: "Manage cycle dates, status, award configuration, and versioned application forms.",
+      href: "/admin/programs",
+      icon: Settings,
+    },
+    {
+      title: "Applicant directory",
+      text: "Find applicant profiles and their linked program applications.",
+      href: "/admin/applicants",
+      icon: UserRound,
+    },
+    {
+      title: "Awards and disbursements",
+      text: "Track acceptance, verification, scheduled and completed disbursements.",
+      href: "/admin/awards",
+      icon: Award,
+    },
+    {
+      title: "Communications",
+      text: "Review templates, queue state, retries, and delivery history.",
+      href: "/admin/communications",
+      icon: Mail,
+    },
+    {
+      title: "Legacy applicant import",
+      text: "Stage, reconcile, invite, and securely connect Name Your Need applicants.",
+      href: "/admin/imports",
+      icon: Database,
+    },
+    {
+      title: "Trusted sources",
+      text: `Monitor scholarship sources and ${exceptions ?? 0} unresolved exceptions.`,
+      href: "/admin/sources",
+      icon: ShieldCheck,
+    },
+    {
+      title: "Reports & CSV exports",
+      text: "Download permission-scoped operational reports with audit logging.",
+      href: "/admin/reports",
+      icon: FileDown,
+    },
+    {
+      title: "Audit log",
+      text: "Inspect append-only accountability events and safe metadata.",
+      href: "/admin/audit",
+      icon: ScrollText,
+    },
   ];
-  return <main className="section white"><div className="shell"><div className="eyebrow">Administration</div><h2>Command center</h2><p className="muted">Live, permission-scoped operations · Signed in as {roles.map(item=>item.role.replaceAll("_"," ")).join(", ")}</p><div className="stats admin-stats">{[["Applied",counts[0].count??0],["In review",counts[1].count??0],["Action needed",counts[2].count??0],["Approved",counts[3].count??0]].map(([label,count])=><div className="stat" key={label}><strong>{count}</strong><span>{label}</span></div>)}</div><div className="cards admin-cards">{cards.map(({title,text,href,icon:Icon})=><a className="card admin-card" href={href} key={title}><Icon/><h3>{title}</h3><p>{text}</p><span className="card-link">Open workspace →</span></a>)}</div><div className="notice" style={{marginTop:24}}><HeartHandshake size={18}/> Applicant-facing decisions remain separate from private reviewer notes and internal reasons.</div></div></main>;
+  return (
+    <main className="section white">
+      <div className="shell">
+        <div className="eyebrow">Administration</div>
+        <h2>Command center</h2>
+        <p className="muted">
+          Live, permission-scoped operations · Signed in as{" "}
+          {roles.map((item) => item.role.replaceAll("_", " ")).join(", ")}
+        </p>
+        <div className="stats admin-stats">
+          {[
+            ["Applied", counts[0].count ?? 0],
+            ["In review", counts[1].count ?? 0],
+            ["Action needed", counts[2].count ?? 0],
+            ["Approved", counts[3].count ?? 0],
+          ].map(([label, count]) => (
+            <div className="stat" key={label}>
+              <strong>{count}</strong>
+              <span>{label}</span>
+            </div>
+          ))}
+        </div>
+        <div className="cards admin-cards">
+          {cards.map(({ title, text, href, icon: Icon }) => (
+            <a className="card admin-card" href={href} key={title}>
+              <Icon />
+              <h3>{title}</h3>
+              <p>{text}</p>
+              <span className="card-link">Open workspace →</span>
+            </a>
+          ))}
+        </div>
+        <div className="notice" style={{ marginTop: 24 }}>
+          <HeartHandshake size={18} /> Applicant-facing decisions remain
+          separate from private reviewer notes and internal reasons.
+        </div>
+      </div>
+    </main>
+  );
 }

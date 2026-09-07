@@ -1,5 +1,321 @@
 import Link from "next/link";
-import {ArrowRight,BookOpen,Building2,CheckCircle2,HeartHandshake,MapPinned,ShieldCheck,UsersRound} from "lucide-react";
-const programs=[{title:"Name Your Need Scholarship",text:"Tell us what you need most to stay enrolled. No minimum GPA; verified unmet financial need is what matters.",href:"/programs/name-your-need",tag:"Now open"},{title:"For Such a Time as This",text:"Rolling need-based support for students navigating a defining season. Multiple recipients will be selected.",href:"/programs/for-such-a-time-as-this",tag:"Rolling support"},{title:"Emergency Grant",text:"A shorter path for urgent needs that could interrupt a student’s education.",href:"/resources#emergency-aid-programs",tag:"Start here"}];
-const resources=[{icon:HeartHandshake,title:"Urgent balance or emergency",text:"Build a next-step plan for tuition holds, food, housing, transportation, and other immediate barriers.",href:"/resources#emergency-aid-programs"},{icon:ShieldCheck,title:"FAFSA and financial-aid help",text:"Understand verification, appeal options, financial-aid offers, and what to ask your school next.",href:"/resources#fafsa-mentor"},{icon:MapPinned,title:"Help in all 50 states",text:"Find official state aid, SNAP, 211, and local support—without paying a middleman.",href:"/resources#state-directory"},{icon:BookOpen,title:"Scholarship tools that help",text:"Use planners, essay support, and a searchable directory of opportunities from original providers.",href:"/scholarships"}];
-export default function Home(){return <main><section className="portal-hero"><div className="shell portal-hero-grid"><div className="portal-hero-copy"><p className="portal-overline">ESTHER FUNDS FOUNDATION · STUDENT SUPPORT PORTAL</p><h1>College is hard.<br/><em>Keeping going should not be.</em></h1><p className="portal-hero-lead">A clear place to find scholarships, practical resources, emergency next steps, and a community that believes every student deserves a real chance to finish.</p><div className="portal-hero-actions"><Link className="button light" href="/resources">Find support now <ArrowRight size={18}/></Link><Link className="button ghost-light" href="/programs">Explore EFF programs</Link></div></div><aside className="portal-hero-panel"><p>START WHERE YOU ARE</p><h2>What do you need today?</h2><Link href="/resources">Help with an urgent need <ArrowRight/></Link><Link href="/scholarships">Find funding and scholarships <ArrowRight/></Link><Link href="/programs">Apply to an EFF program <ArrowRight/></Link><small>No account is required to explore free resources.</small></aside></div></section><section className="portal-trust-strip"><div className="shell"><span><CheckCircle2/> Faith-based 501(c)(3) nonprofit</span><span>Every Future Fulfilled.</span><span>EIN 93-4917509</span><a href="https://www.estherfundsfoundation.org/impact-%26-financials" target="_blank" rel="noopener noreferrer">Impact &amp; financials <ArrowRight/></a></div></section><section className="section white portal-pathways"><div className="shell"><div className="section-head"><div><p className="eyebrow">ONE MISSION · THREE WAYS FORWARD</p><h2>Support that meets students<br/>in the real world.</h2></div><p>EFF connects direct support, practical navigation, and community so a financial problem does not have to become the end of a college journey.</p></div><div className="portal-pathway-grid"><article><span>01</span><HeartHandshake/><h3>Get help now</h3><p>Start with the need in front of you. We will help point you toward EFF support, campus offices, and trusted national resources.</p><Link href="/resources">Open the Student Help Center <ArrowRight/></Link></article><article><span>02</span><BookOpen/><h3>Find funding</h3><p>Explore EFF-administered programs and scholarships from independent providers—with direct links to original sources.</p><Link href="/programs">See EFF programs <ArrowRight/></Link></article><article><span>03</span><UsersRound/><h3>Build your support team</h3><p>Bring a chapter, school, employer, or community partner into the work of helping students persist through graduation.</p><Link href="/partners">Partner with EFF <ArrowRight/></Link></article></div></div></section><section className="section portal-needs"><div className="shell portal-needs-grid"><div><p className="eyebrow">STUDENT STORIES · REVIEWED WITH CARE</p><h2>See the barrier.<br/>See the student behind it.</h2><p>EFF’s Meet a Student directory gives approved students a reviewed place to explain what they need and where their supporters can help. Direct student support and charitable gifts to EFF are kept clear and separate.</p><Link className="button" href="/meet-a-student">Meet a student <ArrowRight/></Link></div><aside><ShieldCheck/><h3>Clear by design</h3><p>Profiles are reviewed for consent, redacted documentation, and an approved external destination before publication.</p><ul><li><CheckCircle2/> Student story and goal</li><li><CheckCircle2/> Amount needed and support purpose</li><li><CheckCircle2/> Clear external giving destination</li></ul></aside></div></section><section className="section white portal-programs"><div className="shell"><div className="section-head"><div><p className="eyebrow">EFF-ADMINISTERED SUPPORT</p><h2>Programs built to help<br/>students stay enrolled.</h2></div><Link className="text-link" href="/programs">View every EFF program <ArrowRight/></Link></div><div className="portal-program-grid">{programs.map((program)=><article key={program.title}><span>{program.tag}</span><h3>{program.title}</h3><p>{program.text}</p><Link href={program.href}>See details <ArrowRight/></Link></article>)}</div></div></section><section className="section portal-resources"><div className="shell"><div className="section-head"><div><p className="eyebrow">FREE TOOLS · REAL NEXT STEPS</p><h2>Resources for the part<br/>no one prepared you for.</h2></div><p>Not every student needs an award. Sometimes the next right email, campus office, benefits application, or scholarship plan makes the difference.</p></div><div className="portal-resource-grid">{resources.map(({icon:Icon,title,text,href})=><Link href={href} key={title}><Icon/><h3>{title}</h3><p>{text}</p><span>Explore this path <ArrowRight/></span></Link>)}</div><div className="portal-resource-footer"><div><strong>Need something else?</strong><span>Search current scholarship opportunities, organize an application plan, or ask EFF’s National Student Help Desk for a guided next step.</span></div><Link className="button" href="/resources">Explore all free resources <ArrowRight/></Link></div></div></section><section className="portal-partner-band"><div className="shell"><div><p className="eyebrow light">FOR DONORS · SCHOOLS · EMPLOYERS · COMMUNITY PARTNERS</p><h2>Invest in college completion—not just college access.</h2><p>Partner with EFF to help students navigate the financial, personal, and institutional barriers that can interrupt graduation.</p></div><div><Link className="button light" href="/partners"><Building2/> Partner with EFF</Link><a className="button ghost-light" href="https://givebutter.com/estherfundsfoundation" target="_blank" rel="noopener noreferrer">Support the mission <ArrowRight/></a></div></div></section></main>}
+import {
+  ArrowRight,
+  BookOpen,
+  Building2,
+  CheckCircle2,
+  HeartHandshake,
+  MapPinned,
+  ShieldCheck,
+  UsersRound,
+} from "lucide-react";
+import AskEffHomeCard from "@/components/ask-eff/AskEffHomeCard";
+const programs = [
+  {
+    title: "Name Your Need Scholarship",
+    text: "Tell us what you need most to stay enrolled. No minimum GPA; verified unmet financial need is what matters.",
+    href: "/programs/name-your-need",
+    tag: "Now open",
+  },
+  {
+    title: "For Such a Time as This",
+    text: "Rolling need-based support for students navigating a defining season. Multiple recipients will be selected.",
+    href: "/programs/for-such-a-time-as-this",
+    tag: "Rolling support",
+  },
+  {
+    title: "Emergency Grant",
+    text: "A shorter path for urgent needs that could interrupt a student’s education.",
+    href: "/resources#emergency-aid-programs",
+    tag: "Start here",
+  },
+];
+const resources = [
+  {
+    icon: HeartHandshake,
+    title: "Urgent balance or emergency",
+    text: "Build a next-step plan for tuition holds, food, housing, transportation, and other immediate barriers.",
+    href: "/resources#emergency-aid-programs",
+  },
+  {
+    icon: ShieldCheck,
+    title: "FAFSA and financial-aid help",
+    text: "Understand verification, appeal options, financial-aid offers, and what to ask your school next.",
+    href: "/resources#fafsa-mentor",
+  },
+  {
+    icon: MapPinned,
+    title: "Help in all 50 states",
+    text: "Find official state aid, SNAP, 211, and local support—without paying a middleman.",
+    href: "/resources#state-directory",
+  },
+  {
+    icon: BookOpen,
+    title: "Scholarship tools that help",
+    text: "Use planners, essay support, and a searchable directory of opportunities from original providers.",
+    href: "/scholarships",
+  },
+];
+export default function Home() {
+  return (
+    <main>
+      <section className="portal-hero">
+        <div className="shell portal-hero-grid">
+          <div className="portal-hero-copy">
+            <p className="portal-overline">
+              ESTHER FUNDS FOUNDATION · STUDENT SUPPORT PORTAL
+            </p>
+            <h1>
+              College is hard.
+              <br />
+              <em>Keeping going should not be.</em>
+            </h1>
+            <p className="portal-hero-lead">
+              A clear place to find scholarships, practical resources, emergency
+              next steps, and a community that believes every student deserves a
+              real chance to finish.
+            </p>
+            <div className="portal-hero-actions">
+              <Link className="button light" href="/resources">
+                Find support now <ArrowRight size={18} />
+              </Link>
+              <Link className="button ghost-light" href="/programs">
+                Explore EFF programs
+              </Link>
+            </div>
+          </div>
+          <aside className="portal-hero-panel">
+            <p>START WHERE YOU ARE</p>
+            <h2>What do you need today?</h2>
+            <Link href="/resources">
+              Help with an urgent need <ArrowRight />
+            </Link>
+            <Link href="/scholarships">
+              Find funding and scholarships <ArrowRight />
+            </Link>
+            <Link href="/programs">
+              Apply to an EFF program <ArrowRight />
+            </Link>
+            <small>No account is required to explore free resources.</small>
+          </aside>
+        </div>
+      </section>
+      <section className="portal-trust-strip">
+        <div className="shell">
+          <span>
+            <CheckCircle2 /> Faith-based 501(c)(3) nonprofit
+          </span>
+          <span>Every Future Fulfilled.</span>
+          <span>EIN 93-4917509</span>
+          <a
+            href="https://www.estherfundsfoundation.org/impact-%26-financials"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Impact &amp; financials <ArrowRight />
+          </a>
+        </div>
+      </section>
+      <AskEffHomeCard />
+      <section className="section white portal-pathways">
+        <div className="shell">
+          <div className="section-head">
+            <div>
+              <p className="eyebrow">ONE MISSION · THREE WAYS FORWARD</p>
+              <h2>
+                Support that meets students
+                <br />
+                in the real world.
+              </h2>
+            </div>
+            <p>
+              EFF connects direct support, practical navigation, and community
+              so a financial problem does not have to become the end of a
+              college journey.
+            </p>
+          </div>
+          <div className="portal-pathway-grid">
+            <article>
+              <span>01</span>
+              <HeartHandshake />
+              <h3>Get help now</h3>
+              <p>
+                Start with the need in front of you. We will help point you
+                toward EFF support, campus offices, and trusted national
+                resources.
+              </p>
+              <Link href="/resources">
+                Open the Student Help Center <ArrowRight />
+              </Link>
+            </article>
+            <article>
+              <span>02</span>
+              <BookOpen />
+              <h3>Find funding</h3>
+              <p>
+                Explore EFF-administered programs and scholarships from
+                independent providers—with direct links to original sources.
+              </p>
+              <Link href="/programs">
+                See EFF programs <ArrowRight />
+              </Link>
+            </article>
+            <article>
+              <span>03</span>
+              <UsersRound />
+              <h3>Build your support team</h3>
+              <p>
+                Bring a chapter, school, employer, or community partner into the
+                work of helping students persist through graduation.
+              </p>
+              <Link href="/partners">
+                Partner with EFF <ArrowRight />
+              </Link>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section className="section portal-needs">
+        <div className="shell portal-needs-grid">
+          <div>
+            <p className="eyebrow">STUDENT STORIES · REVIEWED WITH CARE</p>
+            <h2>
+              See the barrier.
+              <br />
+              See the student behind it.
+            </h2>
+            <p>
+              EFF’s Meet a Student directory gives approved students a reviewed
+              place to explain what they need and where their supporters can
+              help. Direct student support and charitable gifts to EFF are kept
+              clear and separate.
+            </p>
+            <Link className="button" href="/meet-a-student">
+              Meet a student <ArrowRight />
+            </Link>
+          </div>
+          <aside>
+            <ShieldCheck />
+            <h3>Clear by design</h3>
+            <p>
+              Profiles are reviewed for consent, redacted documentation, and an
+              approved external destination before publication.
+            </p>
+            <ul>
+              <li>
+                <CheckCircle2 /> Student story and goal
+              </li>
+              <li>
+                <CheckCircle2 /> Amount needed and support purpose
+              </li>
+              <li>
+                <CheckCircle2 /> Clear external giving destination
+              </li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+      <section className="section white portal-programs">
+        <div className="shell">
+          <div className="section-head">
+            <div>
+              <p className="eyebrow">EFF-ADMINISTERED SUPPORT</p>
+              <h2>
+                Programs built to help
+                <br />
+                students stay enrolled.
+              </h2>
+            </div>
+            <Link className="text-link" href="/programs">
+              View every EFF program <ArrowRight />
+            </Link>
+          </div>
+          <div className="portal-program-grid">
+            {programs.map((program) => (
+              <article key={program.title}>
+                <span>{program.tag}</span>
+                <h3>{program.title}</h3>
+                <p>{program.text}</p>
+                <Link href={program.href}>
+                  See details <ArrowRight />
+                </Link>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+      <section className="section portal-resources">
+        <div className="shell">
+          <div className="section-head">
+            <div>
+              <p className="eyebrow">FREE TOOLS · REAL NEXT STEPS</p>
+              <h2>
+                Resources for the part
+                <br />
+                no one prepared you for.
+              </h2>
+            </div>
+            <p>
+              Not every student needs an award. Sometimes the next right email,
+              campus office, benefits application, or scholarship plan makes the
+              difference.
+            </p>
+          </div>
+          <div className="portal-resource-grid">
+            {resources.map(({ icon: Icon, title, text, href }) => (
+              <Link href={href} key={title}>
+                <Icon />
+                <h3>{title}</h3>
+                <p>{text}</p>
+                <span>
+                  Explore this path <ArrowRight />
+                </span>
+              </Link>
+            ))}
+          </div>
+          <div className="portal-resource-footer">
+            <div>
+              <strong>Need something else?</strong>
+              <span>
+                Search current scholarship opportunities, organize an
+                application plan, or ask EFF’s National Student Help Desk for a
+                guided next step.
+              </span>
+            </div>
+            <Link className="button" href="/resources">
+              Explore all free resources <ArrowRight />
+            </Link>
+          </div>
+        </div>
+      </section>
+      <section className="portal-partner-band">
+        <div className="shell">
+          <div>
+            <p className="eyebrow light">
+              FOR DONORS · SCHOOLS · EMPLOYERS · COMMUNITY PARTNERS
+            </p>
+            <h2>Invest in college completion—not just college access.</h2>
+            <p>
+              Partner with EFF to help students navigate the financial,
+              personal, and institutional barriers that can interrupt
+              graduation.
+            </p>
+          </div>
+          <div>
+            <Link className="button light" href="/partners">
+              <Building2 /> Partner with EFF
+            </Link>
+            <a
+              className="button ghost-light"
+              href="https://givebutter.com/estherfundsfoundation"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Support the mission <ArrowRight />
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
