@@ -37,6 +37,10 @@ function extractWebSources(response: unknown, accessedAt: string): EvidenceSourc
   }));
 }
 
+function sourcesCitedInAnswer(answer: string, sources: EvidenceSource[]) {
+  return sources.filter((source) => new RegExp(`\\b${source.id}\\b`, "i").test(answer));
+}
+
 export async function researchCurrentEducationInformation(rawQuery: string, adminEnabled = true) {
   const config = getAskEffConfig();
   if (!config.webSearchEnabled || !adminEnabled) return {summary: "", sources: [] as EvidenceSource[]};
@@ -94,5 +98,5 @@ export async function answerWithAskEff(input: {
   });
   const answer = removeUnknownCitationIds(response.output_text.trim(), sources);
   if (!answer) throw new Error("Ask EFF returned an empty response");
-  return {answer, sources, mode: "live" as const};
+  return {answer, sources: sourcesCitedInAnswer(answer, sources), mode: "live" as const};
 }
