@@ -9,7 +9,7 @@ const sensitivePatterns = [
 
 const urgentSafetyPattern = /\b(kill myself|suicid(?:e|al)|end my life|hurt myself|self[- ]?harm|do not want to live|don't want to live)\b/i;
 const underagePattern = /\b(i am|i'm|im)\s+(?:1[0-7]|[1-9])\b|\bminor\b/i;
-const educationPattern = /\b(colleges?|universit(?:y|ies)|schools?|classes?|courses?|credits?|professors?|advisors?|financial aid|fafsa|scholarships?|tuition|balances?|holds?|register|enroll|degrees?|majors?|minors?|study|exams?|grades?|gpa|transfer|transcripts?|withdraw|drop out|dropout|stop out|probation|satisfactory academic progress|sap appeal|mentors?|campus|dorms?|housing|food|transportation|eff|esther funds|chapters?|ambassadors?|students?|careers?|internships?|resumes?|graduate|graduation|commencement|accommodations?|disability services|student parent|graduate school|master'?s|doctorate|phd)\b/i;
+const educationPattern = /\b(colleges?|universit(?:y|ies)|schools?|classes?|courses?|credits?|professors?|advisors?|financial aid|fafsa|scholarships?|tuition|balances?|holds?|register|enroll|degrees?|majors?|minors?|study|exams?|grades?|gpa|transfer|transcripts?|withdraw|drop out|dropout|stop out|probation|satisfactory academic progress|sap appeal|mentors?|campus|dorms?|housing|food|transportation|eff|esther funds|reach|myeff|futurelink|future link|ask eff|selah|name your need|for such a time as this|men of eff|pretty girls who serve|pgws|chapters?|ambassadors?|students?|careers?|internships?|resumes?|graduate|graduation|commencement|accommodations?|disability services|student parent|graduate school|master'?s|doctorate|phd)\b/i;
 
 export function containsSensitiveData(value: string) {
   return sensitivePatterns.some((pattern) => {

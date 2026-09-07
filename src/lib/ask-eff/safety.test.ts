@@ -28,6 +28,12 @@ describe("Ask EFF deterministic boundaries", () => {
     expect(isEducationRelated("How should I prepare for graduate school?")).toBe(true);
     expect(isEducationRelated("Help me improve my resume for internships")).toBe(true);
   });
+  it("recognizes EFF program names as in scope", () => {
+    expect(isEducationRelated("What is REACH?")).toBe(true);
+    expect(isEducationRelated("How do I use MyEFF?")).toBe(true);
+    expect(isEducationRelated("Tell me about FutureLink")).toBe(true);
+    expect(isEducationRelated("What is Pretty Girls Who Serve?")).toBe(true);
+  });
   it("does not force unrelated entertainment into scope", () => expect(isEducationRelated("Tell me celebrity gossip")).toBe(false));
   it("routes time-sensitive questions to research", () => expect(needsCurrentResearch("What is the deadline this year?")).toBe(true));
   it("extracts an institution for an approved chapter lookup", () => expect(extractInstitutionMention("Does EFF have a chapter at Morgan State University?")).toBe("Morgan State University"));
