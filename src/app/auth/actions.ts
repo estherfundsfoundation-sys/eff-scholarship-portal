@@ -50,6 +50,8 @@ export async function signUp(formData:FormData){
   // surge cannot block otherwise-valid student registrations.
   const requestHeaders=await headers();
   const origin=requestHeaders.get("origin")??"https://portal.estherfundsfoundation.org";
+  const futureLink=origin.includes("mentor.estherfundsfoundation.org")||origin.includes("eff-futurelink");
+  const accountName=futureLink?"EFF FutureLink":"Esther Funds Foundation Portal";
   const admin=createAdminClient();
   const generated=await admin.auth.admin.generateLink({type:"signup",email,password,options:{data:{legal_name:legalName,preferred_name:preferredName}}});
   if(generated.error){
@@ -62,7 +64,7 @@ export async function signUp(formData:FormData){
     resetUrl.searchParams.set("token_hash",tokenHash);
     resetUrl.searchParams.set("type","recovery");
     resetUrl.searchParams.set("next","/reset-password");
-    const {error:deliveryError}=await getResend().emails.send({from:emailFrom,to:email,subject:"Finish setting up your Esther Funds Foundation Portal account",html:`<div style="font-family:Arial,sans-serif;line-height:1.6;color:#2d1748"><h1 style="color:#42127F">Finish setting up your portal account</h1><p>An earlier registration attempt started an account for this email. Use the secure button below to verify your inbox and create your password.</p><p><a href="${resetUrl.toString()}" style="display:inline-block;background:#42127F;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">Finish my account</a></p><p>Use only the newest email. Questions? nationals@estherfundsinc.org</p></div>`,text:`Finish setting up your Esther Funds Foundation Portal account: ${resetUrl.toString()}\n\nUse only the newest email.`});
+    const {error:deliveryError}=await getResend().emails.send({from:emailFrom,to:email,subject:`Finish setting up your ${accountName} account`,html:`<div style="font-family:Arial,sans-serif;line-height:1.6;color:#2d1748"><h1 style="color:#42127F">Finish setting up your ${futureLink?"FutureLink":"portal"} account</h1><p>An earlier registration attempt started an account for this email. Use the secure button below to verify your inbox and create your password.</p><p><a href="${resetUrl.toString()}" style="display:inline-block;background:#42127F;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">Finish my account</a></p><p>Use only the newest email. Questions? nationals@estherfundsinc.org</p></div>`,text:`Finish setting up your ${accountName} account: ${resetUrl.toString()}\n\nUse only the newest email.`});
     if(deliveryError)redirect(`/sign-up?error=${encodeURIComponent("We could not send your secure setup email. Please try again shortly.")}&next=${encodeURIComponent(next)}`);
     redirect(`/sign-in?message=${encodeURIComponent("Check your email for a secure link to finish setting up your account. Use only the newest message.")}&next=${encodeURIComponent(next)}`);
   }
@@ -72,7 +74,7 @@ export async function signUp(formData:FormData){
   verifyUrl.searchParams.set("token_hash",tokenHash);
   verifyUrl.searchParams.set("type","signup");
   verifyUrl.searchParams.set("next",next);
-  const {error:deliveryError}=await getResend().emails.send({from:emailFrom,to:email,subject:"Verify your Esther Funds Foundation Portal account",html:`<div style="font-family:Arial,sans-serif;line-height:1.6;color:#2d1748"><h1 style="color:#42127F">Verify your portal account</h1><p>Welcome to the Esther Funds Foundation Portal. Verify your email address to securely enter your account.</p><p><a href="${verifyUrl.toString()}" style="display:inline-block;background:#42127F;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">Verify my email</a></p><p>Use only the newest email. Questions? nationals@estherfundsinc.org</p></div>`,text:`Verify your Esther Funds Foundation Portal account: ${verifyUrl.toString()}\n\nUse only the newest email.`});
+  const {error:deliveryError}=await getResend().emails.send({from:emailFrom,to:email,subject:`Verify your ${accountName} account`,html:`<div style="font-family:Arial,sans-serif;line-height:1.6;color:#2d1748"><h1 style="color:#42127F">Verify your ${futureLink?"FutureLink":"portal"} account</h1><p>Welcome to ${accountName}. Verify your email address to securely enter your account.</p><p><a href="${verifyUrl.toString()}" style="display:inline-block;background:#42127F;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">Verify my email</a></p><p>Use only the newest email. Questions? nationals@estherfundsinc.org</p></div>`,text:`Verify your ${accountName} account: ${verifyUrl.toString()}\n\nUse only the newest email.`});
   if(deliveryError)redirect(`/sign-up?error=${encodeURIComponent("We could not send your verification email. Please try again shortly.")}&next=${encodeURIComponent(next)}`);
   redirect(`/sign-in?message=${encodeURIComponent("Check your email to verify your account, then sign in. Use only the newest message.")}&next=${encodeURIComponent(next)}`);
 }
