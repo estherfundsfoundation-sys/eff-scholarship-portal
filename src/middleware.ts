@@ -27,6 +27,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.rewrite(url);
   }
 
+  if (pathname.startsWith("/future-link")) {
+    const cleanPath = pathname.slice("/future-link".length) || "/";
+    const url = new URL(cleanPath, "https://eff-futurelink.vercel.app");
+    url.search = request.nextUrl.search;
+    return NextResponse.redirect(url);
+  }
+
   if (pathname.startsWith("/apply-everywhere")) {
     return NextResponse.redirect(new URL("/", request.url));
   }
