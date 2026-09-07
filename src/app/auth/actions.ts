@@ -7,6 +7,16 @@ import { emailFrom, getResend } from "@/lib/email";
 import {safeInternalPath} from "@/lib/security";
 
 const safeNext=(value:FormDataEntryValue|null)=>safeInternalPath(value);
+function trustedRequestOrigin(requestHeaders:Headers){
+  const configured=process.env.NEXT_PUBLIC_APP_URL??"https://portal.estherfundsfoundation.org";
+  const raw=requestHeaders.get("origin")??`${requestHeaders.get("x-forwarded-proto")??"https"}://${requestHeaders.get("x-forwarded-host")??requestHeaders.get("host")??""}`;
+  try{
+    const parsed=new URL(raw);
+    const host=parsed.hostname.toLowerCase();
+    if(host==="mentor.estherfundsfoundation.org"||host==="portal.estherfundsfoundation.org"||host==="eff-futurelink.vercel.app"||host.startsWith("eff-futurelink-")&&host.endsWith(".vercel.app"))return parsed.origin;
+  }catch{}
+  return configured;
+}
 export async function signIn(formData:FormData){const supabase=await createClient();const email=String(formData.get("email")??"").trim();const password=String(formData.get("password")??"");const next=safeNext(formData.get("next"));const {error}=await supabase.auth.signInWithPassword({email,password});if(error)redirect(`/sign-in?error=${encodeURIComponent(error.message)}&next=${encodeURIComponent(next)}`);redirect(next);}
 export async function signUp(formData:FormData){
   const supabase=await createClient();
@@ -49,7 +59,7 @@ export async function signUp(formData:FormData){
   // Supabase's hosted email quota is intentionally not used, so a public launch
   // surge cannot block otherwise-valid student registrations.
   const requestHeaders=await headers();
-  const origin=requestHeaders.get("origin")??"https://portal.estherfundsfoundation.org";
+  const origin=trustedRequestOrigin(requestHeaders);
   const futureLink=origin.includes("mentor.estherfundsfoundation.org")||origin.includes("eff-futurelink");
   const accountName=futureLink?"EFF FutureLink":"Esther Funds Foundation Portal";
   const admin=createAdminClient();
@@ -78,6 +88,6 @@ export async function signUp(formData:FormData){
   if(deliveryError)redirect(`/sign-up?error=${encodeURIComponent("We could not send your verification email. Please try again shortly.")}&next=${encodeURIComponent(next)}`);
   redirect(`/sign-in?message=${encodeURIComponent("Check your email to verify your account, then sign in. Use only the newest message.")}&next=${encodeURIComponent(next)}`);
 }
-export async function requestPasswordReset(formData:FormData){const email=String(formData.get("email")??"").trim().toLowerCase();const requestHeaders=await headers();const origin=requestHeaders.get("origin")??process.env.NEXT_PUBLIC_APP_URL!;try{const admin=createAdminClient();const {data,error}=await admin.auth.admin.generateLink({type:"recovery",email});if(error)throw error;const tokenHash=data.properties?.hashed_token;if(!tokenHash)throw new Error("Recovery token was not generated");const resetUrl=new URL("/auth/confirm",origin);resetUrl.searchParams.set("token_hash",tokenHash);resetUrl.searchParams.set("type","recovery");resetUrl.searchParams.set("next","/reset-password");const {error:emailError}=await getResend().emails.send({from:emailFrom,to:email,subject:"Create your Esther Funds Foundation Portal password",html:`<div style="font-family:Arial,sans-serif;line-height:1.6;color:#2d1748"><h1 style="color:#42127F">Create your portal password</h1><p>Use the secure button below to create your password for the Esther Funds Foundation Portal.</p><p><a href="${resetUrl.toString()}" style="display:inline-block;background:#42127F;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">Create my password</a></p><p>This one-time link expires. If you requested more than one email, use only the newest message.</p><p>Questions? nationals@estherfundsinc.org</p></div>`,text:`Create your Esther Funds Foundation Portal password: ${resetUrl.toString()}\n\nThis one-time link expires. If you requested more than one email, use only the newest message.`});if(emailError)throw emailError;}catch(error){console.error("Password recovery email could not be sent",error);}redirect(`/forgot-password?message=${encodeURIComponent("If that email has an account, a secure reset link is on its way. Use only the newest email; earlier links expire automatically.")}`);}
+export async function requestPasswordReset(formData:FormData){const email=String(formData.get("email")??"").trim().toLowerCase();const requestHeaders=await headers();const origin=trustedRequestOrigin(requestHeaders);try{const admin=createAdminClient();const {data,error}=await admin.auth.admin.generateLink({type:"recovery",email});if(error)throw error;const tokenHash=data.properties?.hashed_token;if(!tokenHash)throw new Error("Recovery token was not generated");const resetUrl=new URL("/auth/confirm",origin);resetUrl.searchParams.set("token_hash",tokenHash);resetUrl.searchParams.set("type","recovery");resetUrl.searchParams.set("next","/reset-password");const {error:emailError}=await getResend().emails.send({from:emailFrom,to:email,subject:"Create your Esther Funds Foundation Portal password",html:`<div style="font-family:Arial,sans-serif;line-height:1.6;color:#2d1748"><h1 style="color:#42127F">Create your portal password</h1><p>Use the secure button below to create your password for the Esther Funds Foundation Portal.</p><p><a href="${resetUrl.toString()}" style="display:inline-block;background:#42127F;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:700">Create my password</a></p><p>This one-time link expires. If you requested more than one email, use only the newest message.</p><p>Questions? nationals@estherfundsinc.org</p></div>`,text:`Create your Esther Funds Foundation Portal password: ${resetUrl.toString()}\n\nThis one-time link expires. If you requested more than one email, use only the newest message.`});if(emailError)throw emailError;}catch(error){console.error("Password recovery email could not be sent",error);}redirect(`/forgot-password?message=${encodeURIComponent("If that email has an account, a secure reset link is on its way. Use only the newest email; earlier links expire automatically.")}`);}
 export async function updatePassword(formData:FormData){const supabase=await createClient();const password=String(formData.get("password")??"");if(password.length<10)redirect("/reset-password?error=Password+must+be+at+least+10+characters.");const {error}=await supabase.auth.updateUser({password});if(error)redirect(`/reset-password?error=${encodeURIComponent(error.message)}`);redirect("/dashboard?message=Password+updated.");}
 export async function signOut(){const supabase=await createClient();await supabase.auth.signOut();redirect("/");}
