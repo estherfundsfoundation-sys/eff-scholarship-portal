@@ -14,7 +14,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.rewrite(url);
   }
 
-  if (hostname === "mentor.estherfundsfoundation.org" && !pathname.startsWith("/future-link")) {
+  if (hostname === "mentor.estherfundsfoundation.org" && pathname.startsWith("/future-link")) {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname.slice("/future-link".length) || "/";
+    return NextResponse.redirect(url);
+  }
+
+  if (hostname === "mentor.estherfundsfoundation.org") {
     const url = request.nextUrl.clone();
     url.pathname = pathname === "/" ? "/future-link" : `/future-link${pathname}`;
     return NextResponse.rewrite(url);
